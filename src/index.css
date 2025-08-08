@@ -1,0 +1,341 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light;
+  color: #000000;
+  background-color: #FFFFFF;
+  
+  /* RGB values for the primary color #FF6B00 */
+  --primary-rgb: 255, 107, 0;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+@layer base {
+  body {
+    @apply min-h-screen;
+  }
+
+  h1 {
+    @apply text-4xl font-bold;
+  }
+
+  h2 {
+    @apply text-3xl font-bold;
+  }
+
+  h3 {
+    @apply text-2xl font-bold;
+  }
+
+  h4 {
+    @apply text-xl font-bold;
+  }
+
+  h5 {
+    @apply text-lg font-bold;
+  }
+
+  h6 {
+    @apply text-base font-bold;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply btn bg-primary text-accent hover:opacity-80;
+  }
+
+  .btn-secondary {
+    @apply btn bg-secondary text-accent hover:opacity-80;
+  }
+
+  .container-custom {
+    @apply container mx-auto px-4 sm:px-6 lg:px-8 max-w-screen-2xl;
+  }
+  
+  .bg-mesh-gradient-1 {
+    @apply relative overflow-hidden;
+    background-color: #FFFFFF;
+  }
+  
+  .bg-mesh-gradient-1::before {
+    content: '';
+    @apply absolute inset-0 pointer-events-none z-0 opacity-70;
+    background-image: url('/src/assets/mesh-gradient-1.svg');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+  
+  .bg-mesh-gradient-2 {
+    @apply relative overflow-hidden;
+    background-color: #FFFFFF;
+  }
+  
+  .bg-mesh-gradient-2::before {
+    content: '';
+    @apply absolute inset-0 pointer-events-none z-0 opacity-70;
+    background-image: url('/src/assets/mesh-gradient-2.svg');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+  
+  .bg-mesh-gradient-3 {
+    @apply relative overflow-hidden;
+    background-color: #FFFFFF;
+  }
+  
+  .bg-mesh-gradient-3::before {
+    content: '';
+    @apply absolute inset-0 pointer-events-none z-0 opacity-70;
+    background-image: url('/src/assets/mesh-gradient-3.svg');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+  
+  .bg-dot-pattern {
+    @apply relative;
+    background-image: url('/src/assets/dot-pattern.svg');
+    background-repeat: repeat;
+    background-size: 40px 40px;
+  }
+
+  .matatu-card {
+    @apply relative overflow-hidden rounded-lg shadow-lg transition-all duration-300 hover:shadow-xl;
+  }
+
+  .matatu-card-image {
+    @apply w-full h-48 object-cover transition-transform duration-500 hover:scale-105;
+  }
+
+  .matatu-card-content {
+    @apply p-4 bg-gradient-to-t from-black/80 to-transparent absolute bottom-0 w-full text-white;
+  }
+  
+  .glassmorphic {
+    @apply backdrop-blur-md bg-white/20 border border-white/30 shadow-lg;
+  }
+  
+  .glassmorphic-card {
+    @apply relative overflow-hidden rounded-2xl transition-all duration-300 hover:translate-y-[-5px];
+    background: rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+  }
+  
+  .glassmorphic-content {
+    @apply p-6 absolute bottom-0 w-full text-white transition-all duration-300;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.75), transparent);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    transform: translateY(0);
+  }
+  
+  .glassmorphic-card:hover .glassmorphic-content {
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.2));
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+  
+  .apple-text {
+    @apply font-sans tracking-tight leading-tight;
+    letter-spacing: -0.02em;
+    text-rendering: optimizeLegibility;
+  }
+  
+  .apple-focus {
+    @apply relative;
+    transform-style: preserve-3d;
+    perspective: 1000px;
+  }
+  
+  .apple-focus::after {
+    content: '';
+    @apply absolute w-full h-full top-0 left-0 pointer-events-none;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.15), 0 0 30px rgba(0, 0, 0, 0.05);
+    border-radius: inherit;
+  }
+  
+  .apple-focus:hover::before {
+    content: '';
+    @apply absolute w-full h-full top-0 left-0 pointer-events-none z-10;
+    background: radial-gradient(circle at var(--x, 50%) var(--y, 50%), rgba(255, 255, 255, 0.08) 0%, transparent 60%);
+    border-radius: inherit;
+  }
+  
+  .apple-card {
+    @apply relative overflow-hidden rounded-2xl transition-all duration-500 bg-white shadow-lg hover:shadow-xl;
+    transform-style: preserve-3d;
+    perspective: 1000px;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+  }
+  
+  .apple-card:hover {
+    @apply translate-y-[-5px];
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+  }
+  
+  .apple-card::after {
+    content: '';
+    @apply absolute w-full h-full top-0 left-0 pointer-events-none;
+    box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.05);
+    border-radius: inherit;
+  }
+  
+  .apple-card:hover::before {
+    content: '';
+    @apply absolute w-full h-full top-0 left-0 pointer-events-none z-10;
+    background: radial-gradient(circle at var(--x, 50%) var(--y, 50%), rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+    border-radius: inherit;
+  }
+  
+  .apple-card-body {
+    @apply p-8 flex flex-col items-center text-center transition-all duration-300;
+  }
+  
+  .apple-icon-container {
+    @apply flex items-center justify-center w-16 h-16 rounded-full mb-6 transition-transform duration-500;
+    background: linear-gradient(135deg, rgba(var(--primary-rgb), 0.1), rgba(var(--primary-rgb), 0.2));
+  }
+  
+  .apple-card:hover .apple-icon-container {
+    @apply scale-110;
+    transform: translateZ(10px);
+  }
+  
+  .apple-program-card {
+    @apply relative overflow-hidden rounded-2xl transition-all duration-500 bg-white shadow-lg hover:shadow-xl;
+    transform-style: preserve-3d;
+    perspective: 1000px;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+  }
+  
+  .apple-program-card:hover {
+    @apply translate-y-[-5px];
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+  }
+  
+  .apple-program-card::after {
+    content: '';
+    @apply absolute w-full h-full top-0 left-0 pointer-events-none;
+    box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.05);
+    border-radius: inherit;
+  }
+  
+  .apple-program-card:hover::before {
+    content: '';
+    @apply absolute w-full h-full top-0 left-0 pointer-events-none z-10;
+    background: radial-gradient(circle at var(--x, 50%) var(--y, 50%), rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+    border-radius: inherit;
+  }
+  
+  .apple-program-image {
+    @apply relative w-full h-56 overflow-hidden;
+  }
+  
+  .apple-program-image img {
+    @apply w-full h-full object-cover transition-transform duration-700;
+  }
+  
+  .apple-program-card:hover .apple-program-image img {
+    @apply scale-105;
+  }
+  
+  .apple-program-content {
+    @apply p-8 transition-all duration-300;
+  }
+  
+  .apple-button {
+    @apply inline-flex items-center justify-center px-6 py-3 rounded-full font-medium transition-all duration-300;
+    background: linear-gradient(135deg, rgba(var(--primary-rgb), 1), rgba(var(--primary-rgb), 0.9));
+    color: white;
+    box-shadow: 0 4px 10px rgba(var(--primary-rgb), 0.3);
+  }
+  
+  .apple-button:hover {
+    @apply translate-y-[-2px];
+    box-shadow: 0 6px 15px rgba(var(--primary-rgb), 0.4);
+  }
+  
+  .apple-blog-card {
+    @apply relative overflow-hidden rounded-2xl transition-all duration-500 bg-white shadow-lg hover:shadow-xl;
+    transform-style: preserve-3d;
+    perspective: 1000px;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+  }
+  
+  .apple-blog-card:hover {
+    @apply translate-y-[-5px];
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+  }
+  
+  .apple-blog-card::after {
+    content: '';
+    @apply absolute w-full h-full top-0 left-0 pointer-events-none;
+    box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.05);
+    border-radius: inherit;
+  }
+  
+  .apple-blog-card:hover::before {
+    content: '';
+    @apply absolute w-full h-full top-0 left-0 pointer-events-none z-10;
+    background: radial-gradient(circle at var(--x, 50%) var(--y, 50%), rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+    border-radius: inherit;
+  }
+  
+  .apple-blog-image {
+    @apply relative w-full h-56 overflow-hidden;
+  }
+  
+  .apple-blog-image img {
+    @apply w-full h-full object-cover transition-transform duration-700;
+  }
+  
+  .apple-blog-card:hover .apple-blog-image img {
+    @apply scale-105;
+  }
+  
+  .apple-blog-content {
+    @apply p-8 transition-all duration-300;
+  }
+  
+  .apple-date {
+    @apply text-sm opacity-60 mb-2 apple-text;
+  }
+  
+  .apple-link-button {
+    @apply inline-flex items-center justify-center px-5 py-2 rounded-full font-medium text-sm transition-all duration-300;
+    background: linear-gradient(135deg, rgba(var(--primary-rgb), 1), rgba(var(--primary-rgb), 0.9));
+    color: white;
+    box-shadow: 0 4px 8px rgba(var(--primary-rgb), 0.25);
+  }
+  
+  .apple-link-button:hover {
+    @apply translate-y-[-2px];
+    box-shadow: 0 6px 12px rgba(var(--primary-rgb), 0.35);
+  }
+  
+  .wave-divider {
+    @apply w-full h-24 relative overflow-hidden;
+  }
+  
+  .wave-divider img {
+    @apply w-full h-full object-cover;
+  }
+}
+
+/* Theme is now fixed to light with custom colors */
