@@ -1,11 +1,11 @@
-import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
 import { FiSearch, FiCalendar, FiUser, FiTag, FiClock, FiArrowRight } from 'react-icons/fi';
 import MainLayout from '../components/layout/MainLayout';
-import { collection, getDocs, query, orderBy, limit, where } from 'firebase/firestore';
 import { db } from '../firebase/config';
+import { collection, getDocs } from 'firebase/firestore';
 
 export default function Blog() {
   const [posts, setPosts] = useState([]);
@@ -14,182 +14,111 @@ export default function Blog() {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [currentPage, setCurrentPage] = useState(1);
   const postsPerPage = 6;
+  const navigate = useNavigate();
+
+  // Sample data as fallback
+  const postsData = [
+    {
+      id: 1,
+      title: "Building Wells in Rural Communities",
+      excerpt: "Our latest water project brings clean drinking water to over 500 families in remote villages.",
+      content: "Full article content here...",
+      author: "Sarah Johnson",
+      authorImage: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face",
+      date: "March 15, 2024",
+      readTime: "5 min read",
+      category: "water",
+      image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&h=600&fit=crop",
+      tags: ["water", "community", "development"]
+    },
+    {
+      id: 2,
+      title: "Education Program Reaches 1000 Children",
+      excerpt: "Our education initiative has successfully enrolled over 1000 children in schools across three countries.",
+      content: "Full article content here...",
+      author: "Michael Chen",
+      authorImage: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face",
+      date: "March 10, 2024",
+      readTime: "7 min read",
+      category: "education",
+      image: "https://images.unsplash.com/photo-1497486751825-1233686d5d80?w=800&h=600&fit=crop",
+      tags: ["education", "children", "schools"]
+    },
+    {
+      id: 3,
+      title: "Emergency Relief Efforts in Crisis Areas",
+      excerpt: "Rapid response teams provide immediate aid to families affected by natural disasters.",
+      content: "Full article content here...",
+      author: "Emily Rodriguez",
+      authorImage: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face",
+      date: "March 8, 2024",
+      readTime: "6 min read",
+      category: "emergency",
+      image: "https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?w=800&h=600&fit=crop",
+      tags: ["emergency", "relief", "disaster"]
+    },
+    {
+      id: 4,
+      title: "Healthcare Mobile Clinics Expand Reach",
+      excerpt: "New mobile health units bring medical care to underserved communities in remote areas.",
+      content: "Full article content here...",
+      author: "Dr. James Wilson",
+      authorImage: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
+      date: "March 5, 2024",
+      readTime: "8 min read",
+      category: "healthcare",
+      image: "https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=800&h=600&fit=crop",
+      tags: ["healthcare", "mobile", "clinics"]
+    },
+    {
+      id: 5,
+      title: "Sustainable Agriculture Training Programs",
+      excerpt: "Teaching farmers sustainable practices to improve crop yields and protect the environment.",
+      content: "Full article content here...",
+      author: "Maria Santos",
+      authorImage: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&h=150&fit=crop&crop=face",
+      date: "March 1, 2024",
+      readTime: "6 min read",
+      category: "agriculture",
+      image: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=800&h=600&fit=crop",
+      tags: ["agriculture", "sustainability", "training"]
+    },
+    {
+      id: 6,
+      title: "Women's Empowerment Through Microfinance",
+      excerpt: "Small loans create big opportunities for women entrepreneurs in developing communities.",
+      content: "Full article content here...",
+      author: "Aisha Patel",
+      authorImage: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&h=150&fit=crop&crop=face",
+      date: "February 28, 2024",
+      readTime: "5 min read",
+      category: "empowerment",
+      image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=800&h=600&fit=crop",
+      tags: ["women", "microfinance", "empowerment"]
+    }
+  ];
+
+  const categories = ['all', 'water', 'education', 'healthcare', 'emergency', 'agriculture', 'empowerment'];
 
   useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(db, 'posts'));
+        const postsData = querySnapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        }));
+        setPosts(postsData.length > 0 ? postsData : postsData);
+      } catch (error) {
+        console.error('Error fetching posts:', error);
+        setPosts(postsData);
+      } finally {
+        setLoading(false);
+      }
+    };
+
     fetchPosts();
   }, []);
-
-  const fetchPosts = async () => {
-    setLoading(true);
-    try {
-      let postsQuery;
-      
-      if (selectedCategory === 'all') {
-        postsQuery = query(collection(db, 'blogs'), orderBy('createdAt', 'desc'));
-      } else {
-        postsQuery = query(
-          collection(db, 'blogs'), 
-          where('category', '==', selectedCategory),
-          orderBy('createdAt', 'desc')
-        );
-      }
-      
-      const querySnapshot = await getDocs(postsQuery);
-      const postsData = querySnapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data(),
-        date: doc.data().createdAt?.toDate().toLocaleDateString('en-US', {
-          year: 'numeric',
-          month: 'long',
-          day: 'numeric'
-        }) || 'Unknown date'
-      }));
-      
-      setPosts(postsData);
-    } catch (error) {
-      console.error('Error fetching posts:', error);
-      // Fallback to sample data if Firebase fetch fails
-      const postsData = [
-        {
-          id: 1,
-          title: 'Clean Water Initiative Reaches 10,000 People',
-          excerpt: 'Our clean water initiative has successfully provided access to clean drinking water for over 10,000 people in rural communities.',
-          content: '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p><p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p><h2>The Impact</h2><p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p><ul><li>Improved health outcomes</li><li>Reduced waterborne diseases</li><li>Increased school attendance</li><li>Economic benefits for communities</li></ul>',
-          author: 'Sarah Johnson',
-          authorImage: 'https://randomuser.me/api/portraits/women/12.jpg',
-          date: 'March 15, 2023',
-          readTime: '5 min read',
-          category: 'water',
-          image: 'https://images.unsplash.com/photo-1541252260730-0412e8e2108e?ixlib=rb-1.2.1&auto=format&fit=crop&w=1200&q=80',
-          tags: ['water', 'health', 'community']
-        },
-        {
-          id: 2,
-          title: 'Education Program Expands to 5 New Schools',
-          excerpt: 'Our education initiative is expanding to 5 new schools, providing quality education to hundreds more children in underserved areas.',
-          content: '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>',
-          author: 'Michael Chen',
-          authorImage: 'https://randomuser.me/api/portraits/men/32.jpg',
-          date: 'March 8, 2023',
-          readTime: '4 min read',
-          category: 'education',
-          image: 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1200&q=80',
-          tags: ['education', 'children', 'schools']
-        },
-        {
-          id: 3,
-          title: 'Annual Fundraising Gala Raises Record $2 Million',
-          excerpt: 'This year\'s annual fundraising gala was our most successful yet, raising over $2 million to support our global initiatives.',
-          content: '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>',
-          author: 'Emily Rodriguez',
-          authorImage: 'https://randomuser.me/api/portraits/women/23.jpg',
-          date: 'February 28, 2023',
-          readTime: '3 min read',
-          category: 'events',
-          image: 'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?ixlib=rb-1.2.1&auto=format&fit=crop&w=1200&q=80',
-          tags: ['fundraising', 'events', 'charity']
-        },
-        {
-          id: 4,
-          title: 'Healthcare Clinic Opens in Rural Community',
-          excerpt: 'We\'ve opened a new healthcare clinic that will provide essential medical services to over 5,000 people in a remote rural area.',
-          content: '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>',
-          author: 'Dr. James Wilson',
-          authorImage: 'https://randomuser.me/api/portraits/men/45.jpg',
-          date: 'February 20, 2023',
-          readTime: '6 min read',
-          category: 'healthcare',
-          image: 'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1200&q=80',
-          tags: ['healthcare', 'medical', 'rural']
-        },
-        {
-          id: 5,
-          title: 'Volunteer Spotlight: Meet Maria',
-          excerpt: 'Maria has dedicated over 500 hours to our organization. Learn about her journey and the impact she\'s made in communities worldwide.',
-          content: '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>',
-          author: 'Jessica Taylor',
-          authorImage: 'https://randomuser.me/api/portraits/women/45.jpg',
-          date: 'February 15, 2023',
-          readTime: '4 min read',
-          category: 'volunteer',
-          image: 'https://images.unsplash.com/photo-1517486808906-6ca8b3f8e1c1?ixlib=rb-1.2.1&auto=format&fit=crop&w=1200&q=80',
-          tags: ['volunteer', 'spotlight', 'community']
-        },
-        {
-          id: 6,
-          title: 'Environmental Conservation Project Saves 500 Acres',
-          excerpt: 'Our latest environmental initiative has successfully protected 500 acres of critical forest habitat from deforestation.',
-          content: '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>',
-          author: 'David Nguyen',
-          authorImage: 'https://randomuser.me/api/portraits/men/67.jpg',
-          date: 'February 10, 2023',
-          readTime: '5 min read',
-          category: 'environment',
-          image: 'https://images.unsplash.com/photo-1511497584788-876760111969?ixlib=rb-1.2.1&auto=format&fit=crop&w=1200&q=80',
-          tags: ['environment', 'conservation', 'forest']
-        },
-        {
-          id: 7,
-          title: 'New Partnership Announced with Global Health Initiative',
-          excerpt: 'We\'re excited to announce our new partnership with the Global Health Initiative to expand healthcare access in developing regions.',
-          content: '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>',
-          author: 'Robert Kim',
-          authorImage: 'https://randomuser.me/api/portraits/men/52.jpg',
-          date: 'February 5, 2023',
-          readTime: '3 min read',
-          category: 'partnerships',
-          image: 'https://images.unsplash.com/photo-1600880292089-90a7e086ee0c?ixlib=rb-1.2.1&auto=format&fit=crop&w=1200&q=80',
-          tags: ['partnerships', 'healthcare', 'global']
-        },
-        {
-          id: 8,
-          title: 'Community Development Program Transforms Local Village',
-          excerpt: 'See how our community development program has transformed a local village through infrastructure improvements and economic opportunities.',
-          content: '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>',
-          author: 'Sophia Martinez',
-          authorImage: 'https://randomuser.me/api/portraits/women/64.jpg',
-          date: 'January 30, 2023',
-          readTime: '7 min read',
-          category: 'community',
-          image: 'https://images.unsplash.com/photo-1531206715517-5c0ba140b2b8?ixlib=rb-1.2.1&auto=format&fit=crop&w=1200&q=80',
-          tags: ['community', 'development', 'economic']
-        },
-        {
-          id: 9,
-          title: 'Corporate Partnership Program Launches with 10 New Companies',
-          excerpt: 'Our corporate partnership program has launched with 10 new companies committed to supporting our mission through funding and volunteer work.',
-          content: '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>',
-          author: 'Thomas Lee',
-          authorImage: 'https://randomuser.me/api/portraits/men/22.jpg',
-          date: 'February 8, 2023',
-          readTime: '4 min read',
-          category: 'partnerships',
-          image: 'https://images.unsplash.com/photo-1556484687-30636164638b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1200&q=80',
-          tags: ['partnerships', 'collaboration', 'impact']
-        },
-        {
-          id: 10,
-          title: 'Youth Leadership in Community Development',
-          excerpt: 'See how we\'re empowering young people to take leadership roles in driving positive change in their communities.',
-          content: '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>',
-          author: 'Amina Kofi',
-          authorImage: 'https://randomuser.me/api/portraits/women/33.jpg',
-          date: 'January 25, 2023',
-          readTime: '6 min read',
-          category: 'youth',
-          image: 'https://images.unsplash.com/photo-1529390079861-591de354faf5?ixlib=rb-1.2.1&auto=format&fit=crop&w=1200&q=80',
-          tags: ['youth', 'leadership', 'development']
-        }
-      ];
-      
-      setPosts(postsData);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // Get all unique categories from posts
-  const categories = ['all', ...new Set(posts.map(post => post.category))];
 
   // Filter posts based on search term and category
   const filteredPosts = posts.filter(post => {
@@ -221,145 +150,275 @@ export default function Blog() {
         <link rel="canonical" href="/blog" />
       </Helmet>
 
-      <div className="bg-base-200 py-12 md:py-20">
-        <div className="container-custom">
+      <div className="bg-accent bg-mesh-gradient-2 min-h-screen">
+        <div className="container-custom py-12 md:py-20">
+          {/* Hero Section */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+            className="text-center max-w-4xl mx-auto mb-16"
+          >
+            <motion.h1 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="text-5xl md:text-7xl font-bold mb-6 text-secondary"
+            >
+              Our Blog
+            </motion.h1>
+            <motion.p 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.4 }}
+              className="text-xl md:text-2xl mb-8 text-secondary/80 leading-relaxed"
+            >
+              Stay updated with the latest news, stories, and insights from our charity work around the world.
+            </motion.p>
+            
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.8, delay: 0.6 }}
+              className="inline-block px-6 py-3 bg-white/10 backdrop-blur-md rounded-full border border-white/20 text-secondary/70 font-medium"
+            >
+              ✨ Discover inspiring stories and updates
+            </motion.div>
+          </motion.div>
+
+          {/* Search & Filter Controls */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="text-center max-w-3xl mx-auto"
+            transition={{ duration: 0.6, delay: 0.8 }}
+            className="max-w-4xl mx-auto mb-12"
           >
-            <h1 className="text-4xl md:text-5xl font-bold mb-4">Our Blog</h1>
-            <p className="text-lg mb-8">Stay updated with the latest news, stories, and insights from our charity work around the world.</p>
-            
-            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
-              <div className="relative flex-grow max-w-md">
+            <div className="flex flex-col lg:flex-row gap-4 items-center justify-center">
+              {/* Search Bar */}
+              <motion.div 
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                className="relative flex-grow max-w-md"
+              >
                 <input 
                   type="text" 
-                  placeholder="Search articles..." 
-                  className="input input-bordered w-full pr-10" 
+                  placeholder="Search articles, authors, topics..." 
+                  className="w-full px-6 py-4 bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl text-secondary placeholder-secondary/50 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 transition-all duration-300" 
                   value={searchTerm}
                   onChange={(e) => {
                     setSearchTerm(e.target.value);
-                    setCurrentPage(1); // Reset to first page on search
+                    setCurrentPage(1);
                   }}
                 />
-                <FiSearch className="absolute right-3 top-1/2 -translate-y-1/2 text-base-content/50" />
-              </div>
+                <FiSearch className="absolute right-4 top-1/2 -translate-y-1/2 text-secondary/50 text-xl" />
+              </motion.div>
               
-              <select 
-                className="select select-bordered w-full sm:w-auto" 
+              {/* Category Filter */}
+              <motion.select 
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                className="px-6 py-4 bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl text-secondary focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 transition-all duration-300 min-w-[200px]" 
                 value={selectedCategory}
                 onChange={(e) => {
                   setSelectedCategory(e.target.value);
-                  setCurrentPage(1); // Reset to first page on category change
+                  setCurrentPage(1);
                 }}
               >
                 {categories.map((category, index) => (
-                  <option key={index} value={category}>
+                  <option key={index} value={category} className="bg-white text-gray-800">
                     {category === 'all' ? 'All Categories' : category.charAt(0).toUpperCase() + category.slice(1)}
                   </option>
                 ))}
-              </select>
+              </motion.select>
             </div>
+
+            {/* Category Pills */}
+            <motion.div 
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 1.0 }}
+              className="flex flex-wrap gap-2 justify-center mt-6"
+            >
+              {categories.slice(0, 6).map((category, index) => (
+                <motion.button
+                  key={category}
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.4, delay: 1.0 + index * 0.1 }}
+                  whileHover={{ scale: 1.05, y: -2 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => {
+                    setSelectedCategory(category);
+                    setCurrentPage(1);
+                  }}
+                  className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
+                    selectedCategory === category
+                      ? 'bg-primary text-white shadow-lg shadow-primary/25'
+                      : 'bg-white/10 backdrop-blur-md text-secondary/70 hover:bg-white/20 border border-white/20'
+                  }`}
+                >
+                  {category === 'all' ? 'All' : category.charAt(0).toUpperCase() + category.slice(1)}
+                </motion.button>
+              ))}
+            </motion.div>
           </motion.div>
           
+          {/* Content Section */}
           {loading ? (
-            <div className="flex justify-center items-center py-20">
-              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
-            </div>
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="flex justify-center items-center py-20"
+            >
+              <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-primary"></div>
+            </motion.div>
           ) : filteredPosts.length === 0 ? (
-            <div className="text-center py-20">
-              <h2 className="text-2xl font-bold mb-4">No posts found</h2>
-              <p className="text-base-content/70">Try adjusting your search criteria or check back later for new content.</p>
-            </div>
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="text-center py-20"
+            >
+              <h2 className="text-3xl font-bold mb-4 text-secondary">No posts found</h2>
+              <p className="text-secondary/70 text-lg">Try adjusting your search criteria or check back later for new content.</p>
+            </motion.div>
           ) : (
             <>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-12">
+              {/* Blog Posts Grid */}
+              <motion.div 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.6, delay: 1.2 }}
+                className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+              >
                 {currentPosts.map((post, index) => (
                   <motion.div 
                     key={post.id}
-                    initial={{ opacity: 0, y: 20 }}
+                    initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5, delay: index * 0.1 }}
+                    transition={{ duration: 0.6, delay: 1.2 + index * 0.1 }}
+                    whileHover={{ y: -8, scale: 1.02 }}
+                    className="group cursor-pointer"
+                    onClick={() => window.location.href = `/blog/${post.id}`}
                   >
-                    <div className="card bg-base-100 shadow-md h-full flex flex-col">
-                      <figure className="h-48">
+                    <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-3xl overflow-hidden h-full flex flex-col transition-all duration-500 group-hover:bg-white/20 group-hover:border-white/30 group-hover:shadow-2xl group-hover:shadow-primary/10">
+                      {/* Image */}
+                      <div className="relative h-48 overflow-hidden">
                         <img 
                           src={post.image} 
                           alt={post.title} 
-                          className="w-full h-full object-cover"
+                          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                         />
-                      </figure>
-                      <div className="card-body flex flex-col">
-                        <div className="flex flex-wrap gap-2 text-sm text-base-content/70 mb-2">
-                          <div className="flex items-center">
-                            <FiCalendar className="mr-1" size={14} />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                        
+                        {/* Category Badge */}
+                        <div className="absolute top-4 left-4">
+                          <span className="px-3 py-1 bg-primary/90 backdrop-blur-sm text-white text-xs font-semibold rounded-full">
+                            {post.category.charAt(0).toUpperCase() + post.category.slice(1)}
+                          </span>
+                        </div>
+                      </div>
+                      
+                      {/* Content */}
+                      <div className="p-6 flex flex-col flex-grow">
+                        {/* Meta Info */}
+                        <div className="flex flex-wrap gap-4 text-sm text-secondary/60 mb-3">
+                          <div className="flex items-center gap-1">
+                            <FiCalendar size={14} />
                             <span>{post.date}</span>
                           </div>
-                          <div className="flex items-center">
-                            <FiClock className="mr-1" size={14} />
+                          <div className="flex items-center gap-1">
+                            <FiClock size={14} />
                             <span>{post.readTime}</span>
                           </div>
                         </div>
                         
-                        <h2 className="card-title hover:text-primary transition-colors">
-                          <Link to={`/blog/${post.id}`}>{post.title}</Link>
+                        {/* Title */}
+                        <h2 className="text-xl font-bold mb-3 text-secondary group-hover:text-primary transition-colors duration-300 line-clamp-2">
+                          {post.title}
                         </h2>
                         
-                        <p className="text-base-content/80 mb-4">{post.excerpt}</p>
+                        {/* Excerpt */}
+                        <p className="text-secondary/70 mb-6 line-clamp-3 flex-grow leading-relaxed">
+                          {post.excerpt}
+                        </p>
                         
-                        <div className="flex items-center mt-auto">
-                          <div className="avatar mr-3">
-                            <div className="w-8 h-8 rounded-full">
-                              <img src={post.authorImage} alt={post.author} />
+                        {/* Author & Read More */}
+                        <div className="flex items-center justify-between mt-auto">
+                          <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 rounded-full overflow-hidden ring-2 ring-white/20 group-hover:ring-primary/30 transition-all duration-300">
+                              <img src={post.authorImage} alt={post.author} className="w-full h-full object-cover" />
+                            </div>
+                            <div>
+                              <p className="text-sm font-medium text-secondary">{post.author}</p>
+                              <div className="flex gap-1">
+                                {post.tags?.slice(0, 2).map((tag, tagIndex) => (
+                                  <span key={tagIndex} className="text-xs text-secondary/50">
+                                    #{tag}
+                                  </span>
+                                ))}
+                              </div>
                             </div>
                           </div>
-                          <span className="text-sm font-medium">{post.author}</span>
-                        </div>
-                        
-                        <div className="card-actions justify-end mt-4">
-                          <Link to={`/blog/${post.id}`} className="btn btn-sm btn-ghost gap-1">
-                            Read more <FiArrowRight size={14} />
-                          </Link>
+                          
+                          <motion.div
+                            whileHover={{ x: 5 }}
+                            className="flex items-center gap-1 text-primary font-medium text-sm group-hover:text-primary transition-colors duration-300"
+                          >
+                            Read more <FiArrowRight size={16} />
+                          </motion.div>
                         </div>
                       </div>
                     </div>
                   </motion.div>
                 ))}
-              </div>
+              </motion.div>
               
               {/* Pagination */}
               {totalPages > 1 && (
-                <div className="flex justify-center mt-12">
-                  <div className="join">
-                    <button 
-                      className="join-item btn"
+                <motion.div 
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 1.4 }}
+                  className="flex justify-center mt-16"
+                >
+                  <div className="flex gap-2 p-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl">
+                    <motion.button 
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      className="px-4 py-2 rounded-xl bg-white/10 text-secondary hover:bg-white/20 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
                       onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
                       disabled={currentPage === 1}
                     >
-                      «
-                    </button>
+                      ←
+                    </motion.button>
                     
                     {[...Array(totalPages)].map((_, index) => (
-                      <button
+                      <motion.button
                         key={index}
-                        className={`join-item btn ${currentPage === index + 1 ? 'btn-active' : ''}`}
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        className={`px-4 py-2 rounded-xl transition-all duration-300 ${
+                          currentPage === index + 1 
+                            ? 'bg-primary text-white shadow-lg shadow-primary/25' 
+                            : 'bg-white/10 text-secondary hover:bg-white/20'
+                        }`}
                         onClick={() => setCurrentPage(index + 1)}
                       >
                         {index + 1}
-                      </button>
+                      </motion.button>
                     ))}
                     
-                    <button 
-                      className="join-item btn"
+                    <motion.button 
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      className="px-4 py-2 rounded-xl bg-white/10 text-secondary hover:bg-white/20 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
                       onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
                       disabled={currentPage === totalPages}
                     >
-                      »
-                    </button>
+                      →
+                    </motion.button>
                   </div>
-                </div>
+                </motion.div>
               )}
             </>
           )}

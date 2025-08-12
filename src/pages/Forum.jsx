@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
-import { FiSearch, FiMessageSquare, FiUser, FiCalendar, FiTag, FiHeart, FiMessageCircle, FiFilter, FiPlus, FiAlertCircle } from 'react-icons/fi';
+import { FiSearch, FiMessageSquare, FiUser, FiCalendar, FiTag, FiHeart, FiMessageCircle, FiFilter, FiPlus, FiAlertCircle, FiX } from 'react-icons/fi';
 import MainLayout from '../components/layout/MainLayout';
 import { useAuth } from '../contexts/AuthContext';
 import { db } from '../firebase/config';
@@ -552,63 +552,94 @@ export default function Forum() {
         <meta name="description" content="Join our community forum to connect with like-minded individuals, share ideas, and participate in meaningful discussions about causes that matter." />
       </Helmet>
       
-      <div className="container-custom py-12">
+      <div className="bg-accent bg-mesh-gradient-2 py-12 min-h-screen">
+        <div className="container-custom">
+        {/* Hero Section */}
         <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="text-center mb-12"
+          initial={{ opacity: 0, y: -30, scale: 0.9 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
+          className="text-center mb-16"
         >
-          <h1 className="text-4xl font-bold mb-4">Community Forum</h1>
-          <p className="text-xl max-w-3xl mx-auto">
+          <h1 className="text-4xl md:text-6xl font-bold mb-6 text-secondary tracking-tight">Community Forum</h1>
+          <p className="text-xl md:text-2xl max-w-4xl mx-auto text-secondary/90 leading-relaxed">
             Connect with like-minded individuals, share ideas, and participate in meaningful discussions about causes that matter.
           </p>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="mt-8 flex justify-center"
+          >
+            <div className="bg-white/10 backdrop-blur-sm rounded-full px-6 py-3 border border-white/20">
+              <span className="text-secondary/80 text-sm font-medium">Join the conversation • Share your voice • Make an impact</span>
+            </div>
+          </motion.div>
         </motion.div>
         
+        {/* Search and Controls */}
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          className="mb-8 flex flex-col md:flex-row gap-4 justify-between items-center"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.3 }}
+          className="mb-12"
         >
-          <div className="relative w-full md:w-1/3">
-            <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-              <FiSearch className="text-base-content/70" />
-            </div>
-            <input 
-              type="text" 
-              className="input input-bordered w-full pl-10" 
-              placeholder="Search topics..."
-              value={searchTerm}
-              onChange={handleSearchChange}
-            />
-          </div>
-          
-          <div className="flex gap-2 w-full md:w-auto overflow-x-auto pb-2 md:pb-0">
-            {categories.map(category => (
-              <button
-                key={category.id}
-                className={`btn btn-sm ${selectedCategory === category.id ? 'btn-primary' : 'btn-outline'}`}
-                onClick={() => handleCategoryChange(category.id)}
+          <div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl border border-white/20 p-6 md:p-8">
+            <div className="flex flex-col lg:flex-row gap-6 items-center">
+              {/* Search Bar */}
+              <div className="relative flex-1 w-full">
+                <div className="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
+                  <FiSearch className="text-gray-400 text-lg" />
+                </div>
+                <input 
+                  type="text" 
+                  className="w-full pl-12 pr-4 py-4 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-200 text-gray-700 placeholder-gray-400" 
+                  placeholder="Search topics, discussions, or keywords..."
+                  value={searchTerm}
+                  onChange={handleSearchChange}
+                />
+              </div>
+              
+              {/* New Topic Button */}
+              <motion.button 
+                whileHover={{ scale: 1.02, y: -1 }}
+                whileTap={{ scale: 0.98 }}
+                className="bg-primary text-white px-6 py-4 rounded-xl font-semibold flex items-center gap-2 shadow-lg hover:shadow-xl transition-all duration-200 w-full lg:w-auto justify-center"
+                onClick={() => {
+                  if (!currentUser) {
+                    toast.info('You must be logged in to create a topic');
+                    navigate('/login', { state: { from: '/forum' } });
+                    return;
+                  }
+                  setShowNewTopicModal(true);
+                }}
               >
-                {category.name}
-              </button>
-            ))}
+                <FiPlus className="text-lg" /> New Topic
+              </motion.button>
+            </div>
+            
+            {/* Category Filter Pills */}
+            <div className="mt-6 flex flex-wrap gap-2">
+              {categories.map((category, index) => (
+                <motion.button
+                  key={category.id}
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.3, delay: 0.4 + index * 0.05 }}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
+                    selectedCategory === category.id 
+                      ? 'bg-primary text-white shadow-md' 
+                      : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                  }`}
+                  onClick={() => handleCategoryChange(category.id)}
+                >
+                  {category.name}
+                </motion.button>
+              ))}
+            </div>
           </div>
-          
-          <button 
-              className="btn btn-primary w-full md:w-auto gap-2"
-              onClick={() => {
-                if (!currentUser) {
-                  toast.info('You must be logged in to create a topic');
-                  navigate('/login', { state: { from: '/forum' } });
-                  return;
-                }
-                setShowNewTopicModal(true);
-              }}
-            >
-              <FiPlus /> New Topic
-            </button>
         </motion.div>
         
         {loading ? (
@@ -621,88 +652,110 @@ export default function Forum() {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.4 }}
           >
-            <div className="overflow-x-auto bg-base-100 rounded-lg shadow-lg">
-              <table className="table w-full">
-                <thead>
-                  <tr>
-                    <th>Topic</th>
-                    <th className="hidden md:table-cell">Category</th>
-                    <th className="hidden md:table-cell">Author</th>
-                    <th className="hidden md:table-cell">Replies</th>
-                    <th className="hidden md:table-cell">Views</th>
-                    <th>Last Activity</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {currentTopics.length > 0 ? (
-                    currentTopics.map(topic => (
-                      <tr key={topic.id} className={topic.isSticky ? 'bg-base-200' : ''}>
-                        <td>
-                          <div className="flex flex-col">
-                            <Link 
-                              to={`/forum/${topic.id}`} 
-                              className="font-medium hover:text-primary transition-colors flex items-center gap-2"
-                              onClick={async () => {
-                                // Update view count when clicking on a topic
-                                try {
-                                  const topicRef = doc(db, 'forumTopics', topic.id);
-                                  await updateDoc(topicRef, {
-                                    views: increment(1)
-                                  });
-                                } catch (error) {
-                                  console.error('Error updating view count:', error);
-                                }
-                              }}
-                            >
-                              {topic.isSticky && <span className="badge badge-sm badge-primary">Sticky</span>}
-                              {topic.isLocked && <span className="badge badge-sm badge-error ml-1">Locked</span>}
-                              {topic.title}
-                            </Link>
-                            <div className="text-xs text-base-content/70 mt-1 md:hidden">
-                              <span className={`badge badge-sm ${getCategoryBadgeColor(topic.category)} mr-2`}>{topic.category}</span>
-                              <span className="mr-2"><FiUser className="inline mr-1" size={12} /> {topic.authorName || topic.author}</span>
-                              <span><FiMessageSquare className="inline mr-1" size={12} /> {topic.replies}</span>
-                            </div>
+            {/* Topics Grid */}
+            <div className="space-y-4">
+              {currentTopics.length > 0 ? (
+                currentTopics.map((topic, index) => (
+                  <motion.div
+                    key={topic.id}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.4, delay: index * 0.05 }}
+                    whileHover={{ y: -4, scale: 1.02 }}
+                    className="group bg-white/95 backdrop-blur-sm rounded-2xl shadow-lg border border-white/20 hover:shadow-2xl hover:border-primary/20 transition-all duration-300 cursor-pointer"
+                    onClick={async () => {
+                      // Update view count when clicking on a topic
+                      try {
+                        const topicRef = doc(db, 'forumTopics', topic.id);
+                        await updateDoc(topicRef, {
+                          views: increment(1)
+                        });
+                      } catch (error) {
+                        console.error('Error updating view count:', error);
+                      }
+                      // Navigate to the topic
+                      navigate(`/forum/${topic.id}`);
+                    }}
+                  >
+                    <div className="p-6 group-hover:bg-gradient-to-r group-hover:from-primary/5 group-hover:to-transparent transition-all duration-300">
+                      <div className="flex flex-col lg:flex-row lg:items-center gap-4">
+                        {/* Topic Info */}
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2 mb-2">
+                            {topic.isSticky && (
+                              <span className="px-2 py-1 bg-primary/10 text-primary text-xs font-medium rounded-full group-hover:bg-primary/20 transition-colors duration-300">
+                                📌 Sticky
+                              </span>
+                            )}
+                            {topic.isLocked && (
+                              <span className="px-2 py-1 bg-red-100 text-red-600 text-xs font-medium rounded-full group-hover:bg-red-200 transition-colors duration-300">
+                                🔒 Locked
+                              </span>
+                            )}
+                            <span className={`px-2 py-1 text-xs font-medium rounded-full transition-all duration-300 ${getCategoryBadgeColor(topic.category)}`}>
+                              {topic.category}
+                            </span>
                           </div>
-                        </td>
-                        <td className="hidden md:table-cell">
-                          <span className={`badge ${getCategoryBadgeColor(topic.category)}`}>{topic.category}</span>
-                        </td>
-                        <td className="hidden md:table-cell">
-                          <div className="flex items-center gap-2">
-                            <div className="avatar">
-                              <div className="w-8 rounded-full">
-                                {topic.authorAvatar ? (
-                                  <img src={topic.authorAvatar} alt={topic.authorName || topic.author} />
-                                ) : (
-                                  <div className="bg-primary text-white flex items-center justify-center h-full">
-                                    {(topic.authorName || topic.author || '?').charAt(0).toUpperCase()}
-                                  </div>
-                                )}
+                          
+                          <h3 className="text-lg font-semibold text-gray-800 group-hover:text-primary transition-colors duration-300 line-clamp-2 mb-2">
+                            {topic.title}
+                          </h3>
+                          
+                          <div className="flex items-center gap-2 text-sm text-gray-500 group-hover:text-gray-600 transition-colors duration-300">
+                            <div className="flex items-center gap-1">
+                              <div className="w-6 h-6 rounded-full bg-gradient-to-br from-primary to-primary/70 text-white flex items-center justify-center text-xs font-medium group-hover:scale-110 transition-transform duration-300">
+                                {(topic.authorName || topic.author || '?').charAt(0).toUpperCase()}
                               </div>
+                              <span>by {topic.authorName || topic.author}</span>
                             </div>
-                            <span>{topic.authorName || topic.author}</span>
+                            <span>•</span>
+                            <span>{topic.date}</span>
                           </div>
-                        </td>
-                        <td className="hidden md:table-cell">{topic.replies}</td>
-                        <td className="hidden md:table-cell">{topic.views}</td>
-                        <td>
-                          <div className="flex flex-col">
-                            <span>{topic.lastActivity ? new Date(topic.lastActivity).toLocaleDateString() : 'N/A'}</span>
-                            <span className="text-xs text-base-content/70">{Array.isArray(topic.likes) ? topic.likes.length : (topic.likes || 0)} likes</span>
+                        </div>
+                        
+                        {/* Stats */}
+                        <div className="flex items-center gap-6 lg:gap-8">
+                          <div className="flex items-center gap-4">
+                            <div className="text-center group-hover:scale-105 transition-transform duration-300">
+                              <div className="text-lg font-bold text-gray-800 group-hover:text-primary transition-colors duration-300">{topic.replies}</div>
+                              <div className="text-xs text-gray-500 group-hover:text-gray-600 transition-colors duration-300">Replies</div>
+                            </div>
+                            <div className="text-center group-hover:scale-105 transition-transform duration-300">
+                              <div className="text-lg font-bold text-gray-800 group-hover:text-primary transition-colors duration-300">{topic.views}</div>
+                              <div className="text-xs text-gray-500 group-hover:text-gray-600 transition-colors duration-300">Views</div>
+                            </div>
+                            <div className="text-center group-hover:scale-105 transition-transform duration-300">
+                              <div className="text-lg font-bold text-gray-800 group-hover:text-primary transition-colors duration-300">{Array.isArray(topic.likes) ? topic.likes.length : (topic.likes || 0)}</div>
+                              <div className="text-xs text-gray-500 group-hover:text-gray-600 transition-colors duration-300">Likes</div>
+                            </div>
                           </div>
-                        </td>
-                      </tr>
-                    ))
-                  ) : (
-                    <tr>
-                      <td colSpan="6" className="text-center py-8">
-                        No topics found matching your criteria.
-                      </td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
+                          
+                          {/* Last Activity */}
+                          <div className="hidden lg:flex flex-col items-center text-center min-w-[120px] group-hover:scale-105 transition-transform duration-300">
+                            <div className="flex items-center gap-2 mb-1">
+                              <div className="w-6 h-6 rounded-full bg-gradient-to-br from-gray-400 to-gray-500 text-white flex items-center justify-center text-xs font-medium">
+                                {(topic.authorName || topic.author || '?').charAt(0).toUpperCase()}
+                              </div>
+                              <span className="text-xs text-gray-600 font-medium group-hover:text-gray-700 transition-colors duration-300">
+                                {topic.authorName || topic.author}
+                              </span>
+                            </div>
+                            <span className="text-xs text-gray-500 group-hover:text-gray-600 transition-colors duration-300">
+                              {topic.lastActivity ? new Date(topic.lastActivity).toLocaleDateString() : 'N/A'}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </motion.div>
+                ))
+              ) : (
+                <div className="text-center py-12">
+                  <FiAlertCircle className="mx-auto text-4xl text-gray-400 mb-4" />
+                  <p className="text-lg text-gray-600">No topics found matching your criteria.</p>
+                  <p className="text-sm text-gray-500 mt-2">Try adjusting your search or category filter.</p>
+                </div>
+              )}
             </div>
             
             {/* Load More Button */}
@@ -727,120 +780,159 @@ export default function Forum() {
             
             {/* Pagination for filtered results */}
             {(searchTerm || selectedCategory !== 'all') && totalPages > 1 && (
-              <div className="flex justify-center mt-8">
-                <div className="join">
-                  <button 
-                    className="join-item btn"
-                    onClick={() => paginate(Math.max(1, currentPage - 1))}
-                    disabled={currentPage === 1}
-                  >
-                    «
-                  </button>
-                  
-                  {[...Array(totalPages).keys()].map(number => (
-                    <button
-                      key={number + 1}
-                      onClick={() => paginate(number + 1)}
-                      className={`join-item btn ${currentPage === number + 1 ? 'btn-active' : ''}`}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.7 }}
+                className="flex justify-center mt-12"
+              >
+                <div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-lg border border-white/20 p-4">
+                  <div className="flex items-center gap-2">
+                    <motion.button 
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      className="px-4 py-2 rounded-xl bg-gray-100 text-gray-600 hover:bg-gray-200 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                      onClick={() => paginate(Math.max(1, currentPage - 1))}
+                      disabled={currentPage === 1}
                     >
-                      {number + 1}
-                    </button>
-                  ))}
-                  
-                  <button 
-                    className="join-item btn"
-                    onClick={() => paginate(Math.min(totalPages, currentPage + 1))}
-                    disabled={currentPage === totalPages}
-                  >
-                    »
-                  </button>
+                      Previous
+                    </motion.button>
+                    
+                    {[...Array(totalPages).keys()].map(number => (
+                      <motion.button
+                        key={number + 1}
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        onClick={() => paginate(number + 1)}
+                        className={`px-4 py-2 rounded-xl transition-all duration-200 ${
+                          currentPage === number + 1 
+                            ? 'bg-primary text-white shadow-md' 
+                            : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                        }`}
+                      >
+                        {number + 1}
+                      </motion.button>
+                    ))}
+                    
+                    <motion.button 
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      className="px-4 py-2 rounded-xl bg-gray-100 text-gray-600 hover:bg-gray-200 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                      onClick={() => paginate(Math.min(totalPages, currentPage + 1))}
+                      disabled={currentPage === totalPages}
+                    >
+                      Next
+                    </motion.button>
+                  </div>
                 </div>
-              </div>
+              </motion.div>
             )}
           </motion.div>
         )}
+        </div>
       </div>
       
       {/* New Topic Modal */}
       {showNewTopicModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-base-100 p-6 rounded-lg shadow-lg max-w-2xl w-full">
-            <h3 className="font-bold text-lg mb-4">Create New Topic</h3>
-            
-            <form onSubmit={handleNewTopicSubmit}>
-              <div className="form-control mb-4">
-                <label className="label">
-                  <span className="label-text">Title</span>
-                </label>
-                <input 
-                  type="text" 
-                  name="title"
-                  className="input input-bordered w-full" 
-                  placeholder="Enter topic title"
-                  value={newTopic.title}
-                  onChange={handleNewTopicChange}
-                  required
-                />
-              </div>
-              
-              <div className="form-control mb-4">
-                <label className="label">
-                  <span className="label-text">Category</span>
-                </label>
-                <select 
-                  name="category"
-                  className="select select-bordered w-full"
-                  value={newTopic.category}
-                  onChange={handleNewTopicChange}
-                  required
-                >
-                  <option value="" disabled>Select a category</option>
-                  {categories.filter(cat => cat.id !== 'all').map(category => (
-                    <option key={category.id} value={category.id}>{category.name}</option>
-                  ))}
-                </select>
-              </div>
-              
-              <div className="form-control mb-6">
-                <label className="label">
-                  <span className="label-text">Content</span>
-                </label>
-                <textarea 
-                  name="content"
-                  className="textarea textarea-bordered w-full" 
-                  placeholder="Write your topic content here..."
-                  rows="6"
-                  value={newTopic.content}
-                  onChange={handleNewTopicChange}
-                  required
-                ></textarea>
-              </div>
-              
-              <div className="flex justify-end gap-2">
-                <button 
-                  type="button" 
-                  className="btn btn-ghost"
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.9, y: 20 }}
+            className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+          >
+            <div className="p-6 md:p-8">
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-2xl font-bold text-gray-800">Create New Topic</h3>
+                <motion.button
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
                   onClick={() => setShowNewTopicModal(false)}
+                  className="p-2 rounded-full hover:bg-gray-100 transition-colors"
                 >
-                  Cancel
-                </button>
-                <button 
-                type="submit" 
-                className="btn btn-primary" 
-                disabled={submitting}
-              >
-                {submitting ? (
-                  <>
-                    <LoadingSpinner size="sm" />
-                    Creating...
-                  </>
-                ) : (
-                  'Create Topic'
-                )}
-              </button>
+                  <FiX className="text-xl text-gray-500" />
+                </motion.button>
               </div>
-            </form>
-          </div>
+              
+              <form onSubmit={handleNewTopicSubmit} className="space-y-6">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Topic Title
+                  </label>
+                  <input 
+                    type="text" 
+                    name="title"
+                    className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-200 text-gray-700" 
+                    placeholder="Enter a descriptive title for your topic..."
+                    value={newTopic.title}
+                    onChange={handleNewTopicChange}
+                    required
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Category
+                  </label>
+                  <select 
+                    name="category"
+                    className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-200 text-gray-700"
+                    value={newTopic.category}
+                    onChange={handleNewTopicChange}
+                    required
+                  >
+                    <option value="" disabled>Select a category</option>
+                    {categories.filter(cat => cat.id !== 'all').map(category => (
+                      <option key={category.id} value={category.id}>{category.name}</option>
+                    ))}
+                  </select>
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Content
+                  </label>
+                  <textarea 
+                    name="content"
+                    className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-200 text-gray-700 resize-none" 
+                    rows="6"
+                    placeholder="Share your thoughts, ask questions, or start a discussion..."
+                    value={newTopic.content}
+                    onChange={handleNewTopicChange}
+                    required
+                  ></textarea>
+                </div>
+                
+                <div className="flex gap-3 pt-4">
+                  <motion.button 
+                    type="button"
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    className="flex-1 px-6 py-3 bg-gray-100 text-gray-700 rounded-xl font-medium hover:bg-gray-200 transition-all duration-200"
+                    onClick={() => setShowNewTopicModal(false)}
+                  >
+                    Cancel
+                  </motion.button>
+                  <motion.button 
+                    type="submit"
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    className="flex-1 px-6 py-3 bg-primary text-white rounded-xl font-medium hover:shadow-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                    disabled={submitting}
+                  >
+                    {submitting ? (
+                      <span className="flex items-center justify-center gap-2">
+                        <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                        Creating...
+                      </span>
+                    ) : (
+                      'Create Topic'
+                    )}
+                  </motion.button>
+                </div>
+              </form>
+            </div>
+          </motion.div>
         </div>
       )}
     </MainLayout>

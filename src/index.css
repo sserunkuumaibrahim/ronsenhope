@@ -11,8 +11,8 @@
   color: #000000;
   background-color: #FFFFFF;
   
-  /* RGB values for the primary color #FF6B00 */
-  --primary-rgb: 255, 107, 0;
+  /* Primary color RGB values for rose-pink */
+  --primary-rgb: 254, 79, 195;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;

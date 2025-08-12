@@ -175,7 +175,7 @@ export default function Programs() {
             </button>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="space-y-8">
             {filteredPrograms.map((program, index) => (
               <motion.div
                 key={program.id}
@@ -184,48 +184,61 @@ export default function Programs() {
                 transition={{ duration: 0.5, delay: index * 0.1 }}
                 className="card bg-base-200 shadow-xl overflow-hidden"
               >
-                <figure className="h-48 relative">
-                  <img 
-                    src={program.image} 
-                    alt={program.title} 
-                    className="w-full h-full object-cover"
-                  />
-                  <div className="absolute top-4 right-4 badge badge-primary">{program.category}</div>
-                </figure>
-                <div className="card-body">
-                  <h2 className="card-title">{program.title}</h2>
-                  <p className="text-base-content/70">{program.description}</p>
-                  
-                  <div className="mt-4 space-y-3">
-                    <div className="flex items-center text-sm">
-                      <FiMapPin className="mr-2" />
-                      <span>{program.location}</span>
+                <div className="flex flex-col lg:flex-row">
+                  {/* Content Section - Left Side */}
+                  <div className="card-body flex-1 lg:w-2/3">
+                    <div className="flex items-start justify-between mb-4">
+                      <h2 className="card-title text-2xl">{program.title}</h2>
+                      <div className="badge badge-primary">{program.category}</div>
                     </div>
-                    <div className="flex items-center text-sm">
-                      <FiCalendar className="mr-2" />
-                      <span>Started: {program.startDate}</span>
+                    
+                    <p className="text-base-content/70 mb-6">{program.description}</p>
+                    
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+                      <div className="flex items-center text-sm">
+                        <FiMapPin className="mr-2 text-primary" />
+                        <span>{program.location}</span>
+                      </div>
+                      <div className="flex items-center text-sm">
+                        <FiCalendar className="mr-2 text-primary" />
+                        <span>Started: {program.startDate}</span>
+                      </div>
+                      <div className="flex items-center text-sm">
+                        <FiUsers className="mr-2 text-primary" />
+                        <span>{program.participants.toLocaleString()} participants</span>
+                      </div>
                     </div>
-                    <div className="flex items-center text-sm">
-                      <FiUsers className="mr-2" />
-                      <span>{program.participants.toLocaleString()} participants</span>
+                    
+                    <div className="mb-6">
+                      <div className="flex justify-between items-center mb-2">
+                        <p className="text-sm font-medium">Program Progress</p>
+                        <span className="text-sm font-bold text-primary">{program.progress}% complete</span>
+                      </div>
+                      <div className="w-full bg-base-300 rounded-full h-3">
+                        <div 
+                          className="bg-primary h-3 rounded-full transition-all duration-500" 
+                          style={{ width: `${program.progress}%` }}
+                        ></div>
+                      </div>
+                    </div>
+                    
+                    <div className="card-actions">
+                      <Link to={`/programs/${program.id}`} className="btn btn-primary gap-2">
+                        Learn More <FiArrowRight />
+                      </Link>
                     </div>
                   </div>
                   
-                  <div className="mt-4">
-                    <p className="text-sm mb-1">Program Progress</p>
-                    <div className="w-full bg-base-300 rounded-full h-2.5">
-                      <div 
-                        className="bg-primary h-2.5 rounded-full" 
-                        style={{ width: `${program.progress}%` }}
-                      ></div>
-                    </div>
-                    <p className="text-right text-xs mt-1">{program.progress}% complete</p>
-                  </div>
-                  
-                  <div className="card-actions justify-end mt-4">
-                    <Link to={`/programs/${program.id}`} className="btn btn-primary btn-sm gap-2">
-                      Learn More <FiArrowRight />
-                    </Link>
+                  {/* Image Section - Right Side */}
+                  <div className="lg:w-1/3 relative">
+                    <figure className="h-64 lg:h-full relative">
+                      <img 
+                        src={program.image} 
+                        alt={program.title} 
+                        className="w-full h-full object-cover"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+                    </figure>
                   </div>
                 </div>
               </motion.div>

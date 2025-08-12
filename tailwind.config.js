@@ -7,9 +7,14 @@ export default {
   theme: {
     extend: {
       colors: {
-        primary: '#FF6B00',   // Orange
-        secondary: '#000000', // Black
+        primary: '#FE4FC3',   // Rose Pink
+        secondary: '#FF1CB4', // Shocking Pink
         accent: '#FFFFFF',    // White
+        silver: '#BBBAB8',    // Silver
+      },
+      backgroundImage: {
+        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+        'gradient-conic': 'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
       },
     },
   },
@@ -17,10 +22,10 @@ export default {
   daisyui: {
     themes: [{
       mytheme: {
-        "primary": "#FF6B00",
-        "secondary": "#000000",
+        "primary": "#FE4FC3",
+        "secondary": "#FF1CB4",
         "accent": "#FFFFFF",
-        "neutral": "#333333",
+        "neutral": "#000000",
         "base-100": "#FFFFFF",
         "base-200": "#F8F8F8",
         "base-300": "#EEEEEE",
@@ -31,4 +36,4 @@ export default {
       },
     }],
   },
-};
+}

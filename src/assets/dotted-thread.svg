@@ -1,0 +1,22 @@
+<svg width="800" height="600" viewBox="0 0 800 600" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <pattern id="dottedLine" patternUnits="userSpaceOnUse" width="20" height="20">
+      <circle cx="10" cy="10" r="2" fill="rgba(255,255,255,0.15)"/>
+    </pattern>
+  </defs>
+  
+  <!-- Curved dotted thread paths -->
+  <path d="M50 100 Q200 50 350 120 T650 80" stroke="url(#dottedLine)" stroke-width="4" fill="none" stroke-dasharray="8,12"/>
+  <path d="M100 200 Q300 150 500 220 T750 180" stroke="url(#dottedLine)" stroke-width="3" fill="none" stroke-dasharray="6,10"/>
+  <path d="M0 300 Q150 250 300 320 T600 280" stroke="url(#dottedLine)" stroke-width="3" fill="none" stroke-dasharray="6,10"/>
+  <path d="M150 400 Q350 350 550 420 T800 380" stroke="url(#dottedLine)" stroke-width="4" fill="none" stroke-dasharray="8,12"/>
+  <path d="M50 500 Q250 450 450 520 T750 480" stroke="url(#dottedLine)" stroke-width="3" fill="none" stroke-dasharray="6,10"/>
+  
+  <!-- Additional scattered dots -->
+  <circle cx="120" cy="80" r="1.5" fill="rgba(255,255,255,0.1)"/>
+  <circle cx="280" cy="160" r="2" fill="rgba(255,255,255,0.12)"/>
+  <circle cx="450" cy="240" r="1.5" fill="rgba(255,255,255,0.1)"/>
+  <circle cx="620" cy="320" r="2" fill="rgba(255,255,255,0.12)"/>
+  <circle cx="180" cy="440" r="1.5" fill="rgba(255,255,255,0.1)"/>
+  <circle cx="520" cy="520" r="2" fill="rgba(255,255,255,0.12)"/>
+</svg>
