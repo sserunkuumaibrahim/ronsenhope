@@ -11,6 +11,7 @@ import ForgotPassword from './pages/auth/ForgotPassword';
 import NotFound from './pages/NotFound';
 import Unauthorized from './pages/Unauthorized';
 import About from './pages/About';
+import Gallery from './pages/Gallery';
 
 // Admin Pages
 import Dashboard from './pages/admin/Dashboard';
@@ -57,6 +58,7 @@ function App() {
             {/* Content Routes */}
             <Route path="/programs" element={<Programs />} />
             <Route path="/programs/:id" element={<ProgramDetail />} />
+            <Route path="/gallery" element={<Gallery />} />
             <Route path="/donate" element={<Donate />} />
             <Route path="/volunteer" element={<Volunteer />} />
             <Route path="/blog" element={<Blog />} />

@@ -33,6 +33,8 @@ export default function MainLayout({ children }) {
             {/* Desktop Navigation */}
             <nav className="hidden md:flex space-x-6 items-center">
               <Link to="/" className="hover:opacity-80 transition-colors">Home</Link>
+              <Link to="/programs" className="hover:opacity-80 transition-colors">Programs</Link>
+              <Link to="/gallery" className="hover:opacity-80 transition-colors">Gallery</Link>
               <Link to="/blog" className="hover:opacity-80 transition-colors">Blog</Link>
               <Link to="/forum" className="hover:opacity-80 transition-colors">Forum</Link>
               <Link to="/about" className="hover:opacity-80 transition-colors">About Us</Link>
@@ -88,6 +90,8 @@ export default function MainLayout({ children }) {
           >
             <nav className="flex flex-col space-y-2 p-4">
               <Link to="/" className="p-2 hover:bg-base-300 rounded-md">Home</Link>
+              <Link to="/programs" className="p-2 hover:bg-base-300 rounded-md">Programs</Link>
+              <Link to="/gallery" className="p-2 hover:bg-base-300 rounded-md">Gallery</Link>
               <Link to="/blog" className="p-2 hover:bg-base-300 rounded-md">Blog</Link>
               <Link to="/forum" className="p-2 hover:bg-base-300 rounded-md">Forum</Link>
               <Link to="/about" className="p-2 hover:bg-base-300 rounded-md">About Us</Link>
