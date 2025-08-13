@@ -31,9 +31,10 @@ export default function MainLayout({ children }) {
             <Link to="/" className="text-2xl font-bold">Charity NGO</Link>
             
             {/* Desktop Navigation */}
-            <nav className="hidden md:flex space-x-6 items-center">
+            <nav className="hidden xl:flex space-x-6 items-center">
               <Link to="/" className="hover:opacity-80 transition-colors">Home</Link>
               <Link to="/programs" className="hover:opacity-80 transition-colors">Programs</Link>
+              <Link to="/volunteer" className="hover:opacity-80 transition-colors">Volunteer</Link>
               <Link to="/gallery" className="hover:opacity-80 transition-colors">Gallery</Link>
               <Link to="/blog" className="hover:opacity-80 transition-colors">Blog</Link>
               <Link to="/forum" className="hover:opacity-80 transition-colors">Forum</Link>
@@ -62,14 +63,41 @@ export default function MainLayout({ children }) {
               ) : (
                 <div className="flex space-x-2">
                   <Link to="/login" className="btn btn-sm btn-ghost hover:bg-primary-focus">Login</Link>
-                  <Link to="/signup" className="btn btn-sm btn-secondary">Sign Up</Link>
+                  <Link to="/signup" className="btn btn-sm bg-white text-primary hover:bg-gray-50 border border-primary">Sign Up</Link>
                 </div>
               )}
             </nav>
             
+            {/* Tablet Auth Buttons */}
+            <div className="hidden md:flex xl:hidden items-center space-x-2">
+              {currentUser ? (
+                <div className="dropdown dropdown-end">
+                  <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
+                    <div className="w-10 rounded-full bg-secondary flex items-center justify-center">
+                      <span className="text-lg font-bold text-accent">
+                        {currentUser.displayName ? currentUser.displayName.charAt(0).toUpperCase() : 'U'}
+                      </span>
+                    </div>
+                  </div>
+                  <ul tabIndex={0} className="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-52 text-neutral">
+                    <li><Link to="/profile">Profile</Link></li>
+                    {currentUser.role === 'admin' && (
+                      <li><Link to="/admin">Admin Dashboard</Link></li>
+                    )}
+                    <li><button onClick={handleLogout}>Logout</button></li>
+                  </ul>
+                </div>
+              ) : (
+                <div className="flex space-x-2">
+                  <Link to="/login" className="btn btn-sm btn-ghost hover:bg-primary-focus">Login</Link>
+                  <Link to="/signup" className="btn btn-sm bg-white text-primary hover:bg-gray-50 border border-primary">Sign Up</Link>
+                </div>
+              )}
+            </div>
+            
             {/* Mobile Menu Button */}
             <button 
-              className="md:hidden text-2xl focus:outline-none"
+              className="xl:hidden text-2xl focus:outline-none"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
             >
               {isMenuOpen ? <FiX /> : <FiMenu />}
@@ -86,38 +114,44 @@ export default function MainLayout({ children }) {
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.3 }}
-            className="md:hidden bg-base-200 overflow-hidden"
+            className="xl:hidden bg-white overflow-hidden shadow-lg"
           >
             <nav className="flex flex-col space-y-2 p-4">
-              <Link to="/" className="p-2 hover:bg-base-300 rounded-md">Home</Link>
-              <Link to="/programs" className="p-2 hover:bg-base-300 rounded-md">Programs</Link>
-              <Link to="/gallery" className="p-2 hover:bg-base-300 rounded-md">Gallery</Link>
-              <Link to="/blog" className="p-2 hover:bg-base-300 rounded-md">Blog</Link>
-              <Link to="/forum" className="p-2 hover:bg-base-300 rounded-md">Forum</Link>
-              <Link to="/about" className="p-2 hover:bg-base-300 rounded-md">About Us</Link>
-              <Link to="/contact" className="p-2 hover:bg-base-300 rounded-md">Contact</Link>
+              <Link to="/" className="text-gray-700 hover:text-white hover:bg-primary transition-all duration-200 py-3 px-4 rounded-lg">Home</Link>
+              <Link to="/programs" className="text-gray-700 hover:text-white hover:bg-primary transition-all duration-200 py-3 px-4 rounded-lg">Programs</Link>
+              <Link to="/volunteer" className="text-gray-700 hover:text-white hover:bg-primary transition-all duration-200 py-3 px-4 rounded-lg">Volunteer</Link>
+              <Link to="/gallery" className="text-gray-700 hover:text-white hover:bg-primary transition-all duration-200 py-3 px-4 rounded-lg">Gallery</Link>
+              <Link to="/blog" className="text-gray-700 hover:text-white hover:bg-primary transition-all duration-200 py-3 px-4 rounded-lg">Blog</Link>
+              <Link to="/forum" className="text-gray-700 hover:text-white hover:bg-primary transition-all duration-200 py-3 px-4 rounded-lg">Forum</Link>
+              <Link to="/about" className="text-gray-700 hover:text-white hover:bg-primary transition-all duration-200 py-3 px-4 rounded-lg">About Us</Link>
+              <Link to="/contact" className="text-gray-700 hover:text-white hover:bg-primary transition-all duration-200 py-3 px-4 rounded-lg">Contact</Link>
               
-              {currentUser ? (
-                <>
-                  <div className="divider my-1"></div>
-                  <Link to="/profile" className="p-2 hover:bg-base-300 rounded-md">Profile</Link>
-                  {currentUser.role === 'admin' && (
-                    <Link to="/admin" className="p-2 hover:bg-base-300 rounded-md">Admin Dashboard</Link>
-                  )}
-                  <button 
-                    onClick={handleLogout}
-                    className="p-2 text-left hover:bg-base-300 rounded-md"
-                  >
-                    Logout
-                  </button>
-                </>
-              ) : (
-                <>
-                  <div className="divider my-1"></div>
-                  <Link to="/login" className="p-2 hover:bg-base-300 rounded-md">Login</Link>
-                  <Link to="/signup" className="p-2 hover:bg-base-300 rounded-md">Sign Up</Link>
-                </>
-              )}
+              {/* Mobile Auth Buttons - Only show on mobile, not tablets */}
+              <div className="md:hidden">
+                {currentUser ? (
+                  <>
+                    <div className="divider my-4"></div>
+                    <Link to="/profile" className="text-gray-700 hover:text-white hover:bg-primary transition-all duration-200 py-3 px-4 rounded-lg block">Profile</Link>
+                    {currentUser.role === 'admin' && (
+                      <Link to="/admin" className="text-gray-700 hover:text-white hover:bg-primary transition-all duration-200 py-3 px-4 rounded-lg block mt-2">Admin Dashboard</Link>
+                    )}
+                    <button 
+                      onClick={handleLogout}
+                      className="text-gray-700 hover:text-white hover:bg-red-500 transition-all duration-200 py-3 px-4 rounded-lg text-left w-full mt-2"
+                    >
+                      Logout
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <div className="divider my-4"></div>
+                    <div className="flex flex-col space-y-3">
+                      <Link to="/login" className="bg-gray-100 text-gray-700 hover:bg-gray-200 transition-all duration-200 py-3 px-6 rounded-lg text-center font-medium border border-gray-300">Login</Link>
+                      <Link to="/signup" className="bg-white text-primary px-6 py-3 rounded-lg hover:bg-gray-50 transition-all duration-200 text-center font-medium shadow-md border border-primary">Sign Up</Link>
+                    </div>
+                  </>
+                )}
+              </div>
             </nav>
           </motion.div>
         )}

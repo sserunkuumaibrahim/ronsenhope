@@ -257,150 +257,50 @@ export default function Home() {
       </Helmet>
 
       {/* Hero Section */}
-      <section className="relative bg-accent text-secondary py-16 md:py-24 bg-mesh-gradient-1 overflow-hidden">
-        {/* Background decorative elements */}
-        <div className="absolute inset-0 pointer-events-none">
-          {/* Dotted thread pattern */}
-          <svg 
-            className="absolute inset-0 w-full h-full opacity-20" 
-            viewBox="0 0 800 600" 
-            fill="none" 
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path 
-              d="M50 100 Q200 50 350 120 T650 80" 
-              stroke="rgba(255,255,255,0.3)" 
-              strokeWidth="3" 
-              fill="none" 
-              strokeDasharray="8,12"
-            />
-            <path 
-              d="M100 200 Q300 150 500 220 T750 180" 
-              stroke="rgba(255,255,255,0.25)" 
-              strokeWidth="2" 
-              fill="none" 
-              strokeDasharray="6,10"
-            />
-            <path 
-              d="M0 300 Q150 250 300 320 T600 280" 
-              stroke="rgba(255,255,255,0.2)" 
-              strokeWidth="2" 
-              fill="none" 
-              strokeDasharray="6,10"
-            />
-            <path 
-              d="M150 400 Q350 350 550 420 T800 380" 
-              stroke="rgba(255,255,255,0.3)" 
-              strokeWidth="3" 
-              fill="none" 
-              strokeDasharray="8,12"
-            />
-            <circle cx="120" cy="80" r="2" fill="rgba(255,255,255,0.15)"/>
-            <circle cx="280" cy="160" r="1.5" fill="rgba(255,255,255,0.12)"/>
-            <circle cx="450" cy="240" r="2" fill="rgba(255,255,255,0.15)"/>
-            <circle cx="620" cy="320" r="1.5" fill="rgba(255,255,255,0.12)"/>
-            <circle cx="180" cy="440" r="2" fill="rgba(255,255,255,0.15)"/>
-            <circle cx="520" cy="520" r="1.5" fill="rgba(255,255,255,0.12)"/>
-          </svg>
-          
-          {/* Paper doves */}
+      <section className="relative py-20 md:py-32 overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-pink-400 via-pink-500 to-white"></div>
+        <div className="absolute inset-0 bg-black/20"></div>
+        
+        {/* Animated background elements */}
+        <div className="absolute inset-0">
           <motion.div
-            initial={{ opacity: 0, x: -50, y: 20 }}
-            animate={{ 
-              opacity: [0.4, 0.6, 0.4],
-              x: [-50, -30, -50],
-              y: [20, 10, 20]
+            className="absolute top-20 left-10 w-32 h-32 bg-white/10 rounded-full blur-xl"
+            animate={{
+              x: [0, 30, 0],
+              y: [0, -20, 0],
+            }}
+            transition={{
+              duration: 6,
+              repeat: Infinity,
+              ease: "easeInOut"
+            }}
+          />
+          <motion.div
+            className="absolute bottom-20 right-10 w-48 h-48 bg-white/5 rounded-full blur-2xl"
+            animate={{
+              x: [0, -40, 0],
+              y: [0, 30, 0],
             }}
             transition={{
               duration: 8,
               repeat: Infinity,
               ease: "easeInOut"
             }}
-            className="absolute top-20 left-10 w-24 h-16"
-          >
-            <svg 
-              className="w-full h-full" 
-              viewBox="0 0 120 80" 
-              fill="none" 
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <ellipse cx="60" cy="45" rx="25" ry="15" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.1)" strokeWidth="1"/>
-              <circle cx="45" cy="35" r="8" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.1)" strokeWidth="1"/>
-              <path d="M37 35 L32 33 L37 37 Z" fill="rgba(255,255,255,0.06)"/>
-              <path d="M50 40 Q70 25 95 35 Q85 45 70 50 Q60 45 50 40 Z" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.08)" strokeWidth="1"/>
-              <path d="M55 45 Q75 30 100 40 Q90 50 75 55 Q65 50 55 45 Z" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.06)" strokeWidth="1"/>
-              <path d="M85 50 Q95 55 105 45 Q100 60 90 55 Q85 52 85 50 Z" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.08)" strokeWidth="1"/>
-              <circle cx="42" cy="32" r="1.5" fill="rgba(255,255,255,0.1)"/>
-            </svg>
-          </motion.div>
-          
-          <motion.div
-            initial={{ opacity: 0, x: 100, y: -20 }}
-            animate={{ 
-              opacity: [0.3, 0.5, 0.3],
-              x: [100, 80, 100],
-              y: [-20, -30, -20]
-            }}
-            transition={{
-              duration: 10,
-              repeat: Infinity,
-              ease: "easeInOut",
-              delay: 2
-            }}
-            className="absolute top-32 right-20 w-20 h-14"
-            style={{ transform: 'scaleX(-1)' }}
-          >
-            <svg 
-              className="w-full h-full" 
-              viewBox="0 0 120 80" 
-              fill="none" 
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <ellipse cx="60" cy="45" rx="25" ry="15" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.1)" strokeWidth="1"/>
-              <circle cx="45" cy="35" r="8" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.1)" strokeWidth="1"/>
-              <path d="M37 35 L32 33 L37 37 Z" fill="rgba(255,255,255,0.06)"/>
-              <path d="M50 40 Q70 25 95 35 Q85 45 70 50 Q60 45 50 40 Z" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.08)" strokeWidth="1"/>
-              <path d="M55 45 Q75 30 100 40 Q90 50 75 55 Q65 50 55 45 Z" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.06)" strokeWidth="1"/>
-              <path d="M85 50 Q95 55 105 45 Q100 60 90 55 Q85 52 85 50 Z" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.08)" strokeWidth="1"/>
-              <circle cx="42" cy="32" r="1.5" fill="rgba(255,255,255,0.1)"/>
-            </svg>
-          </motion.div>
-          
-          <motion.div
-            initial={{ opacity: 0, x: 50, y: 50 }}
-            animate={{ 
-              opacity: [0.2, 0.4, 0.2],
-              x: [50, 70, 50],
-              y: [50, 40, 50]
-            }}
-            transition={{
-              duration: 12,
-              repeat: Infinity,
-              ease: "easeInOut",
-              delay: 4
-            }}
-            className="absolute bottom-40 left-1/3 w-16 h-12"
-          >
-            <svg 
-              className="w-full h-full" 
-              viewBox="0 0 120 80" 
-              fill="none" 
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <ellipse cx="60" cy="45" rx="25" ry="15" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.1)" strokeWidth="1"/>
-              <circle cx="45" cy="35" r="8" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.1)" strokeWidth="1"/>
-              <path d="M37 35 L32 33 L37 37 Z" fill="rgba(255,255,255,0.06)"/>
-              <path d="M50 40 Q70 25 95 35 Q85 45 70 50 Q60 45 50 40 Z" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.08)" strokeWidth="1"/>
-              <path d="M55 45 Q75 30 100 40 Q90 50 75 55 Q65 50 55 45 Z" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.06)" strokeWidth="1"/>
-              <path d="M85 50 Q95 55 105 45 Q100 60 90 55 Q85 52 85 50 Z" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.08)" strokeWidth="1"/>
-              <circle cx="42" cy="32" r="1.5" fill="rgba(255,255,255,0.1)"/>
-            </svg>
-          </motion.div>
+          />
         </div>
         
-        <div className="container-custom max-w-screen-2xl mx-auto relative z-10">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
-            <div className="text-center lg:text-left text-secondary">
+        <div className="container-custom relative z-10">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div className="text-center lg:text-left text-white">
+              <motion.div
+                initial={{ scale: 0.9, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ duration: 0.6, delay: 0.1 }}
+                className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm rounded-full px-6 py-3 mb-8 border border-white/30"
+              >
+                <FiHeart className="text-pink-200" />
+                <span className="text-sm font-medium">Creating Change Together</span>
+              </motion.div>
               <motion.h1 
                 initial={{ opacity: 0, y: -30, scale: 0.9 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -408,7 +308,7 @@ export default function Home() {
                   duration: 0.6, 
                   ease: "easeOut"
                 }}
-                className="text-4xl md:text-6xl font-bold mb-6"
+                className="text-5xl md:text-7xl font-bold mb-8 bg-gradient-to-r from-white to-pink-100 bg-clip-text text-transparent"
               >
                 Making a Difference Together
               </motion.h1>
@@ -420,7 +320,7 @@ export default function Home() {
                   delay: 0.05,
                   ease: "easeOut"
                 }}
-                className="text-xl md:text-2xl mb-10 max-w-3xl mx-auto lg:mx-0"
+                className="text-xl md:text-2xl mb-10 text-white/90 leading-relaxed max-w-3xl mx-auto lg:mx-0"
               >
                 Join us in our mission to create positive change through community engagement, education, and sustainable development.
               </motion.p>
@@ -440,8 +340,16 @@ export default function Home() {
                   transition={{ type: "spring", stiffness: 400, damping: 17 }}
                   className="w-full sm:w-auto"
                 >
-                  <Link to="/donate" className="btn btn-lg bg-primary text-accent hover:opacity-80 w-full sm:w-auto">
-                    Donate Now
+                  <Link to="/donate" className="group relative px-8 py-4 bg-white text-pink-600 rounded-full font-semibold text-lg shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300 overflow-hidden inline-flex items-center justify-center w-full sm:w-auto">
+                    <span className="relative z-10 flex items-center">
+                      <FiHeart className="mr-2" />
+                      Donate Now
+                    </span>
+                    <div className="absolute inset-0 bg-gradient-to-r from-pink-500 to-pink-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    <span className="absolute inset-0 z-10 flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 font-semibold">
+                      <FiHeart className="mr-2" />
+                      Donate Now
+                    </span>
                   </Link>
                 </motion.div>
                 <motion.div
@@ -450,8 +358,9 @@ export default function Home() {
                   transition={{ type: "spring", stiffness: 400, damping: 17 }}
                   className="w-full sm:w-auto"
                 >
-                  <Link to="/volunteer" className="btn btn-lg btn-outline border-primary text-primary hover:bg-primary hover:text-accent w-full sm:w-auto">
-                    Volunteer
+                  <Link to="/volunteer" className="px-8 py-4 border-2 border-white text-white rounded-full font-semibold text-lg hover:bg-white hover:text-pink-600 transition-all duration-300 backdrop-blur-sm inline-flex items-center justify-center w-full sm:w-auto">
+                    <FiUsers className="mr-2" />
+                    Get Involved
                   </Link>
                 </motion.div>
               </motion.div>
@@ -464,122 +373,75 @@ export default function Home() {
                 duration: 0.7, 
                 ease: "easeOut"
               }}
-              className="relative h-[60vh] sm:h-[70vh] lg:h-[500px] w-full overflow-hidden"
+              className="relative h-[60vh] sm:h-[70vh] lg:h-[500px] min-h-[400px] w-full overflow-hidden rounded-2xl shadow-2xl border border-white/20 backdrop-blur-sm"
             >
-              {/* Grid Layer with Image in Each Div */}
-              {(() => {
-                // Responsive grid configuration
-                const getGridConfig = () => {
-                  if (typeof window !== 'undefined') {
-                    const width = window.innerWidth;
-                    if (width < 640) return { cols: 15, rows: 12 }; // Mobile: 180 pieces
-                    if (width < 768) return { cols: 20, rows: 15 }; // Tablet: 300 pieces
-                    if (width < 1024) return { cols: 25, rows: 18 }; // Small desktop: 450 pieces
-                    return { cols: 30, rows: 20 }; // Large desktop: 600 pieces
-                  }
-                  return { cols: 25, rows: 18 }; // Default fallback
-                };
-                
-                const { cols: gridCols, rows: gridRows } = getGridConfig();
-                const totalPieces = gridCols * gridRows;
-                
-                // Create grid with image pieces
-                const imageGrid = (
-                  <div 
-                    className="absolute inset-0 w-full h-full grid gap-0"
-                    style={{
-                      gridTemplateColumns: `repeat(${gridCols}, 1fr)`,
-                      gridTemplateRows: `repeat(${gridRows}, 1fr)`,
-                      backgroundColor: 'transparent',
-                      padding: '1px',
+              {/* Simple Image Carousel */}
+              <div className="relative w-full h-full">
+                {carouselImages.map((image, index) => (
+                  <motion.div
+                    key={index}
+                    className="absolute inset-0 w-full h-full"
+                    initial={{ opacity: 0 }}
+                    animate={{ 
+                      opacity: index === currentImageIndex ? 1 : 0,
+                      scale: index === currentImageIndex ? 1 : 1.1
+                    }}
+                    transition={{ 
+                      duration: 1,
+                      ease: "easeInOut"
                     }}
                   >
-                    {Array.from({ length: totalPieces }, (_, i) => {
-                      const col = i % gridCols;
-                      const row = Math.floor(i / gridCols);
-                      
-                      // Calculate the exact portion of the image this piece should show
-                      const imageOffsetX = -(col * (100 / gridCols));
-                      const imageOffsetY = -(row * (100 / gridRows));
-                      
-                      // Calculate random wind-blown entrance animation
-                      const randomDelay = Math.random() * 2; // 0-2 seconds delay
-                      const randomRotation = (Math.random() - 0.5) * 360; // -180 to 180 degrees
-                      const randomX = (Math.random() - 0.5) * 200; // -100 to 100px
-                      const randomY = (Math.random() - 0.5) * 200; // -100 to 100px
-                      const randomScale = 0.3 + Math.random() * 0.4; // 0.3 to 0.7 scale
-
-                      return (
-                        <motion.div
-                          key={i}
-                          initial={{
-                            opacity: 0,
-                            scale: randomScale,
-                            rotate: randomRotation,
-                            x: randomX,
-                            y: randomY,
-                            filter: "blur(5px)"
-                          }}
-                          animate={{
-                            opacity: 1,
-                            scale: 1,
-                            rotate: [0, Math.sin(i * 0.1) * 2, 0], // Gentle rotation based on position
-                            x: [0, Math.sin(i * 0.05) * 1, 0], // Subtle horizontal float
-                            y: [0, Math.cos(i * 0.07) * 1, 0], // Subtle vertical float
-                            filter: "blur(0px)"
-                          }}
-                          transition={{
-                            duration: 1.5 + Math.random() * 1, // Initial entrance
-                            delay: randomDelay,
-                            ease: [0.25, 0.46, 0.45, 0.94],
-                            type: "spring",
-                            stiffness: 60 + Math.random() * 40,
-                            damping: 15 + Math.random() * 10,
-                            // Continuous floating animation
-                            rotate: {
-                              duration: 4 + Math.random() * 2,
-                              repeat: Infinity,
-                              ease: "easeInOut"
-                            },
-                            x: {
-                              duration: 3 + Math.random() * 2,
-                              repeat: Infinity,
-                              ease: "easeInOut"
-                            },
-                            y: {
-                              duration: 3.5 + Math.random() * 2,
-                              repeat: Infinity,
-                              ease: "easeInOut"
-                            }
-                          }}
-                          whileHover={{
-                            scale: 1.08,
-                            rotate: Math.random() * 15 - 7.5, // -7.5 to 7.5 degrees
-                            transition: { duration: 0.3 }
-                          }}
-                          className="border border-white rounded-md overflow-hidden relative shadow-sm"
-                          style={{
-                            gridColumn: col + 1,
-                            gridRow: row + 1,
-                            backgroundColor: 'white',
-                          }}
-                        >
-                          <div
-                            className="w-full h-full bg-cover bg-center bg-no-repeat transition-all duration-1000 ease-in-out"
-                            style={{
-                              backgroundImage: `url(${carouselImages[currentImageIndex]})`,
-                              backgroundPosition: `${(col / (gridCols - 1)) * 100}% ${(row / (gridRows - 1)) * 100}%`,
-                              backgroundSize: `${gridCols * 100}% ${gridRows * 100}%`,
-                            }}
-                          />
-                        </motion.div>
-                      );
-                    })}
-                  </div>
-                );
+                    <img
+                      src={image}
+                      alt={`Carousel image ${index + 1}`}
+                      className="w-full h-full object-cover"
+                      loading={index === 0 ? "eager" : "lazy"}
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />
+                  </motion.div>
+                ))}
                 
-                return imageGrid;
-              })()}
+                {/* Carousel Indicators */}
+                <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
+                  {carouselImages.map((_, index) => (
+                    <button
+                      key={index}
+                      onClick={() => setCurrentImageIndex(index)}
+                      className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                        index === currentImageIndex 
+                          ? 'bg-white shadow-lg scale-110' 
+                          : 'bg-white/50 hover:bg-white/70'
+                      }`}
+                      aria-label={`Go to slide ${index + 1}`}
+                    />
+                  ))}
+                </div>
+                
+                {/* Navigation Arrows */}
+                <button
+                  onClick={() => setCurrentImageIndex((prev) => 
+                    prev === 0 ? carouselImages.length - 1 : prev - 1
+                  )}
+                  className="absolute left-4 top-1/2 transform -translate-y-1/2 w-10 h-10 bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-full flex items-center justify-center transition-all duration-300 group"
+                  aria-label="Previous image"
+                >
+                  <svg className="w-5 h-5 text-white group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                  </svg>
+                </button>
+                
+                <button
+                  onClick={() => setCurrentImageIndex((prev) => 
+                    (prev + 1) % carouselImages.length
+                  )}
+                  className="absolute right-4 top-1/2 transform -translate-y-1/2 w-10 h-10 bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-full flex items-center justify-center transition-all duration-300 group"
+                  aria-label="Next image"
+                >
+                  <svg className="w-5 h-5 text-white group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </button>
+              </div>
             </motion.div>
           </div>
         </div>

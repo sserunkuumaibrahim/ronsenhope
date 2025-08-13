@@ -184,6 +184,19 @@
     border: 1px solid rgba(0, 0, 0, 0.05);
   }
   
+  .apple-card::before {
+    content: '';
+    @apply absolute inset-0 pointer-events-none opacity-10;
+    background: #ec4899;
+    border-radius: inherit;
+    transform: rotate(1deg);
+    transition: transform 0.3s ease;
+  }
+  
+  .apple-card:hover::before {
+    transform: rotate(2deg);
+  }
+  
   .apple-card:hover {
     @apply translate-y-[-5px];
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);

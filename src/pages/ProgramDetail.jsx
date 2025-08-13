@@ -56,10 +56,46 @@ Our approach involves close collaboration with local communities to ensure that 
           '120 local technicians trained'
         ],
         team: [
-          { name: 'Dr. Sarah Johnson', role: 'Program Director', image: 'https://randomuser.me/api/portraits/women/44.jpg' },
-          { name: 'Michael Ochieng', role: 'Regional Coordinator', image: 'https://randomuser.me/api/portraits/men/32.jpg' },
-          { name: 'Emma Williams', role: 'Water Engineer', image: 'https://randomuser.me/api/portraits/women/68.jpg' },
-          { name: 'David Mutua', role: 'Community Liaison', image: 'https://randomuser.me/api/portraits/men/75.jpg' }
+          { 
+            name: 'Dr. Sarah Johnson', 
+            role: 'Program Director', 
+            image: 'https://randomuser.me/api/portraits/women/44.jpg',
+            experience: 12,
+            email: 'sarah.johnson@cleanwater.org',
+            specialties: ['Water Systems Management', 'Public Health', 'Project Leadership'],
+            education: 'PhD in Environmental Engineering, MIT',
+            bio: 'Leading water access initiatives across Africa for over a decade with expertise in sustainable development.'
+          },
+          { 
+            name: 'Michael Ochieng', 
+            role: 'Regional Coordinator', 
+            image: 'https://randomuser.me/api/portraits/men/32.jpg',
+            experience: 8,
+            email: 'michael.ochieng@cleanwater.org',
+            specialties: ['Community Engagement', 'Local Partnerships', 'Cultural Integration'],
+            education: 'MSc in Development Studies, University of Nairobi',
+            bio: 'Native to the region with deep understanding of local communities and sustainable development practices.'
+          },
+          { 
+            name: 'Emma Williams', 
+            role: 'Water Engineer', 
+            image: 'https://randomuser.me/api/portraits/women/68.jpg',
+            experience: 6,
+            email: 'emma.williams@cleanwater.org',
+            specialties: ['Well Drilling', 'Pump Systems', 'Water Quality Testing'],
+            education: 'BEng in Civil Engineering, Imperial College London',
+            bio: 'Specialized in designing and implementing water infrastructure solutions for rural communities.'
+          },
+          { 
+            name: 'David Mutua', 
+            role: 'Community Liaison', 
+            image: 'https://randomuser.me/api/portraits/men/75.jpg',
+            experience: 10,
+            email: 'david.mutua@cleanwater.org',
+            specialties: ['Community Mobilization', 'Training Programs', 'Stakeholder Relations'],
+            education: 'BA in Social Work, Kenyatta University',
+            bio: 'Experienced in building trust and facilitating collaboration between international organizations and local communities.'
+          }
         ],
         updates: [
           { date: 'June 15, 2023', title: 'New Region Added', content: 'We\'re expanding our program to include the northern districts, reaching an additional 15 communities.' },
@@ -148,15 +184,35 @@ Our approach involves close collaboration with local communities to ensure that 
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <div>
-            <h3 className="text-2xl font-semibold mb-4">Photo Gallery</h3>
-            <div className="grid grid-cols-2 gap-2">
+            <h3 className="text-2xl font-semibold mb-6">Photo Gallery</h3>
+            <div className="grid grid-cols-2 gap-4">
               {program.gallery.map((image, index) => (
-                <img 
-                  key={index} 
-                  src={image} 
-                  alt={`${program.title} - Gallery image ${index + 1}`} 
-                  className="rounded-lg object-cover w-full h-32"
-                />
+                <div key={index} className="group relative overflow-hidden rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300">
+                  <img 
+                    src={image} 
+                    alt={`${program.title} - Gallery image ${index + 1}`} 
+                    className="w-full h-40 object-cover group-hover:scale-110 transition-transform duration-500"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <div className="absolute bottom-3 left-3 right-3">
+                      <div className="flex items-center justify-between">
+                        <span className="text-white text-sm font-medium">Image {index + 1}</span>
+                        <div className="w-8 h-8 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center">
+                          <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                          </svg>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <div className="w-6 h-6 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center">
+                      <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clipRule="evenodd" />
+                      </svg>
+                    </div>
+                  </div>
+                </div>
               ))}
             </div>
           </div>
@@ -165,7 +221,7 @@ Our approach involves close collaboration with local communities to ensure that 
             <h3 className="text-2xl font-semibold mb-4">Program Team</h3>
             <div className="grid grid-cols-2 gap-4">
               {program.team.map((member, index) => (
-                <div key={index} className="flex items-center space-x-3">
+                <div key={index} className="flex items-center space-x-3 group relative">
                   <div className="avatar">
                     <div className="mask mask-squircle w-12 h-12">
                       <img src={member.image} alt={member.name} />
@@ -174,6 +230,64 @@ Our approach involves close collaboration with local communities to ensure that 
                   <div>
                     <div className="font-bold">{member.name}</div>
                     <div className="text-sm opacity-70">{member.role}</div>
+                  </div>
+                  
+                  {/* Detailed Tooltip */}
+                  <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-3 w-80 bg-white border border-gray-200 shadow-2xl rounded-xl opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none z-20">
+                    <div className="p-4">
+                      {/* Header */}
+                      <div className="flex items-center gap-3 mb-3 pb-3 border-b border-gray-100">
+                        <div className="w-12 h-12 rounded-full overflow-hidden flex-shrink-0">
+                          <img src={member.image} alt={member.name} className="w-full h-full object-cover" />
+                        </div>
+                        <div>
+                          <div className="font-bold text-gray-900">{member.name}</div>
+                          <div className="text-sm text-pink-600 font-medium">{member.role}</div>
+                          <div className="text-xs text-gray-500">{member.experience} years experience</div>
+                        </div>
+                      </div>
+                      
+                      {/* Bio */}
+                      {member.bio && (
+                        <div className="mb-3">
+                          <p className="text-xs text-gray-700 leading-relaxed">{member.bio}</p>
+                        </div>
+                      )}
+                      
+                      {/* Education */}
+                      {member.education && (
+                        <div className="mb-3">
+                          <div className="text-xs font-semibold text-gray-800 mb-1">Education</div>
+                          <div className="text-xs text-gray-600">{member.education}</div>
+                        </div>
+                      )}
+                      
+                      {/* Specialties */}
+                      {member.specialties && member.specialties.length > 0 && (
+                        <div className="mb-3">
+                          <div className="text-xs font-semibold text-gray-800 mb-2">Specialties</div>
+                          <div className="flex flex-wrap gap-1">
+                            {member.specialties.map((specialty, idx) => (
+                              <span key={idx} className="px-2 py-1 bg-pink-100 text-pink-700 text-xs rounded-full">
+                                {specialty}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                      
+                      {/* Contact */}
+                      {member.email && (
+                        <div className="pt-2 border-t border-gray-100">
+                          <div className="text-xs font-semibold text-gray-800 mb-1">Contact</div>
+                          <div className="text-xs text-blue-600 hover:text-blue-800">{member.email}</div>
+                        </div>
+                      )}
+                    </div>
+                    
+                    {/* Arrow */}
+                    <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-8 border-r-8 border-t-8 border-transparent border-t-white"></div>
+                    <div className="absolute top-full left-1/2 transform -translate-x-1/2 translate-y-[-1px] w-0 h-0 border-l-8 border-r-8 border-t-8 border-transparent border-t-gray-200"></div>
                   </div>
                 </div>
               ))}
@@ -184,16 +298,39 @@ Our approach involves close collaboration with local communities to ensure that 
     ),
     updates: (
       <div className="space-y-6">
-        <h3 className="text-2xl font-semibold mb-4">Program Updates</h3>
-        <div className="space-y-6">
+        <h3 className="text-2xl font-semibold mb-6">Program Updates</h3>
+        <div className="grid gap-6">
           {program.updates.map((update, index) => (
-            <div key={index} className="card bg-base-300/50">
-              <div className="card-body">
-                <div className="flex justify-between items-center mb-2">
-                  <h4 className="card-title">{update.title}</h4>
-                  <span className="text-sm opacity-70">{update.date}</span>
+            <div key={index} className="group">
+              <div className="bg-gradient-to-br from-white via-blue-50/30 to-indigo-50/50 border border-blue-200/60 shadow-lg hover:shadow-xl transition-all duration-300 rounded-xl overflow-hidden hover:scale-[1.02]">
+                <div className="bg-gradient-to-r from-blue-500/10 to-indigo-500/10 border-b border-blue-200/40 p-6">
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="flex items-start gap-4">
+                      <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center text-white font-bold text-lg flex-shrink-0">
+                        <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" />
+                        </svg>
+                      </div>
+                      <div className="flex-1">
+                        <h4 className="text-xl font-bold text-gray-800 mb-1">{update.title}</h4>
+                        <div className="flex items-center gap-2">
+                          <div className="w-4 h-4 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center">
+                            <svg className="w-2.5 h-2.5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                              <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                            </svg>
+                          </div>
+                          <span className="text-sm font-medium text-blue-600">{update.date}</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="bg-gradient-to-br from-blue-100 to-indigo-100 px-3 py-1 rounded-full">
+                      <span className="text-xs font-semibold text-blue-700">UPDATE #{index + 1}</span>
+                    </div>
+                  </div>
                 </div>
-                <p>{update.content}</p>
+                <div className="p-6 bg-white">
+                  <p className="text-gray-700 leading-relaxed">{update.content}</p>
+                </div>
               </div>
             </div>
           ))}
@@ -202,16 +339,32 @@ Our approach involves close collaboration with local communities to ensure that 
     ),
     faq: (
       <div className="space-y-6">
-        <h3 className="text-2xl font-semibold mb-4">Frequently Asked Questions</h3>
-        <div className="space-y-4">
+        <h3 className="text-2xl font-semibold mb-6">Frequently Asked Questions</h3>
+        <div className="grid gap-6">
           {program.faqs.map((faq, index) => (
-            <div key={index} className="collapse collapse-plus bg-base-300/50">
-              <input type="radio" name="faq-accordion" /> 
-              <div className="collapse-title text-lg font-medium">
-                {faq.question}
-              </div>
-              <div className="collapse-content"> 
-                <p>{faq.answer}</p>
+            <div key={index} className="group">
+              <div className="collapse collapse-plus bg-gradient-to-br from-white to-gray-50 border border-gray-200 shadow-lg hover:shadow-xl transition-all duration-300 rounded-xl overflow-hidden">
+                <input type="radio" name="faq-accordion" className="peer" /> 
+                <div className="collapse-title text-lg font-semibold text-gray-800 bg-gradient-to-r from-primary/5 to-secondary/5 border-b border-gray-100 hover:from-primary/10 hover:to-secondary/10 transition-all duration-300">
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 bg-gradient-to-br from-primary to-secondary rounded-full flex items-center justify-center text-white text-sm font-bold">
+                      {index + 1}
+                    </div>
+                    <span className="flex-1">{faq.question}</span>
+                  </div>
+                </div>
+                <div className="collapse-content bg-white"> 
+                  <div className="pt-4 pb-2">
+                    <div className="flex items-start gap-3">
+                      <div className="w-6 h-6 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center mt-1 flex-shrink-0">
+                        <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                        </svg>
+                      </div>
+                      <p className="text-gray-700 leading-relaxed">{faq.answer}</p>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           ))}
@@ -227,13 +380,13 @@ Our approach involves close collaboration with local communities to ensure that 
         <meta name="description" content={program.description} />
       </Helmet>
 
-      <div className="relative h-96 bg-base-300">
+      <div className="relative h-96 bg-gray-100">
         <img 
           src={program.image} 
           alt={program.title} 
           className="w-full h-full object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-base-300 to-transparent"></div>
+        <div className="absolute inset-0 bg-gradient-to-t from-gray-100 to-transparent"></div>
         <div className="absolute bottom-0 left-0 right-0 p-8">
           <div className="container-custom">
             <motion.div
@@ -266,24 +419,25 @@ Our approach involves close collaboration with local communities to ensure that 
         </div>
       </div>
 
-      <div className="container-custom py-12">
+      <div className="bg-gray-50 min-h-screen">
+        <div className="container-custom py-12">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2">
             <div className="tabs tabs-boxed mb-8">
               <a 
-                className={`tab ${activeTab === 'overview' ? 'tab-active' : ''}`}
+                className={`tab ${activeTab === 'overview' ? 'tab-active text-primary' : 'text-black bg-white/80 hover:bg-white hover:text-gray-500'}`}
                 onClick={() => setActiveTab('overview')}
               >
                 Overview
               </a>
               <a 
-                className={`tab ${activeTab === 'updates' ? 'tab-active' : ''}`}
+                className={`tab ${activeTab === 'updates' ? 'tab-active text-primary' : 'text-black bg-white/80 hover:bg-white hover:text-gray-500'}`}
                 onClick={() => setActiveTab('updates')}
               >
                 Updates
               </a>
               <a 
-                className={`tab ${activeTab === 'faq' ? 'tab-active' : ''}`}
+                className={`tab ${activeTab === 'faq' ? 'tab-active text-primary' : 'text-black bg-white/80 hover:bg-white hover:text-gray-500'}`}
                 onClick={() => setActiveTab('faq')}
               >
                 FAQ
@@ -301,97 +455,104 @@ Our approach involves close collaboration with local communities to ensure that 
           </div>
 
           <div className="space-y-8">
-            <div className="card bg-base-200 shadow-lg">
-              <div className="card-body">
-                <h3 className="text-xl font-semibold mb-4">Program Progress</h3>
-                <div className="mb-4">
-                  <div className="flex justify-between mb-1">
-                    <span>Fundraising Goal</span>
-                    <span>${program.budget.toLocaleString()}</span>
+            <div className="bg-gradient-to-br from-white to-green-50/50 border border-green-200/60 shadow-xl hover:shadow-2xl transition-all duration-300 rounded-xl overflow-hidden">
+              <div className="bg-gradient-to-r from-green-500/10 to-emerald-500/10 border-b border-green-200/40 p-6">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-emerald-600 rounded-full flex items-center justify-center">
+                    <FiDollarSign className="w-5 h-5 text-white" />
                   </div>
-                  <div className="w-full bg-base-300 rounded-full h-4">
-                    <div 
-                      className="bg-primary h-4 rounded-full" 
-                      style={{ width: `${program.progress}%` }}
-                    ></div>
+                  <h3 className="text-xl font-bold text-gray-800">Program Progress</h3>
+                </div>
+                
+                <div className="space-y-4">
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-700 font-medium">Fundraising Goal</span>
+                    <span className="text-lg font-bold text-green-600">${program.budget.toLocaleString()}</span>
                   </div>
-                  <div className="flex justify-between mt-1 text-sm">
-                    <span>${program.raised.toLocaleString()} raised</span>
-                    <span>{program.progress}%</span>
+                  
+                  <div className="relative">
+                    <div className="w-full bg-gray-200 rounded-full h-6 overflow-hidden">
+                      <div 
+                        className="bg-gradient-to-r from-green-500 to-emerald-500 h-6 rounded-full transition-all duration-1000 ease-out relative" 
+                        style={{ width: `${program.progress}%` }}
+                      >
+                        <div className="absolute inset-0 bg-white/20 animate-pulse"></div>
+                      </div>
+                    </div>
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <span className="text-sm font-bold text-white drop-shadow-lg">{program.progress}%</span>
+                    </div>
+                  </div>
+                  
+                  <div className="flex justify-between items-center text-sm">
+                    <span className="text-gray-600">${program.raised.toLocaleString()} raised</span>
+                    <span className="text-gray-600">${(program.budget - program.raised).toLocaleString()} remaining</span>
                   </div>
                 </div>
-
-                <div className="space-y-4">
-                  <button className="btn btn-primary w-full gap-2">
-                    <FiDollarSign /> Donate to This Program
-                  </button>
-                  <button className="btn btn-outline w-full gap-2">
-                    <FiClock /> Volunteer Your Time
-                  </button>
+              </div>
+              
+              <div className="p-6 bg-white">
+                <div className="space-y-3">
+                  <Link to="/donate" className="w-full bg-gradient-to-r from-pink-500 to-rose-600 hover:from-pink-600 hover:to-rose-700 text-white font-semibold py-3 px-4 rounded-lg transition-all duration-300 flex items-center justify-center gap-2 shadow-lg hover:shadow-xl">
+                    <FiDollarSign className="w-5 h-5" /> Donate to This Program
+                  </Link>
+                  <Link to="/volunteer" className="w-full border-2 border-pink-500 text-pink-600 hover:bg-pink-50 font-semibold py-3 px-4 rounded-lg transition-all duration-300 flex items-center justify-center gap-2">
+                    <FiClock className="w-5 h-5" /> Volunteer Your Time
+                  </Link>
                 </div>
               </div>
             </div>
 
-            <div className="card bg-base-200 shadow-lg">
-              <div className="card-body">
-                <h3 className="text-xl font-semibold mb-4">Share This Program</h3>
-                <div className="flex justify-between">
-                  <button className="btn btn-circle btn-outline">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
-                    </svg>
-                  </button>
-                  <button className="btn btn-circle btn-outline">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path>
-                    </svg>
-                  </button>
-                  <button className="btn btn-circle btn-outline">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
-                      <polyline points="22,6 12,13 2,6"></polyline>
-                    </svg>
-                  </button>
-                  <button className="btn btn-circle btn-outline">
-                    <FiShare2 />
-                  </button>
+            <div className="bg-gradient-to-br from-white to-blue-50/50 border border-blue-200/60 shadow-xl hover:shadow-2xl transition-all duration-300 rounded-xl overflow-hidden">
+              <div className="bg-gradient-to-r from-blue-500/10 to-indigo-500/10 border-b border-blue-200/40 p-6">
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center">
+                    <FiShare2 className="w-5 h-5 text-white" />
+                  </div>
+                  <h3 className="text-xl font-bold text-gray-800">Share This Program</h3>
                 </div>
-              </div>
-            </div>
-
-            <div className="card bg-base-200 shadow-lg">
-              <div className="card-body">
-                <h3 className="text-xl font-semibold mb-4">Related Programs</h3>
-                <div className="space-y-4">
-                  <div className="flex items-start space-x-3">
-                    <img 
-                      src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?ixlib=rb-1.2.1&auto=format&fit=crop&w=100&q=60" 
-                      alt="Education Program" 
-                      className="rounded-md w-16 h-16 object-cover"
-                    />
-                    <div>
-                      <h4 className="font-medium">Education for All</h4>
-                      <p className="text-sm text-base-content/70 line-clamp-2">Ensuring access to quality education for underprivileged children.</p>
-                      <Link to="/programs/2" className="text-primary text-sm hover:underline">View Program</Link>
+                
+                <div className="grid grid-cols-4 gap-3">
+                  <button className="group bg-white hover:bg-blue-50 border border-blue-200 hover:border-blue-300 rounded-xl p-4 transition-all duration-300 flex flex-col items-center gap-2">
+                    <div className="w-8 h-8 text-blue-600 group-hover:text-blue-700 transition-colors">
+                      <svg fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
+                      </svg>
                     </div>
-                  </div>
-                  <div className="flex items-start space-x-3">
-                    <img 
-                      src="https://images.unsplash.com/photo-1500937386664-56d1dfef3854?ixlib=rb-1.2.1&auto=format&fit=crop&w=100&q=60" 
-                      alt="Sustainable Farming" 
-                      className="rounded-md w-16 h-16 object-cover"
-                    />
-                    <div>
-                      <h4 className="font-medium">Sustainable Farming</h4>
-                      <p className="text-sm text-base-content/70 line-clamp-2">Teaching sustainable agricultural practices to improve food security.</p>
-                      <Link to="/programs/4" className="text-primary text-sm hover:underline">View Program</Link>
+                    <span className="text-xs font-medium text-gray-600 group-hover:text-blue-700">Facebook</span>
+                  </button>
+                  
+                  <button className="group bg-white hover:bg-blue-50 border border-blue-200 hover:border-blue-300 rounded-xl p-4 transition-all duration-300 flex flex-col items-center gap-2">
+                    <div className="w-8 h-8 text-blue-600 group-hover:text-blue-700 transition-colors">
+                      <svg fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path>
+                      </svg>
                     </div>
-                  </div>
+                    <span className="text-xs font-medium text-gray-600 group-hover:text-blue-700">Twitter</span>
+                  </button>
+                  
+                  <button className="group bg-white hover:bg-blue-50 border border-blue-200 hover:border-blue-300 rounded-xl p-4 transition-all duration-300 flex flex-col items-center gap-2">
+                    <div className="w-8 h-8 text-blue-600 group-hover:text-blue-700 transition-colors">
+                      <svg fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                        <polyline points="22,6 12,13 2,6"></polyline>
+                      </svg>
+                    </div>
+                    <span className="text-xs font-medium text-gray-600 group-hover:text-blue-700">Email</span>
+                  </button>
+                  
+                  <button className="group bg-white hover:bg-blue-50 border border-blue-200 hover:border-blue-300 rounded-xl p-4 transition-all duration-300 flex flex-col items-center gap-2">
+                    <div className="w-8 h-8 text-blue-600 group-hover:text-blue-700 transition-colors">
+                      <FiShare2 />
+                    </div>
+                    <span className="text-xs font-medium text-gray-600 group-hover:text-blue-700">More</span>
+                  </button>
                 </div>
               </div>
             </div>
           </div>
         </div>
+      </div>
       </div>
     </MainLayout>
   );

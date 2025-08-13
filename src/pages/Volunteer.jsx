@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
-import { FiCalendar, FiMapPin, FiClock, FiUsers, FiHeart, FiStar } from 'react-icons/fi';
+import { FiCalendar, FiMapPin, FiClock, FiUsers, FiHeart, FiStar, FiUser, FiMail, FiPhone, FiMessageSquare } from 'react-icons/fi';
 import MainLayout from '../components/layout/MainLayout';
 
 export default function Volunteer() {
@@ -10,6 +10,7 @@ export default function Volunteer() {
     name: '',
     email: '',
     phone: '',
+    opportunity: '',
     interests: [],
     availability: [],
     experience: '',
@@ -166,6 +167,7 @@ export default function Volunteer() {
         name: '',
         email: '',
         phone: '',
+        opportunity: '',
         interests: [],
         availability: [],
         experience: '',
@@ -182,35 +184,50 @@ export default function Volunteer() {
       </Helmet>
       
       {/* Hero Section */}
-      <section className="bg-primary text-primary-content py-16 md:py-24 relative overflow-hidden">
+      <section className="relative py-20 md:py-32 overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-pink-500 to-pink-600"></div>
+        <div className="absolute inset-0 bg-black/20"></div>
         <div className="container-custom relative z-10">
           <motion.div 
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="text-center max-w-3xl mx-auto"
+            className="text-center max-w-4xl mx-auto text-white"
           >
-            <h1 className="text-4xl md:text-5xl font-bold mb-6">Volunteer With Us</h1>
-            <p className="text-xl mb-8">
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+              className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm rounded-full px-6 py-3 mb-8 border border-white/30"
+            >
+              <FiHeart className="text-pink-200" />
+              <span className="text-sm font-medium">Make a Difference Today</span>
+            </motion.div>
+            <h1 className="text-5xl md:text-7xl font-bold mb-8 bg-gradient-to-r from-white to-pink-100 bg-clip-text text-transparent">
+              Volunteer With Us
+            </h1>
+            <p className="text-xl md:text-2xl mb-12 text-blue-100 leading-relaxed">
               Join our global community of volunteers and use your skills to make a lasting difference in the lives of others.
             </p>
             <motion.div 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.2 }}
-              className="flex flex-col sm:flex-row gap-4 justify-center"
+              className="flex flex-col sm:flex-row gap-6 justify-center"
             >
               <button 
-                className="btn bg-white text-primary hover:bg-gray-100"
+                className="group relative px-8 py-4 bg-white text-pink-600 rounded-full font-semibold text-lg shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300 overflow-hidden"
                 onClick={() => {
                   setActiveTab('application');
                   document.getElementById('application-section').scrollIntoView({ behavior: 'smooth' });
                 }}
               >
-                Apply Now
+                <span className="relative z-10">Apply Now</span>
+                <div className="absolute inset-0 bg-gradient-to-r from-pink-500 to-pink-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <span className="absolute inset-0 z-10 flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 font-semibold">Apply Now</span>
               </button>
               <button 
-                className="btn btn-outline border-white text-white hover:bg-white hover:text-primary"
+                className="px-8 py-4 border-2 border-white text-white rounded-full font-semibold text-lg hover:bg-white hover:text-pink-600 transition-all duration-300 backdrop-blur-sm"
                 onClick={() => {
                   setActiveTab('opportunities');
                   document.getElementById('opportunities-section').scrollIntoView({ behavior: 'smooth' });
@@ -221,7 +238,7 @@ export default function Volunteer() {
             </motion.div>
           </motion.div>
         </div>
-        <div className="absolute inset-0 opacity-20">
+        <div className="absolute inset-0 opacity-10">
           <img 
             src="https://images.unsplash.com/photo-1593113630400-ea4288922497?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80" 
             alt="Volunteers working together" 
@@ -231,17 +248,29 @@ export default function Volunteer() {
       </section>
       
       {/* Why Volunteer Section */}
-      <section className="py-16 bg-base-100">
+      <section className="py-20 bg-gray-50">
         <div className="container-custom">
           <motion.div 
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
-            className="text-center mb-12"
+            className="text-center mb-16"
           >
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Why Volunteer With Us?</h2>
-            <p className="text-xl max-w-3xl mx-auto">
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              whileInView={{ scale: 1, opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="inline-flex items-center gap-2 bg-pink-100 text-pink-600 rounded-full px-6 py-3 mb-6 font-medium"
+            >
+              <FiStar className="text-pink-500" />
+              <span>Why Choose Us</span>
+            </motion.div>
+            <h2 className="text-4xl md:text-5xl font-bold mb-6 text-gray-800">
+              Why Volunteer With Us?
+            </h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
               Volunteering with Charity NGO offers unique opportunities to make a real difference while developing new skills and connections.
             </p>
           </motion.div>
@@ -253,33 +282,36 @@ export default function Volunteer() {
             viewport={{ once: true }}
             className="grid grid-cols-1 md:grid-cols-3 gap-8"
           >
-            <motion.div variants={itemVariants} className="card bg-base-200 shadow-lg">
-              <div className="card-body items-center text-center">
-                <div className="text-4xl text-primary mb-4">
-                  <FiHeart />
+            <motion.div variants={itemVariants} className="group relative">
+              <div className="absolute inset-0 bg-pink-500 rounded-2xl transform rotate-1 group-hover:rotate-2 transition-transform duration-300 opacity-10"></div>
+              <div className="relative bg-white rounded-2xl p-8 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
+                <div className="w-16 h-16 bg-pink-500 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                  <FiHeart className="text-2xl text-white" />
                 </div>
-                <h3 className="card-title text-2xl">Make a Direct Impact</h3>
-                <p>Our volunteer programs are designed to create meaningful, measurable change in the communities we serve.</p>
+                <h3 className="text-2xl font-bold mb-4 text-gray-800">Make a Direct Impact</h3>
+                <p className="text-gray-600 leading-relaxed">Our volunteer programs are designed to create meaningful, measurable change in the communities we serve.</p>
               </div>
             </motion.div>
             
-            <motion.div variants={itemVariants} className="card bg-base-200 shadow-lg">
-              <div className="card-body items-center text-center">
-                <div className="text-4xl text-primary mb-4">
-                  <FiStar />
+            <motion.div variants={itemVariants} className="group relative">
+              <div className="absolute inset-0 bg-pink-500 rounded-2xl transform -rotate-1 group-hover:-rotate-2 transition-transform duration-300 opacity-10"></div>
+              <div className="relative bg-white rounded-2xl p-8 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
+                <div className="w-16 h-16 bg-pink-500 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                  <FiStar className="text-2xl text-white" />
                 </div>
-                <h3 className="card-title text-2xl">Develop New Skills</h3>
-                <p>Gain valuable experience, enhance your resume, and develop both professional and personal skills.</p>
+                <h3 className="text-2xl font-bold mb-4 text-gray-800">Develop New Skills</h3>
+                <p className="text-gray-600 leading-relaxed">Gain valuable experience, enhance your resume, and develop both professional and personal skills.</p>
               </div>
             </motion.div>
             
-            <motion.div variants={itemVariants} className="card bg-base-200 shadow-lg">
-              <div className="card-body items-center text-center">
-                <div className="text-4xl text-primary mb-4">
-                  <FiUsers />
+            <motion.div variants={itemVariants} className="group relative">
+              <div className="absolute inset-0 bg-pink-500 rounded-2xl transform rotate-1 group-hover:rotate-2 transition-transform duration-300 opacity-10"></div>
+              <div className="relative bg-white rounded-2xl p-8 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
+                <div className="w-16 h-16 bg-pink-500 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                  <FiUsers className="text-2xl text-white" />
                 </div>
-                <h3 className="card-title text-2xl">Join a Global Community</h3>
-                <p>Connect with like-minded individuals from around the world who share your passion for creating positive change.</p>
+                <h3 className="text-2xl font-bold mb-4 text-gray-800">Join a Global Community</h3>
+                <p className="text-gray-600 leading-relaxed">Connect with like-minded individuals from around the world who share your passion for creating positive change.</p>
               </div>
             </motion.div>
           </motion.div>
@@ -287,27 +319,41 @@ export default function Volunteer() {
       </section>
       
       {/* Volunteer Opportunities Section */}
-      <section id="opportunities-section" className="py-16 bg-base-200">
+      <section id="opportunities-section" className="py-20 bg-white">
         <div className="container-custom">
-          <div className="tabs tabs-boxed mb-8 justify-center">
-            <a 
-              className={`tab ${activeTab === 'opportunities' ? 'tab-active' : ''}`}
-              onClick={() => setActiveTab('opportunities')}
-            >
-              Opportunities
-            </a>
-            <a 
-              className={`tab ${activeTab === 'testimonials' ? 'tab-active' : ''}`}
-              onClick={() => setActiveTab('testimonials')}
-            >
-              Volunteer Stories
-            </a>
-            <a 
-              className={`tab ${activeTab === 'application' ? 'tab-active' : ''}`}
-              onClick={() => setActiveTab('application')}
-            >
-              Apply
-            </a>
+          <div className="flex justify-center mb-12">
+            <div className="bg-gray-100 rounded-2xl p-2 inline-flex gap-2">
+              <button 
+                className={`px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
+                  activeTab === 'opportunities' 
+                    ? 'bg-white text-pink-600 shadow-lg transform scale-105' 
+                    : 'text-gray-600 hover:text-pink-600'
+                }`}
+                onClick={() => setActiveTab('opportunities')}
+              >
+                Opportunities
+              </button>
+              <button 
+                className={`px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
+                  activeTab === 'testimonials' 
+                    ? 'bg-white text-pink-600 shadow-lg transform scale-105' 
+                    : 'text-gray-600 hover:text-pink-600'
+                }`}
+                onClick={() => setActiveTab('testimonials')}
+              >
+                Volunteer Stories
+              </button>
+              <button 
+                className={`px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
+                  activeTab === 'application' 
+                    ? 'bg-white text-pink-600 shadow-lg transform scale-105' 
+                    : 'text-gray-600 hover:text-pink-600'
+                }`}
+                onClick={() => setActiveTab('application')}
+              >
+                Apply
+              </button>
+            </div>
           </div>
           
           {activeTab === 'opportunities' && (
@@ -316,9 +362,20 @@ export default function Volunteer() {
               animate={{ opacity: 1 }}
               transition={{ duration: 0.5 }}
             >
-              <div className="text-center mb-12">
-                <h2 className="text-3xl md:text-4xl font-bold mb-4">Current Volunteer Opportunities</h2>
-                <p className="text-xl max-w-3xl mx-auto">
+              <div className="text-center mb-16">
+                <motion.div
+                  initial={{ scale: 0.9, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  transition={{ duration: 0.6 }}
+                  className="inline-flex items-center gap-2 bg-pink-100 text-pink-600 rounded-full px-6 py-3 mb-6 font-medium"
+                >
+                  <FiUsers className="text-pink-500" />
+                  <span>Join Our Team</span>
+                </motion.div>
+                <h2 className="text-4xl md:text-5xl font-bold mb-6 text-gray-800">
+                  Current Volunteer Opportunities
+                </h2>
+                <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
                   Browse our current openings and find a role that matches your skills and interests.
                 </p>
               </div>
@@ -330,102 +387,139 @@ export default function Volunteer() {
                 viewport={{ once: true }}
                 className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
               >
-                {opportunities.map((opportunity) => (
-                  <motion.div key={opportunity.id} variants={itemVariants} className="card bg-base-100 shadow-xl">
-                    <div className="card-body">
-                      <h3 className="card-title text-xl">{opportunity.title}</h3>
-                      <div className="badge badge-primary mb-2">{opportunity.category}</div>
-                      
-                      <div className="space-y-2 mb-4">
-                        <div className="flex items-center">
-                          <FiMapPin className="mr-2 text-primary" />
-                          <span>{opportunity.location}</span>
+                {opportunities.map((opportunity, index) => {
+                  
+                  return (
+                    <motion.div key={opportunity.id} variants={itemVariants} className="group relative">
+                      <div className="absolute inset-0 bg-pink-500 rounded-2xl transform rotate-1 group-hover:rotate-2 transition-transform duration-300 opacity-10"></div>
+                      <div className="relative bg-white rounded-2xl p-6 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 border border-gray-100">
+                        <div className="flex items-start justify-between mb-4">
+                          <div className="w-12 h-12 bg-pink-500 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                            <FiHeart className="text-white text-xl" />
+                          </div>
+                          <span className="px-3 py-1 bg-pink-500 text-white text-sm font-medium rounded-full">
+                            {opportunity.category}
+                          </span>
                         </div>
-                        <div className="flex items-center">
-                          <FiClock className="mr-2 text-primary" />
-                          <span>{opportunity.commitment}</span>
+                        
+                        <h3 className="text-xl font-bold mb-3 text-gray-800">{opportunity.title}</h3>
+                        
+                        <div className="space-y-2 mb-4">
+                          <div className="flex items-center text-gray-600">
+                            <FiMapPin className="mr-3 text-blue-500" />
+                            <span>{opportunity.location}</span>
+                          </div>
+                          <div className="flex items-center text-gray-600">
+                            <FiClock className="mr-3 text-green-500" />
+                            <span>{opportunity.commitment}</span>
+                          </div>
+                          <div className="flex items-center text-gray-600">
+                            <FiCalendar className="mr-3 text-purple-500" />
+                            <span>{opportunity.duration}</span>
+                          </div>
                         </div>
-                        <div className="flex items-center">
-                          <FiCalendar className="mr-2 text-primary" />
-                          <span>{opportunity.duration}</span>
+                        
+                        <p className="text-gray-600 mb-4 leading-relaxed">{opportunity.description}</p>
+                        
+                        <div className="mb-6">
+                          <div className="text-sm font-semibold mb-2 text-gray-800">Skills Needed:</div>
+                          <div className="flex flex-wrap gap-2">
+                            {opportunity.skills.map((skill, skillIndex) => (
+                              <span key={skillIndex} className="px-3 py-1 bg-gray-100 text-gray-700 text-sm rounded-full border border-gray-200 hover:bg-gray-200 transition-colors duration-200">
+                                {skill}
+                              </span>
+                            ))}
+                          </div>
                         </div>
-                      </div>
-                      
-                      <p className="mb-4">{opportunity.description}</p>
-                      
-                      <div className="mb-4">
-                        <div className="text-sm font-semibold mb-1">Skills Needed:</div>
-                        <div className="flex flex-wrap gap-1">
-                          {opportunity.skills.map((skill, index) => (
-                            <span key={index} className="badge badge-outline">{skill}</span>
-                          ))}
-                        </div>
-                      </div>
-                      
-                      <div className="card-actions justify-end">
+                        
                         <button 
-                          className="btn btn-primary btn-sm"
+                          className="w-full py-3 bg-pink-500 text-white font-semibold rounded-xl hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300 hover:bg-pink-600"
                           onClick={() => {
                             setActiveTab('application');
                             document.getElementById('application-section').scrollIntoView({ behavior: 'smooth' });
                           }}
                         >
-                          Apply
+                          Apply Now
                         </button>
                       </div>
-                    </div>
-                  </motion.div>
-                ))}
+                    </motion.div>
+                  );
+                })}
               </motion.div>
             </motion.div>
           )}
           
           {activeTab === 'testimonials' && (
-            <motion.div 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.5 }}
-            >
-              <div className="text-center mb-12">
-                <h2 className="text-3xl md:text-4xl font-bold mb-4">Volunteer Stories</h2>
-                <p className="text-xl max-w-3xl mx-auto">
-                  Hear from our volunteers about their experiences and the impact they've made.
-                </p>
-              </div>
-              
               <motion.div 
-                variants={containerVariants}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true }}
-                className="grid grid-cols-1 md:grid-cols-3 gap-8"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.5 }}
               >
-                {testimonials.map((testimonial) => (
-                  <motion.div key={testimonial.id} variants={itemVariants} className="card bg-base-100 shadow-xl">
-                    <div className="card-body">
-                      <div className="flex items-center mb-4">
-                        <img 
-                          src={testimonial.image} 
-                          alt={testimonial.name} 
-                          className="w-16 h-16 rounded-full mr-4 object-cover"
-                        />
-                        <div>
-                          <h3 className="font-bold">{testimonial.name}</h3>
-                          <div className="text-sm text-base-content/70">{testimonial.role}</div>
-                        </div>
-                      </div>
-                      <div className="relative">
-                          <div className="text-4xl text-primary/20 absolute -top-4 -left-2">
-                            &ldquo;
+                <div className="text-center mb-16">
+                  <motion.div
+                    initial={{ scale: 0.9, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    transition={{ duration: 0.6 }}
+                    className="inline-flex items-center gap-2 bg-pink-100 text-pink-600 rounded-full px-6 py-3 mb-6 font-medium"
+                  >
+                    <FiStar className="text-pink-500" />
+                    <span>Success Stories</span>
+                  </motion.div>
+                  <h2 className="text-4xl md:text-5xl font-bold mb-6 text-gray-800">
+                    Volunteer Stories
+                  </h2>
+                  <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+                    Hear from our volunteers about their experiences and the impact they've made.
+                  </p>
+                </div>
+                
+                <motion.div 
+                  variants={containerVariants}
+                  initial="hidden"
+                  whileInView="visible"
+                  viewport={{ once: true }}
+                  className="grid grid-cols-1 md:grid-cols-3 gap-8"
+                >
+                  {testimonials.map((testimonial, index) => {
+                    
+                    return (
+                      <motion.div key={testimonial.id} variants={itemVariants} className="group relative">
+                        <div className="absolute inset-0 bg-pink-500 rounded-2xl transform rotate-1 group-hover:rotate-2 transition-transform duration-300 opacity-10"></div>
+                        <div className="relative bg-white rounded-2xl p-8 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 border border-gray-100">
+                          <div className="flex items-center mb-6">
+                            <div className="relative">
+                              <img 
+                                src={testimonial.image} 
+                                alt={testimonial.name} 
+                                className="w-16 h-16 rounded-full object-cover border-4 border-white shadow-lg"
+                              />
+                              <div className="absolute -bottom-2 -right-2 w-6 h-6 bg-pink-500 rounded-full flex items-center justify-center">
+                                <FiHeart className="text-white text-xs" />
+                              </div>
+                            </div>
+                            <div className="ml-4">
+                              <h3 className="font-bold text-gray-800 text-lg">{testimonial.name}</h3>
+                              <div className="text-sm text-gray-500 font-medium">{testimonial.role}</div>
+                            </div>
                           </div>
-                          <p className="italic">{testimonial.quote}</p>
-                          <div className="text-4xl text-primary/20 absolute -bottom-8 -right-2">
-                            &rdquo;
+                          <div className="relative">
+                            <div className="text-4xl text-pink-500 absolute -top-4 -left-2 opacity-50">
+                              &ldquo;
+                            </div>
+                            <p className="italic text-gray-600 leading-relaxed pl-6 pr-6">{testimonial.quote}</p>
+                            <div className="text-4xl text-pink-500 absolute -bottom-8 -right-2 opacity-50">
+                              &rdquo;
+                            </div>
+                          </div>
+                          <div className="flex justify-center mt-6">
+                            {[...Array(5)].map((_, i) => (
+                              <FiStar key={i} className={`text-lg ${i < 5 ? 'text-yellow-400 fill-current' : 'text-gray-300'}`} />
+                            ))}
                           </div>
                         </div>
-                      </div>
-                    </motion.div>
-                  ))}
+                      </motion.div>
+                    );
+                  })}
                 </motion.div>
               </motion.div>
             )}
@@ -437,9 +531,20 @@ export default function Volunteer() {
                 transition={{ duration: 0.5 }}
                 id="application-section"
               >
-                <div className="text-center mb-12">
-                  <h2 className="text-3xl md:text-4xl font-bold mb-4">Volunteer Application</h2>
-                  <p className="text-xl max-w-3xl mx-auto">
+                <div className="text-center mb-16">
+                  <motion.div
+                    initial={{ scale: 0.9, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    transition={{ duration: 0.6 }}
+                    className="inline-flex items-center gap-2 bg-pink-100 text-pink-600 rounded-full px-6 py-3 mb-6 font-medium"
+                  >
+                    <FiHeart className="text-pink-500" />
+                    <span>Join Us Today</span>
+                  </motion.div>
+                  <h2 className="text-4xl md:text-5xl font-bold mb-6 text-gray-800">
+                    Volunteer Application
+                  </h2>
+                  <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
                     Ready to make a difference? Fill out the form below to join our volunteer team.
                   </p>
                 </div>
@@ -448,78 +553,118 @@ export default function Volunteer() {
                   <motion.div 
                     initial={{ opacity: 0, scale: 0.9 }}
                     animate={{ opacity: 1, scale: 1 }}
-                    className="bg-success/20 p-8 rounded-lg text-center max-w-2xl mx-auto"
+                    className="relative"
                   >
-                    <div className="text-5xl text-success mb-4">✓</div>
-                    <h3 className="text-2xl font-bold mb-2">Application Submitted!</h3>
-                    <p className="mb-4">Thank you for your interest in volunteering with us. We'll review your application and contact you within 3-5 business days.</p>
+                    <div className="absolute inset-0 bg-pink-500 rounded-3xl transform rotate-1 opacity-10"></div>
+                    <div className="relative bg-white p-12 rounded-3xl text-center max-w-2xl mx-auto shadow-2xl border border-gray-100">
+                      <div className="w-20 h-20 bg-pink-500 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <div className="text-3xl text-white">✓</div>
+                      </div>
+                      <h3 className="text-3xl font-bold mb-4 text-gray-800">Application Submitted!</h3>
+                      <p className="text-gray-600 leading-relaxed text-lg">Thank you for your interest in volunteering with us. We'll review your application and contact you within 3-5 business days.</p>
+                    </div>
                   </motion.div>
                 ) : (
-                  <motion.form 
-                    onSubmit={handleSubmit}
-                    className="bg-base-100 p-6 rounded-lg shadow-lg max-w-4xl mx-auto"
-                    variants={containerVariants}
-                    initial="hidden"
-                    whileInView="visible"
-                    viewport={{ once: true }}
-                  >
+                  <motion.div className="relative max-w-4xl mx-auto">
+                    <div className="absolute inset-0 bg-pink-500 rounded-3xl transform rotate-1 opacity-5"></div>
+                    <motion.form 
+                      onSubmit={handleSubmit}
+                      className="relative bg-white p-8 md:p-12 rounded-3xl shadow-2xl border border-gray-100"
+                      variants={containerVariants}
+                      initial="hidden"
+                      whileInView="visible"
+                      viewport={{ once: true }}
+                    >
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                      <motion.div variants={itemVariants} className="form-control">
-                        <label className="label">
-                          <span className="label-text">Full Name</span>
-                        </label>
+                      <motion.div variants={itemVariants} className="form-control relative group">
                         <input 
                           type="text" 
                           name="name" 
                           value={formData.name} 
                           onChange={handleInputChange} 
-                          className="input input-bordered" 
+                          placeholder=" "
+                          className="peer h-16 w-full rounded-2xl border-2 bg-white/50 backdrop-blur-sm px-6 pt-6 outline-none transition-all duration-300 focus:border-primary focus:bg-white focus:shadow-lg border-gray-200 hover:border-gray-300"
                           required 
                         />
+                        <label className="pointer-events-none absolute left-4 -top-2 bg-white px-2 text-sm font-medium text-gray-600 transition-all peer-placeholder-shown:top-5 peer-placeholder-shown:left-6 peer-placeholder-shown:bg-transparent peer-placeholder-shown:text-base peer-placeholder-shown:font-normal peer-focus:-top-2 peer-focus:left-4 peer-focus:bg-white peer-focus:text-sm peer-focus:font-medium peer-focus:text-primary">
+                          Full Name
+                        </label>
+                        <div className="absolute right-6 top-5 transition-colors duration-300">
+                          <FiUser className="text-xl text-gray-400 group-hover:text-primary" />
+                        </div>
                       </motion.div>
                       
-                      <motion.div variants={itemVariants} className="form-control">
-                        <label className="label">
-                          <span className="label-text">Email</span>
-                        </label>
+                      <motion.div variants={itemVariants} className="form-control relative group">
                         <input 
                           type="email" 
                           name="email" 
                           value={formData.email} 
                           onChange={handleInputChange} 
-                          className="input input-bordered" 
+                          placeholder=" "
+                          className="peer h-16 w-full rounded-2xl border-2 bg-white/50 backdrop-blur-sm px-6 pt-6 outline-none transition-all duration-300 focus:border-primary focus:bg-white focus:shadow-lg border-gray-200 hover:border-gray-300"
                           required 
                         />
+                        <label className="pointer-events-none absolute left-4 -top-2 bg-white px-2 text-sm font-medium text-gray-600 transition-all peer-placeholder-shown:top-5 peer-placeholder-shown:left-6 peer-placeholder-shown:bg-transparent peer-placeholder-shown:text-base peer-placeholder-shown:font-normal peer-focus:-top-2 peer-focus:left-4 peer-focus:bg-white peer-focus:text-sm peer-focus:font-medium peer-focus:text-primary">
+                          Email Address
+                        </label>
+                        <div className="absolute right-6 top-5 transition-colors duration-300">
+                          <FiMail className="text-xl text-gray-400 group-hover:text-primary" />
+                        </div>
                       </motion.div>
                       
-                      <motion.div variants={itemVariants} className="form-control">
-                        <label className="label">
-                          <span className="label-text">Phone Number</span>
-                        </label>
+                      <motion.div variants={itemVariants} className="form-control relative group">
                         <input 
                           type="tel" 
                           name="phone" 
                           value={formData.phone} 
                           onChange={handleInputChange} 
-                          className="input input-bordered" 
+                          placeholder=" "
+                          className="peer h-16 w-full rounded-2xl border-2 bg-white/50 backdrop-blur-sm px-6 pt-6 outline-none transition-all duration-300 focus:border-primary focus:bg-white focus:shadow-lg border-gray-200 hover:border-gray-300"
                         />
+                        <label className="pointer-events-none absolute left-4 -top-2 bg-white px-2 text-sm font-medium text-gray-600 transition-all peer-placeholder-shown:top-5 peer-placeholder-shown:left-6 peer-placeholder-shown:bg-transparent peer-placeholder-shown:text-base peer-placeholder-shown:font-normal peer-focus:-top-2 peer-focus:left-4 peer-focus:bg-white peer-focus:text-sm peer-focus:font-medium peer-focus:text-primary">
+                          Phone Number
+                        </label>
+                        <div className="absolute right-6 top-5 transition-colors duration-300">
+                          <FiPhone className="text-xl text-gray-400 group-hover:text-primary" />
+                        </div>
                       </motion.div>
                       
-                      <motion.div variants={itemVariants} className="form-control">
-                        <label className="label">
-                          <span className="label-text">Previous Volunteer Experience</span>
+                      <motion.div variants={itemVariants} className="form-control relative group">
+                        <select 
+                          name="opportunity" 
+                          value={formData.opportunity} 
+                          onChange={handleInputChange} 
+                          className="peer h-16 w-full rounded-2xl border-2 bg-white/50 backdrop-blur-sm px-6 outline-none transition-all duration-300 focus:border-primary focus:bg-white focus:shadow-lg border-gray-200 hover:border-gray-300 appearance-none"
+                          required
+                        >
+                          <option value="">Select an opportunity</option>
+                          {opportunities.map((opportunity) => (
+                            <option key={opportunity.id} value={opportunity.title}>
+                              {opportunity.title} - {opportunity.location}
+                            </option>
+                          ))}
+                        </select>
+                        <label className="absolute left-4 -top-2 bg-white px-2 text-sm font-medium text-gray-600 transition-all duration-300 peer-focus:text-primary">
+                          Volunteer Opportunity
                         </label>
+                      </motion.div>
+                      
+                      <motion.div variants={itemVariants} className="form-control relative group">
                         <select 
                           name="experience" 
                           value={formData.experience} 
                           onChange={handleInputChange} 
-                          className="select select-bordered w-full"
+                          className="peer h-16 w-full rounded-2xl border-2 bg-white/50 backdrop-blur-sm px-6 outline-none transition-all duration-300 focus:border-primary focus:bg-white focus:shadow-lg border-gray-200 hover:border-gray-300 appearance-none"
+                          required
                         >
                           <option value="">Select experience level</option>
                           <option value="none">No previous experience</option>
                           <option value="some">Some experience (1-2 years)</option>
                           <option value="experienced">Experienced (3+ years)</option>
                         </select>
+                        <label className="absolute left-4 -top-2 bg-white px-2 text-sm font-medium text-gray-600 transition-all duration-300 peer-focus:text-primary">
+                          Previous Volunteer Experience
+                        </label>
                       </motion.div>
                     </div>
                     
@@ -563,23 +708,33 @@ export default function Volunteer() {
                       </div>
                     </motion.div>
                     
-                    <motion.div variants={itemVariants} className="form-control mb-6">
-                      <label className="label">
-                        <span className="label-text">Why do you want to volunteer with us?</span>
-                      </label>
+                    <motion.div variants={itemVariants} className="form-control mb-6 relative group">
                       <textarea 
                         name="message" 
                         value={formData.message} 
                         onChange={handleInputChange} 
-                        className="textarea textarea-bordered h-32" 
+                        placeholder=" "
+                        className="peer h-32 w-full rounded-2xl border-2 bg-white/50 backdrop-blur-sm px-6 pt-6 outline-none transition-all duration-300 focus:border-primary focus:bg-white focus:shadow-lg border-gray-200 hover:border-gray-300 resize-none"
                         required
                       ></textarea>
+                      <label className="pointer-events-none absolute left-4 -top-2 bg-white px-2 text-sm font-medium text-gray-600 transition-all peer-placeholder-shown:top-5 peer-placeholder-shown:left-6 peer-placeholder-shown:bg-transparent peer-placeholder-shown:text-base peer-placeholder-shown:font-normal peer-focus:-top-2 peer-focus:left-4 peer-focus:bg-white peer-focus:text-sm peer-focus:font-medium peer-focus:text-primary">
+                        Why do you want to volunteer with us?
+                      </label>
+                      <div className="absolute right-6 top-5 transition-colors duration-300">
+                        <FiMessageSquare className="text-xl text-gray-400 group-hover:text-primary" />
+                      </div>
                     </motion.div>
                     
-                    <motion.div variants={itemVariants} className="form-control mt-6">
-                      <button type="submit" className="btn btn-primary">Submit Application</button>
+                    <motion.div variants={itemVariants} className="mt-8">
+                      <button 
+                        type="submit" 
+                        className="w-full py-4 bg-pink-500 text-white font-bold text-lg rounded-2xl hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300 hover:bg-pink-600"
+                      >
+                        Submit Application
+                      </button>
                     </motion.div>
                   </motion.form>
+                  </motion.div>
                 )}
               </motion.div>
             )}
@@ -588,85 +743,162 @@ export default function Volunteer() {
       </section>
       
       {/* FAQ Section */}
-      <section className="py-16 bg-base-100">
+      <section className="py-20 bg-gray-50">
         <div className="container-custom">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Frequently Asked Questions</h2>
-            <p className="text-xl max-w-3xl mx-auto">
+          <div className="text-center mb-16">
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              whileInView={{ scale: 1, opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="inline-flex items-center gap-2 bg-pink-100 text-pink-600 rounded-full px-6 py-3 mb-6 font-medium"
+            >
+              <FiClock className="text-pink-500" />
+              <span>Got Questions?</span>
+            </motion.div>
+            <h2 className="text-4xl md:text-5xl font-bold mb-6 text-gray-800">
+              Frequently Asked Questions
+            </h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
               Have questions about volunteering with us? Find answers to common questions below.
             </p>
           </div>
           
-          <div className="max-w-3xl mx-auto">
-            <div className="collapse collapse-plus bg-base-200 mb-4">
-              <input type="radio" name="faq-accordion" checked /> 
-              <div className="collapse-title text-xl font-medium">
-                Do I need special qualifications to volunteer?
+          <div className="max-w-4xl mx-auto space-y-6">
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+              className="group"
+            >
+              <div className="collapse collapse-plus bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100">
+                <input type="radio" name="faq-accordion" defaultChecked /> 
+                <div className="collapse-title text-xl font-bold text-gray-800 group-hover:text-pink-600 transition-colors duration-300">
+                  Do I need special qualifications to volunteer?
+                </div>
+                <div className="collapse-content">
+                  <p className="text-gray-600 leading-relaxed">Most of our volunteer opportunities don't require specific qualifications. We value enthusiasm, commitment, and a willingness to learn. For specialized roles (like medical volunteers), relevant qualifications may be necessary.</p>
+                </div>
               </div>
-              <div className="collapse-content">
-                <p>Most of our volunteer opportunities don't require specific qualifications. We value enthusiasm, commitment, and a willingness to learn. For specialized roles (like medical volunteers), relevant qualifications may be necessary.</p>
-              </div>
-            </div>
+            </motion.div>
             
-            <div className="collapse collapse-plus bg-base-200 mb-4">
-              <input type="radio" name="faq-accordion" /> 
-              <div className="collapse-title text-xl font-medium">
-                How much time do I need to commit?
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              className="group"
+            >
+              <div className="collapse collapse-plus bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100">
+                <input type="radio" name="faq-accordion" /> 
+                <div className="collapse-title text-xl font-bold text-gray-800 group-hover:text-pink-600 transition-colors duration-300">
+                  How much time do I need to commit?
+                </div>
+                <div className="collapse-content">
+                  <p className="text-gray-600 leading-relaxed">We offer flexible volunteering opportunities to accommodate different schedules. Some roles require as little as 2-3 hours per week, while others may need a more substantial commitment. Each opportunity listing specifies the expected time commitment.</p>
+                </div>
               </div>
-              <div className="collapse-content">
-                <p>We offer flexible volunteering opportunities to accommodate different schedules. Some roles require as little as 2-3 hours per week, while others may need a more substantial commitment. Each opportunity listing specifies the expected time commitment.</p>
-              </div>
-            </div>
+            </motion.div>
             
-            <div className="collapse collapse-plus bg-base-200 mb-4">
-              <input type="radio" name="faq-accordion" /> 
-              <div className="collapse-title text-xl font-medium">
-                Can I volunteer remotely?
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.3 }}
+              className="group"
+            >
+              <div className="collapse collapse-plus bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100">
+                <input type="radio" name="faq-accordion" /> 
+                <div className="collapse-title text-xl font-bold text-gray-800 group-hover:text-pink-600 transition-colors duration-300">
+                  Can I volunteer remotely?
+                </div>
+                <div className="collapse-content">
+                  <p className="text-gray-600 leading-relaxed">Yes! We offer several remote volunteering opportunities, including social media management, content creation, grant writing, and virtual mentoring. These roles allow you to make an impact from anywhere in the world.</p>
+                </div>
               </div>
-              <div className="collapse-content">
-                <p>Yes! We offer several remote volunteering opportunities, including social media management, content creation, grant writing, and virtual mentoring. These roles allow you to make an impact from anywhere in the world.</p>
-              </div>
-            </div>
+            </motion.div>
             
-            <div className="collapse collapse-plus bg-base-200 mb-4">
-              <input type="radio" name="faq-accordion" /> 
-              <div className="collapse-title text-xl font-medium">
-                Will I receive training?
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.4 }}
+              className="group"
+            >
+              <div className="collapse collapse-plus bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100">
+                <input type="radio" name="faq-accordion" /> 
+                <div className="collapse-title text-xl font-bold text-gray-800 group-hover:text-pink-600 transition-colors duration-300">
+                  Will I receive training?
+                </div>
+                <div className="collapse-content">
+                  <p className="text-gray-600 leading-relaxed">Absolutely! All volunteers receive orientation and role-specific training. We're committed to ensuring you have the knowledge and resources needed to be effective and confident in your volunteer role.</p>
+                </div>
               </div>
-              <div className="collapse-content">
-                <p>Absolutely! All volunteers receive orientation and role-specific training. We're committed to ensuring you have the knowledge and resources needed to be effective and confident in your volunteer role.</p>
-              </div>
-            </div>
+            </motion.div>
             
-            <div className="collapse collapse-plus bg-base-200">
-              <input type="radio" name="faq-accordion" /> 
-              <div className="collapse-title text-xl font-medium">
-                Can I volunteer as a group or team?
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.5 }}
+              className="group"
+            >
+              <div className="collapse collapse-plus bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100">
+                <input type="radio" name="faq-accordion" /> 
+                <div className="collapse-title text-xl font-bold text-gray-800 group-hover:text-pink-600 transition-colors duration-300">
+                  Can I volunteer as a group or team?
+                </div>
+                <div className="collapse-content">
+                  <p className="text-gray-600 leading-relaxed">Yes, we welcome group volunteering! Whether it's a corporate team, school group, or community organization, we can arrange meaningful volunteer experiences for groups of various sizes. Please contact us directly to discuss group volunteering options.</p>
+                </div>
               </div>
-              <div className="collapse-content">
-                <p>Yes, we welcome group volunteering! Whether it's a corporate team, school group, or community organization, we can arrange meaningful volunteer experiences for groups of various sizes. Please contact us directly to discuss group volunteering options.</p>
-              </div>
-            </div>
+            </motion.div>
           </div>
         </div>
       </section>
       
       {/* Call to Action */}
-      <section className="py-16 bg-primary text-primary-content">
-        <div className="container-custom text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-6">Ready to Make a Difference?</h2>
-          <p className="text-xl mb-8 max-w-2xl mx-auto">
-            Join our community of volunteers today and help us create lasting change around the world.
-          </p>
-          <button 
-            className="btn bg-white text-primary hover:bg-gray-100 btn-lg"
-            onClick={() => {
-              setActiveTab('application');
-              document.getElementById('application-section').scrollIntoView({ behavior: 'smooth' });
-            }}
+      <section className="relative py-20 overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-pink-500 to-pink-600"></div>
+        <div className="absolute inset-0 bg-black/20"></div>
+        <div className="container-custom text-center relative z-10">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="text-white"
           >
-            Apply Now
-          </button>
+            <div className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm rounded-full px-6 py-3 mb-8 border border-white/30">
+              <FiHeart className="text-pink-300" />
+              <span className="text-sm font-medium">Start Your Journey</span>
+            </div>
+            <h2 className="text-4xl md:text-6xl font-bold mb-8 bg-gradient-to-r from-white to-pink-100 bg-clip-text text-transparent">
+              Ready to Make a Difference?
+            </h2>
+            <p className="text-xl md:text-2xl mb-12 text-pink-100 leading-relaxed max-w-3xl mx-auto">
+              Join our community of volunteers today and help us create lasting change around the world.
+            </p>
+            <button 
+              className="group relative px-10 py-5 bg-white text-pink-600 rounded-full font-bold text-xl shadow-2xl hover:shadow-3xl transform hover:-translate-y-2 transition-all duration-300 overflow-hidden"
+              onClick={() => {
+                setActiveTab('application');
+                document.getElementById('application-section').scrollIntoView({ behavior: 'smooth' });
+              }}
+            >
+              <span className="relative z-10">Apply Now</span>
+              <div className="absolute inset-0 bg-pink-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <span className="absolute inset-0 z-10 flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 font-bold">Apply Now</span>
+            </button>
+          </motion.div>
+        </div>
+        <div className="absolute inset-0 opacity-10">
+          <img 
+            src="https://images.unsplash.com/photo-1559027615-cd4628902d4a?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80" 
+            alt="Volunteers making a difference" 
+            className="w-full h-full object-cover"
+          />
         </div>
       </section>
     </MainLayout>

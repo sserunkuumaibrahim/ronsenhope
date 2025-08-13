@@ -227,8 +227,9 @@ export default function Profile() {
             </div>
           </form>
         ) : (
-          <div className="card bg-base-200">
-            <div className="card-body">
+          <div className="card bg-base-200 relative group">
+            <div className="absolute inset-0 bg-pink-500 rounded-2xl transform rotate-1 group-hover:rotate-2 transition-transform duration-300 opacity-10"></div>
+            <div className="card-body relative">
               <div className="space-y-4">
                 <div className="flex items-center gap-4">
                   <FiUser className="text-primary" />
@@ -269,8 +270,9 @@ export default function Profile() {
         <div className="mt-8">
           <h2 className="text-2xl font-bold mb-4">Account Settings</h2>
           
-          <div className="card bg-base-200">
-            <div className="card-body">
+          <div className="card bg-base-200 relative group">
+            <div className="absolute inset-0 bg-pink-500 rounded-2xl transform rotate-1 group-hover:rotate-2 transition-transform duration-300 opacity-10"></div>
+            <div className="card-body relative">
               <div className="space-y-4">
                 <div className="flex justify-between items-center">
                   <div className="flex items-center gap-2">
@@ -367,8 +369,9 @@ export default function Profile() {
           </div>
         )}
         
-        <div className="card bg-base-200 mt-8">
-          <div className="card-body">
+        <div className="card bg-base-200 mt-8 relative group">
+          <div className="absolute inset-0 bg-pink-500 rounded-2xl transform rotate-1 group-hover:rotate-2 transition-transform duration-300 opacity-10"></div>
+          <div className="card-body relative">
             <h3 className="card-title">Donation Summary</h3>
             <div className="stats stats-vertical lg:stats-horizontal shadow">
               <div className="stat">
@@ -416,8 +419,9 @@ export default function Profile() {
           <button className="btn btn-primary">Explore Volunteer Opportunities</button>
         </div>
         
-        <div className="card bg-base-200 mt-8">
-          <div className="card-body">
+        <div className="card bg-base-200 mt-8 relative group">
+          <div className="absolute inset-0 bg-pink-500 rounded-2xl transform rotate-1 group-hover:rotate-2 transition-transform duration-300 opacity-10"></div>
+          <div className="card-body relative">
             <h3 className="card-title">Why Volunteer With Us?</h3>
             <ul className="space-y-2 mt-2">
               <li className="flex items-start gap-2">

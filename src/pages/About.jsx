@@ -164,49 +164,64 @@ export default function About() {
       </Helmet>
       
       {/* Hero Section */}
-      <section className="relative min-h-[50vh] flex items-center justify-center bg-accent text-secondary py-20 bg-mesh-gradient-1 overflow-hidden">
-        <div className="absolute inset-0 bg-primary/5"></div>
-        
-        {/* Background Logo */}
-        <motion.div
-          initial={{ opacity: 0, scale: 1.2 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1.5, ease: "easeOut" }}
-          className="absolute inset-0 flex items-center justify-center"
-        >
-          <div className="relative">
-            {/* Background glow effects */}
-            <div className="absolute inset-0 bg-gradient-radial from-primary/10 via-primary/5 to-transparent rounded-full blur-3xl scale-150"></div>
-            <div className="absolute inset-0 bg-gradient-radial from-white/20 via-white/5 to-transparent rounded-full blur-2xl scale-125"></div>
-            
-            {/* Logo as background element */}
-            <img 
-              src="/partners/LAF Logos/logo 7.png" 
-              alt="Lumps Away Foundation Logo" 
-              className="w-64 md:w-80 lg:w-96 h-auto opacity-10 select-none pointer-events-none"
-            />
-            
-            {/* Subtle animated rings */}
-            <div className="absolute inset-0 rounded-full border border-primary/10 scale-110 animate-pulse"></div>
-            <div className="absolute inset-0 rounded-full border border-white/20 scale-125 animate-pulse" style={{ animationDelay: '1s' }}></div>
-          </div>
-        </motion.div>
-
-        {/* Content overlay */}
+      <section className="relative py-20 md:py-32 overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-pink-500 to-pink-600"></div>
+        <div className="absolute inset-0 bg-black/20"></div>
         <div className="container-custom relative z-10">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
+          <motion.div 
+            initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.3 }}
-            className="text-center max-w-4xl mx-auto"
+            transition={{ duration: 0.5 }}
+            className="text-center max-w-4xl mx-auto text-white"
           >
-            <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold mb-6 text-secondary">
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+              className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm rounded-full px-6 py-3 mb-8 border border-white/30"
+            >
+              <FiHeart className="text-pink-200" />
+              <span className="text-sm font-medium">Our Story of Hope</span>
+            </motion.div>
+            <h1 className="text-5xl md:text-7xl font-bold mb-8 bg-gradient-to-r from-white to-pink-100 bg-clip-text text-transparent">
               About Lumps Away Foundation
             </h1>
-            <p className="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto">
+            <p className="text-xl md:text-2xl mb-12 text-white/90 leading-relaxed max-w-3xl mx-auto">
               Transforming cancer care in Uganda through accessible treatment, community support, and inspiring stories of hope.
             </p>
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.4 }}
+              className="flex flex-col sm:flex-row gap-4 justify-center items-center"
+            >
+              <button 
+                className="group relative px-8 py-4 bg-white text-pink-600 rounded-full font-semibold text-lg shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300 overflow-hidden"
+                onClick={() => {
+                  document.getElementById('our-story').scrollIntoView({ behavior: 'smooth' });
+                }}
+              >
+                <span className="relative z-10">Learn Our Story</span>
+                <div className="absolute inset-0 bg-gradient-to-r from-pink-500 to-pink-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <span className="absolute inset-0 z-10 flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 font-semibold">Learn Our Story</span>
+              </button>
+              <button 
+                className="px-8 py-4 border-2 border-white text-white rounded-full font-semibold text-lg hover:bg-white hover:text-pink-600 transition-all duration-300 backdrop-blur-sm"
+                onClick={() => {
+                  window.location.href = '/contact';
+                }}
+              >
+                Get Involved
+              </button>
+            </motion.div>
           </motion.div>
+        </div>
+        <div className="absolute inset-0 opacity-15">
+          <img 
+            src="/partners/LAF Logos/logo 7.png" 
+            alt="Lumps Away Foundation background" 
+            className="w-full h-full object-contain scale-150"
+          />
         </div>
       </section>
 
@@ -223,7 +238,7 @@ export default function About() {
             className="text-center mb-16"
           >
             <h2 className="text-4xl md:text-5xl font-bold mb-6 text-secondary">Our Leadership Team</h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <p className="text-xl text-black max-w-3xl mx-auto">
               Meet the dedicated professionals who guide our mission to transform cancer care in Uganda.
             </p>
           </motion.div>
@@ -236,12 +251,14 @@ export default function About() {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
                 viewport={{ once: true }}
-                className={`flex flex-col lg:flex-row gap-12 items-center ${
+                className={`relative group flex flex-col lg:flex-row gap-12 items-center p-8 rounded-3xl ${
                   index % 2 === 1 ? 'lg:flex-row-reverse' : ''
                 }`}
               >
+                {/* White background overlay */}
+                <div className="absolute inset-0 bg-white rounded-3xl transform rotate-1 group-hover:rotate-2 transition-transform duration-300 opacity-90 shadow-lg"></div>
                 {/* Large Image */}
-                <div className="w-full lg:w-1/2">
+                <div className="w-full lg:w-1/2 relative">
                   <div className="relative overflow-hidden rounded-2xl shadow-xl">
                     <img
                       src={member.image}
@@ -253,7 +270,7 @@ export default function About() {
                 </div>
                 
                 {/* Content */}
-                <div className="w-full lg:w-1/2 space-y-6">
+                <div className="w-full lg:w-1/2 space-y-6 relative">
                   <div className="flex items-center gap-4 mb-6">
                     <div className="p-4 bg-primary/10 rounded-full text-primary">
                       <member.icon className="w-8 h-8" />
@@ -264,7 +281,7 @@ export default function About() {
                     </div>
                   </div>
                   
-                  <p className="text-lg text-gray-600 leading-relaxed">
+                  <p className="text-lg text-black leading-relaxed">
                     {member.description}
                   </p>
                   
@@ -289,8 +306,8 @@ export default function About() {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 text-secondary">Carol's Inspiring Journey</h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+            <h2 className="text-4xl md:text-5xl font-bold mb-6 text-black">Carol's Inspiring Journey</h2>
+            <p className="text-xl text-black max-w-3xl mx-auto leading-relaxed">
               A story of resilience, hope, and the power of community support in the face of adversity.
             </p>
           </motion.div>
@@ -310,14 +327,14 @@ export default function About() {
                   </div>
                   <div>
                     <h3 className="text-2xl font-bold text-secondary mb-2">Meet Carol</h3>
-                    <p className="text-gray-600">31-year-old breast cancer survivor</p>
+                    <p className="text-black">31-year-old breast cancer survivor</p>
                   </div>
                 </div>
-                <p className="text-lg text-gray-700 leading-relaxed mb-6">
+                <p className="text-lg text-black leading-relaxed mb-6">
                   Carol lives in Kamwokya with her 15-year-old daughter, who dreams of making the world a better place. 
                   Before her diagnosis, she was a nursery school teacher earning just UGX 200,000 (USD 53) per month.
                 </p>
-                <p className="text-lg text-gray-700 leading-relaxed">
+                <p className="text-lg text-black leading-relaxed">
                   Today, Carol channels her passion for helping others by volunteering with the Uganda Women's Cancer 
                   Support Organization (UWOCASO) and providing support to patients at the Uganda Cancer Institute.
                 </p>
@@ -353,8 +370,8 @@ export default function About() {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 text-secondary">Journey of Courage</h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <h2 className="text-4xl md:text-5xl font-bold mb-6 text-black">Journey of Courage</h2>
+            <p className="text-xl text-black max-w-3xl mx-auto">
               Follow Carol's eight-year journey from initial symptoms to becoming a beacon of hope for others.
             </p>
           </motion.div>
@@ -383,7 +400,7 @@ export default function About() {
                       </div>
                       <div className="text-lg font-semibold text-primary mb-2">{event.year}</div>
                       <h3 className="text-2xl font-bold text-secondary mb-4">{event.title}</h3>
-                      <p className="text-gray-600 leading-relaxed mb-6">{event.description}</p>
+                      <p className="text-black leading-relaxed mb-6">{event.description}</p>
                       
                       {event.achievements && (
                         <div className="mb-6">
@@ -393,7 +410,7 @@ export default function About() {
                           </h6>
                           <ul className="space-y-2">
                             {event.achievements.map((achievement, idx) => (
-                              <li key={idx} className="flex items-start gap-2 text-gray-600">
+                              <li key={idx} className="flex items-start gap-2 text-black">
                                 <div className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></div>
                                 <span>{achievement}</span>
                               </li>
@@ -435,8 +452,8 @@ export default function About() {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 text-secondary">What We Learned</h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <h2 className="text-4xl md:text-5xl font-bold mb-6 text-black">What We Learned</h2>
+            <p className="text-xl text-black max-w-3xl mx-auto">
               Carol's journey revealed critical gaps in cancer care and the transformative power of accessible treatment.
             </p>
           </motion.div>
@@ -453,7 +470,7 @@ export default function About() {
                 <FiTarget className="text-2xl text-primary" />
               </div>
               <h3 className="text-2xl font-bold text-secondary mb-4">Financial Barriers</h3>
-              <p className="text-gray-600 leading-relaxed">
+              <p className="text-black leading-relaxed">
                 Carol's initial delay in seeking proper care was primarily due to financial constraints. 
                 Many patients face similar challenges that can be life-threatening.
               </p>
@@ -464,7 +481,7 @@ export default function About() {
                 <FiHeart className="text-2xl text-primary" />
               </div>
               <h3 className="text-2xl font-bold text-secondary mb-4">Free Treatment Works</h3>
-              <p className="text-gray-600 leading-relaxed">
+              <p className="text-black leading-relaxed">
                 At Uganda Cancer Institute, Carol received completely free treatment - chemotherapy, surgery, 
                 radiotherapy, and all tests. This saved her life.
               </p>
@@ -475,7 +492,7 @@ export default function About() {
                 <FiUsers className="text-2xl text-primary" />
               </div>
               <h3 className="text-2xl font-bold text-secondary mb-4">Support Systems Matter</h3>
-              <p className="text-gray-600 leading-relaxed">
+              <p className="text-black leading-relaxed">
                 Mental health support and community connections were crucial to Carol's survival. 
                 She found purpose in helping others through their cancer journey.
               </p>
@@ -496,8 +513,8 @@ export default function About() {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 text-secondary">Our Impact</h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <h2 className="text-4xl md:text-5xl font-bold mb-6 text-black">Our Impact</h2>
+            <p className="text-xl text-black max-w-3xl mx-auto">
               Inspired by stories like Carol's, we're making a real difference in cancer care across Uganda.
             </p>
           </motion.div>
@@ -507,27 +524,24 @@ export default function About() {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8"
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"
           >
             <motion.div variants={itemVariants} className="bg-accent p-8 rounded-2xl shadow-lg border border-gray-100 text-center hover:shadow-xl transition-all duration-300">
-              <div className="text-4xl md:text-5xl font-bold text-primary mb-2">500+</div>
-              <div className="text-lg text-gray-600">Patients Supported</div>
+              <div className="text-4xl md:text-5xl font-bold text-green-700 mb-2">500+</div>
+              <div className="text-lg text-black">Patients Supported</div>
             </motion.div>
             
             <motion.div variants={itemVariants} className="bg-accent p-8 rounded-2xl shadow-lg border border-gray-100 text-center hover:shadow-xl transition-all duration-300">
-              <div className="text-4xl md:text-5xl font-bold text-secondary mb-2">15</div>
-              <div className="text-lg text-gray-600">Partner Hospitals</div>
+              <div className="text-4xl md:text-5xl font-bold text-blue-700 mb-2">15</div>
+              <div className="text-lg text-black">Partner Hospitals</div>
             </motion.div>
             
             <motion.div variants={itemVariants} className="bg-accent p-8 rounded-2xl shadow-lg border border-gray-100 text-center hover:shadow-xl transition-all duration-300">
-              <div className="text-4xl md:text-5xl font-bold text-primary mb-2">100%</div>
-              <div className="text-lg text-gray-600">Free Treatment</div>
+              <div className="text-4xl md:text-5xl font-bold text-yellow-500 mb-2">100%</div>
+              <div className="text-lg text-black">Free Treatment</div>
             </motion.div>
             
-            <motion.div variants={itemVariants} className="bg-accent p-8 rounded-2xl shadow-lg border border-gray-100 text-center hover:shadow-xl transition-all duration-300">
-              <div className="text-4xl md:text-5xl font-bold text-primary mb-2">24/7</div>
-              <div className="text-lg text-gray-600">Support Available</div>
-            </motion.div>
+            
           </motion.div>
         </div>
       </section>
@@ -542,46 +556,61 @@ export default function About() {
             viewport={{ once: true }}
             className="max-w-4xl mx-auto text-center"
           >
-            <div className="bg-primary/5 p-12 rounded-3xl border border-gray-100">
-              <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-8">
-                <FiMessageCircle className="text-3xl text-primary" />
+            <div className="bg-green-500/5 p-12 rounded-3xl border border-gray-100">
+              <div className="w-20 h-20 bg-green-500/10 rounded-full flex items-center justify-center mx-auto mb-8">
+                <FiMessageCircle className="text-3xl text-green-500" />
               </div>
-              <blockquote className="text-2xl md:text-3xl font-light text-gray-700 leading-relaxed mb-8 italic">
+              <blockquote className="text-2xl md:text-3xl font-light text-black leading-relaxed mb-8 italic">
                 "Taking the financial load off my medical journey is the reason I am alive to share my story today. 
                 For now, I am grateful. I am alive."
               </blockquote>
-              <div className="text-lg font-semibold text-secondary">— Carol, Breast Cancer Survivor</div>
+              <div className="text-lg font-semibold text-green-500">— Carol, Breast Cancer Survivor</div>
             </div>
           </motion.div>
         </div>
       </section>
 
       {/* Call to Action */}
-      <section className="py-20 bg-gradient-to-br from-primary to-secondary text-white">
-        <div className="container-custom text-center">
+      <section className="relative py-20 overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-pink-500 to-pink-600"></div>
+        <div className="absolute inset-0 bg-black/20"></div>
+        <div className="container-custom text-center relative z-10">
           <motion.div
-            variants={fadeInUp}
-            initial="hidden"
-            whileInView="visible"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="max-w-4xl mx-auto"
+            transition={{ duration: 0.6 }}
+            className="text-white"
           >
-            <h2 className="text-4xl md:text-5xl font-bold mb-8">Be Part of the Solution</h2>
-            <p className="text-xl md:text-2xl mb-12 opacity-90 leading-relaxed">
+            <div className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm rounded-full px-6 py-3 mb-8 border border-white/30">
+              <FiHeart className="text-pink-300" />
+              <span className="text-sm font-medium">Make a Difference</span>
+            </div>
+            <h2 className="text-4xl md:text-6xl font-bold mb-8 bg-gradient-to-r from-white to-pink-100 bg-clip-text text-transparent">
+              Be Part of the Solution
+            </h2>
+            <p className="text-xl md:text-2xl mb-12 text-pink-100 leading-relaxed max-w-3xl mx-auto">
               Every donation, every volunteer hour, every shared story brings us closer to a world where 
               no one faces cancer without hope, support, and access to quality care.
             </p>
             <div className="flex flex-col sm:flex-row gap-6 justify-center">
-              <a href="/donate" className="btn btn-white btn-lg px-10 py-4 text-lg text-primary hover:bg-gray-100 transition-all duration-300 shadow-lg">
-                Donate Now
-                <FiHeart className="ml-2" />
+              <a href="/donate" className="group relative px-10 py-5 bg-white text-pink-600 rounded-full font-bold text-xl shadow-2xl hover:shadow-3xl transform hover:-translate-y-2 transition-all duration-300 overflow-hidden">
+                <span className="relative z-10">Donate Now</span>
+                <div className="absolute inset-0 bg-pink-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <span className="absolute inset-0 z-10 flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 font-bold">Donate Now</span>
               </a>
-              <a href="/volunteer" className="btn btn-outline border-white text-white hover:bg-white hover:text-primary btn-lg px-10 py-4 text-lg transition-all duration-300">
+              <a href="/volunteer" className="group relative px-10 py-5 bg-transparent border-2 border-white text-white rounded-full font-bold text-xl hover:bg-white hover:text-pink-600 transition-all duration-300 transform hover:-translate-y-2">
                 Volunteer With Us
-                <FiUsers className="ml-2" />
               </a>
             </div>
           </motion.div>
+        </div>
+        <div className="absolute inset-0 opacity-10">
+          <img 
+            src="https://images.unsplash.com/photo-1559027615-cd4628902d4a?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80" 
+            alt="Making a difference together" 
+            className="w-full h-full object-cover"
+          />
         </div>
       </section>
     </MainLayout>

@@ -370,15 +370,16 @@ export default function BlogDetail() {
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {relatedPosts.map((relatedPost) => (
-              <div key={relatedPost.id} className="card bg-base-100 shadow-md h-full">
-                <figure className="h-48">
+              <div key={relatedPost.id} className="card bg-base-100 shadow-md h-full relative group">
+                <div className="absolute inset-0 bg-pink-500 rounded-2xl transform rotate-1 group-hover:rotate-2 transition-transform duration-300 opacity-10"></div>
+                <figure className="h-48 relative">
                   <img 
                     src={relatedPost.image} 
                     alt={relatedPost.title} 
                     className="w-full h-full object-cover"
                   />
                 </figure>
-                <div className="card-body">
+                <div className="card-body relative">
                   <h3 className="card-title hover:text-primary transition-colors">
                     <Link to={`/blog/${relatedPost.id}`}>{relatedPost.title}</Link>
                   </h3>

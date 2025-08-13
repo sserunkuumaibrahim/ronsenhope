@@ -1,0 +1,719 @@
+import React, { useState, useRef } from 'react';
+import { Helmet } from 'react-helmet-async';
+import { motion } from 'framer-motion';
+import { createPortal } from 'react-dom';
+import MainLayout from '../components/layout/MainLayout';
+import { FiCamera, FiHeart, FiUsers, FiCalendar, FiMapPin, FiX } from 'react-icons/fi';
+
+export default function Gallery() {
+  // State for tooltip
+  const [tooltip, setTooltip] = useState({
+    visible: false,
+    image: null,
+    position: { left: 0, top: 0 },
+    arrowClass: ''
+  });
+
+  // Ref for tooltip timeout
+  const tooltipTimeoutRef = useRef(null);
+  
+  // Ref for grid container
+  const gridRef = useRef(null);
+
+  // Gallery data organized by categories
+  const galleryCategories = [
+    {
+      id: 'home-carousel',
+      title: 'Community Highlights',
+      description: 'Showcasing our vibrant community and impactful moments',
+      images: [
+        {
+          src: '/Photos/Home - Carousel/9f8f8672-e795-4a39-b222-7b889d67d1cf.JPG',
+          title: 'Community Gathering',
+          description: 'A heartwarming community gathering where families came together to celebrate our shared mission of hope and healing.',
+          date: '2023',
+          location: 'Community Center'
+        },
+        {
+          src: '/Photos/Home - Carousel/Copy of 04df00e8-cb17-4a57-b84a-09040c91be26.JPG',
+          title: 'Volunteer Training',
+          description: 'Dedicated volunteers participating in our comprehensive training program to better serve our community members.',
+          date: '2023',
+          location: 'Training Facility'
+        },
+        {
+          src: '/Photos/Home - Carousel/Copy of 416e2cf5-9d06-4495-ba53-1b5ced6f20bb.JPG',
+          title: 'Support Group Session',
+          description: 'An intimate support group session where participants share experiences and find strength in community.',
+          date: '2023',
+          location: 'Support Center'
+        },
+        {
+          src: '/Photos/Home - Carousel/Copy of 771f668d-b598-4110-9125-e1e8594c9b0e.JPG',
+          title: 'Educational Workshop',
+          description: 'Educational workshop focusing on health awareness and prevention strategies for our community.',
+          date: '2023',
+          location: 'Workshop Hall'
+        },
+        {
+          src: '/Photos/Home - Carousel/Copy of 864df133-6b4a-437e-8030-4be67e6f35c2.JPG',
+          title: 'Community Outreach',
+          description: 'Our team conducting outreach activities to connect with and support community members in need.',
+          date: '2023',
+          location: 'Various Locations'
+        },
+        {
+          src: '/Photos/Home - Carousel/Copy of bfa758b3-2f2f-4374-9239-8f5b49bb956a.JPG',
+          title: 'Celebration Event',
+          description: 'A joyful celebration marking another milestone in our journey of community service and support.',
+          date: '2023',
+          location: 'Event Center'
+        }
+      ]
+    },
+    {
+      id: 'pink-october',
+      title: 'Pink October Campaign 2023',
+      description: 'Breast cancer awareness and support initiatives',
+      images: [
+        {
+          src: '/Photos/Pink October campaign 2023/0d892a96-cc0c-4088-8ab8-ab548a7ef704.JPG',
+          title: 'Pink October Launch',
+          description: 'The official launch of our Pink October breast cancer awareness campaign, bringing together survivors, families, and supporters.',
+          date: 'October 2023',
+          location: 'Campaign Headquarters'
+        },
+        {
+          src: '/Photos/Pink October campaign 2023/golden tulip talk/05f4fc1a-b7e5-4896-891c-1e58d241d556.JPG',
+          title: 'Golden Tulip Health Talk',
+          description: 'An informative health talk at Golden Tulip focusing on breast cancer prevention, early detection, and treatment options.',
+          date: 'October 2023',
+          location: 'Golden Tulip Hotel'
+        },
+        {
+          src: '/Photos/Pink October campaign 2023/golden tulip talk/86b25a5e-018e-47b2-9e54-76b803ad6ce6.JPG',
+          title: 'Expert Panel Discussion',
+          description: 'Medical experts and survivors sharing valuable insights about breast cancer awareness and support systems.',
+          date: 'October 2023',
+          location: 'Golden Tulip Hotel'
+        },
+        {
+          src: '/Photos/Pink October campaign 2023/golden tulip talk/8cf7b50e-36ff-4e9d-9218-2c627083d182.JPG',
+          title: 'Interactive Q&A Session',
+          description: 'Attendees engaging in meaningful discussions about breast health, asking questions and sharing experiences.',
+          date: 'October 2023',
+          location: 'Golden Tulip Hotel'
+        },
+        {
+          src: '/Photos/Pink October campaign 2023/golden tulip talk/IMG_0932.jpg',
+          title: 'Community Engagement',
+          description: 'Community members actively participating in our breast cancer awareness educational session.',
+          date: 'October 2023',
+          location: 'Golden Tulip Hotel'
+        },
+        {
+          src: '/Photos/Pink October campaign 2023/movie night/1d12aa2f-c38b-44e4-84bb-c86ebb7d045c.JPG',
+          title: 'Awareness Movie Night',
+          description: 'A special movie screening event to raise awareness about breast cancer while bringing the community together.',
+          date: 'October 2023',
+          location: 'Community Cinema'
+        },
+        {
+          src: '/Photos/Pink October campaign 2023/movie night/2bf899b8-4a77-4d01-9568-6c39ae8b0370.JPG',
+          title: 'Movie Night Gathering',
+          description: 'Families and friends enjoying an evening of entertainment while supporting breast cancer awareness.',
+          date: 'October 2023',
+          location: 'Community Cinema'
+        },
+        {
+          src: '/Photos/Pink October campaign 2023/survivors luncheon /02e82319-1a12-45eb-b3dc-ad3b311795c4.JPG',
+          title: 'Survivors Luncheon',
+          description: 'A special luncheon honoring breast cancer survivors, celebrating their strength, courage, and inspiring journeys.',
+          date: 'October 2023',
+          location: 'Event Venue'
+        }
+      ]
+    },
+    {
+      id: 'breast-prosthetics',
+      title: 'Breast Prosthetics Program',
+      description: 'Supporting survivors with prosthetic solutions',
+      images: [
+        {
+          src: '/Photos/breast prosthetics/Copy of 7660d958-836f-4fbc-9d93-fcede9b62649.JPG',
+          title: 'Prosthetic Consultation',
+          description: 'Professional consultation session helping survivors find the right prosthetic solutions for their needs.',
+          date: '2023',
+          location: 'Medical Center'
+        },
+        {
+          src: '/Photos/breast prosthetics/Copy of 81f09672-efb3-4416-8ddf-5218cc74c3b4.JPG',
+          title: 'Fitting Session',
+          description: 'Personalized fitting session ensuring comfort and confidence for breast cancer survivors.',
+          date: '2023',
+          location: 'Prosthetics Center'
+        },
+        {
+          src: '/Photos/breast prosthetics/Copy of IMG_7388.JPG',
+          title: 'Support and Care',
+          description: 'Providing compassionate care and support throughout the prosthetic selection and fitting process.',
+          date: '2023',
+          location: 'Care Facility'
+        },
+        {
+          src: '/Photos/breast prosthetics/Copy of b3e8fbe3-58d1-40fd-a76b-5b59cc353253.JPG',
+          title: 'Quality Assurance',
+          description: 'Ensuring the highest quality prosthetic solutions to help survivors regain confidence and comfort.',
+          date: '2023',
+          location: 'Quality Center'
+        }
+      ]
+    },
+    {
+      id: 'kitintale-drive',
+      title: 'Kitintale Community Drive',
+      description: 'Outreach and support in Kitintale community',
+      images: [
+        {
+          src: '/Photos/kitintale drive/285c7378-d5ca-4861-8a17-a20d634b8a70.JPG',
+          title: 'Community Outreach',
+          description: 'Reaching out to the Kitintale community with essential health services and support programs.',
+          date: '2023',
+          location: 'Kitintale'
+        },
+        {
+          src: '/Photos/kitintale drive/3d991f9f-84ed-4d90-a772-15804278ec29.JPG',
+          title: 'Health Screening',
+          description: 'Providing free health screenings and consultations to community members in Kitintale.',
+          date: '2023',
+          location: 'Kitintale'
+        },
+        {
+          src: '/Photos/kitintale drive/533470f9-fe62-4501-b204-f3aeb5ebe674(1).JPG',
+          title: 'Educational Session',
+          description: 'Conducting educational sessions about health awareness and prevention in the Kitintale community.',
+          date: '2023',
+          location: 'Kitintale'
+        },
+        {
+          src: '/Photos/kitintale drive/615c7481-c93a-4fbf-a624-fd0b29ae2aba.JPG',
+          title: 'Community Engagement',
+          description: 'Engaging with local community leaders and residents to understand their health needs and concerns.',
+          date: '2023',
+          location: 'Kitintale'
+        },
+        {
+          src: '/Photos/kitintale drive/77577e24-9851-44b8-95ed-aa6ed0ffd4e7.JPG',
+          title: 'Support Distribution',
+          description: 'Distributing essential supplies and resources to families in need within the Kitintale community.',
+          date: '2023',
+          location: 'Kitintale'
+        },
+        {
+          src: '/Photos/kitintale drive/864df133-6b4a-437e-8030-4be67e6f35c2.JPG',
+          title: 'Team Collaboration',
+          description: 'Our dedicated team working together to provide comprehensive support to the Kitintale community.',
+          date: '2023',
+          location: 'Kitintale'
+        },
+        {
+          src: '/Photos/kitintale drive/IMG_0918.jpg',
+          title: 'Community Impact',
+          description: 'Witnessing the positive impact of our outreach efforts on the lives of Kitintale community members.',
+          date: '2023',
+          location: 'Kitintale'
+        },
+        {
+          src: '/Photos/kitintale drive/e0025788-8bea-41c0-af86-2b7824335216.JPG',
+          title: 'Follow-up Care',
+          description: 'Providing follow-up care and continued support to ensure lasting positive impact in the community.',
+          date: '2023',
+          location: 'Kitintale'
+        }
+      ]
+    },
+    {
+      id: 'general-activities',
+      title: 'General Activities',
+      description: 'Various community activities and initiatives',
+      images: [
+        {
+          src: '/Photos/68415bd2-f89c-45f7-9b16-7236f1982710.JPG',
+          title: 'Community Workshop',
+          description: 'Interactive workshop session focusing on health education and community empowerment.',
+          date: '2023',
+          location: 'Community Center'
+        },
+        {
+          src: '/Photos/Copy of 02418244-1E6A-4CAE-8BB5-FACF5FA983A6.JPG',
+          title: 'Support Group Meeting',
+          description: 'Regular support group meeting where participants share experiences and provide mutual encouragement.',
+          date: '2023',
+          location: 'Support Center'
+        },
+        {
+          src: '/Photos/Copy of 66e14dc3-bba4-45fa-96a4-fd2ab081304c.JPG',
+          title: 'Health Awareness Campaign',
+          description: 'Community health awareness campaign promoting early detection and prevention strategies.',
+          date: '2023',
+          location: 'Various Locations'
+        },
+        {
+          src: '/Photos/Copy of 6d58e49d-6d98-47cd-b070-2d23d1e43427.JPG',
+          title: 'Volunteer Training',
+          description: 'Comprehensive training session for new volunteers joining our mission of community support.',
+          date: '2023',
+          location: 'Training Center'
+        },
+        {
+          src: '/Photos/Copy of 77577e24-9851-44b8-95ed-aa6ed0ffd4e7.JPG',
+          title: 'Community Celebration',
+          description: 'Celebrating milestones and achievements with our wonderful community members and supporters.',
+          date: '2023',
+          location: 'Event Venue'
+        },
+        {
+          src: '/Photos/Copy of 8d97ae04-9c95-485f-9e4f-f75bc6c3e245.JPG',
+          title: 'Educational Seminar',
+          description: 'Educational seminar providing valuable information about health, wellness, and community resources.',
+          date: '2023',
+          location: 'Seminar Hall'
+        },
+        {
+          src: '/Photos/Toliva & Linda.jpg',
+          title: 'Leadership Team',
+          description: 'Our dedicated leadership team, Toliva and Linda, working tirelessly to serve our community.',
+          date: '2023',
+          location: 'Office'
+        }
+      ]
+    }
+  ];
+
+  // Handle image load for better performance
+  const handleImageLoad = () => {
+    // Optional: Add any image load handling here
+  };
+
+  // Animation variants
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1
+      }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: {
+        duration: 0.5
+      }
+    }
+  };
+
+  // Tooltip positioning function (same as Home page)
+  const calculateTooltipPosition = (triggerElement) => {
+    const rect = triggerElement.getBoundingClientRect();
+    const viewportWidth = window.innerWidth;
+    const viewportHeight = window.innerHeight;
+    
+    // Responsive tooltip width based on viewport
+    let tooltipWidth;
+    if (viewportWidth < 768) { // mobile
+      tooltipWidth = Math.min(320, viewportWidth - 40); // w-80 with 20px margin on each side
+    } else if (viewportWidth < 1024) { // tablet
+      tooltipWidth = 384; // w-96
+    } else { // desktop
+      tooltipWidth = 448; // w-[28rem]
+    }
+    
+    const tooltipHeight = 400; // approximate height
+    const margin = 20;
+    
+    let left, top, arrowClass;
+    
+    // On mobile, prefer bottom or top positioning for better UX
+    if (viewportWidth < 768) {
+      // Check if tooltip fits on the bottom
+      if (rect.bottom + tooltipHeight + margin <= viewportHeight) {
+        left = Math.max(margin, Math.min(rect.left + rect.width/2 - tooltipWidth/2, viewportWidth - tooltipWidth - margin));
+        top = rect.bottom + margin;
+        arrowClass = "absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-full w-0 h-0 border-l-8 border-r-8 border-b-8 border-transparent border-b-white";
+      }
+      // Default to top for mobile
+      else {
+        left = Math.max(margin, Math.min(rect.left + rect.width/2 - tooltipWidth/2, viewportWidth - tooltipWidth - margin));
+        top = Math.max(margin, rect.top - tooltipHeight - margin);
+        arrowClass = "absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-full w-0 h-0 border-l-8 border-r-8 border-t-8 border-transparent border-t-white";
+      }
+    } else {
+      // Desktop/tablet logic - prefer right/left positioning
+      // Check if tooltip fits on the right
+      if (rect.right + tooltipWidth + margin <= viewportWidth) {
+        left = rect.right + margin;
+        top = Math.max(margin, Math.min(rect.top + rect.height/2 - tooltipHeight/2, viewportHeight - tooltipHeight - margin));
+        arrowClass = "absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-full w-0 h-0 border-t-8 border-b-8 border-r-8 border-transparent border-r-white";
+      }
+      // Check if tooltip fits on the left
+      else if (rect.left - tooltipWidth - margin >= 0) {
+        left = rect.left - tooltipWidth - margin;
+        top = Math.max(margin, Math.min(rect.top + rect.height/2 - tooltipHeight/2, viewportHeight - tooltipHeight - margin));
+        arrowClass = "absolute right-0 top-1/2 transform -translate-y-1/2 translate-x-full w-0 h-0 border-t-8 border-b-8 border-l-8 border-transparent border-l-white";
+      }
+      // Check if tooltip fits on the bottom
+      else if (rect.bottom + tooltipHeight + margin <= viewportHeight) {
+        left = Math.max(margin, Math.min(rect.left + rect.width/2 - tooltipWidth/2, viewportWidth - tooltipWidth - margin));
+        top = rect.bottom + margin;
+        arrowClass = "absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-full w-0 h-0 border-l-8 border-r-8 border-b-8 border-transparent border-b-white";
+      }
+      // Default to top
+      else {
+        left = Math.max(margin, Math.min(rect.left + rect.width/2 - tooltipWidth/2, viewportWidth - tooltipWidth - margin));
+        top = Math.max(margin, rect.top - tooltipHeight - margin);
+        arrowClass = "absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-full w-0 h-0 border-l-8 border-r-8 border-t-8 border-transparent border-t-white";
+      }
+    }
+    
+    return { left, top, arrowClass };
+  };
+
+  // Detect if device supports touch
+  const isTouchDevice = () => {
+    return (
+      ('ontouchstart' in window || navigator.maxTouchPoints > 0) &&
+      window.innerWidth < 1024
+    );
+  };
+
+  // Show tooltip
+  const showTooltip = (image, triggerElement) => {
+    if (tooltipTimeoutRef.current) {
+      clearTimeout(tooltipTimeoutRef.current);
+      tooltipTimeoutRef.current = null;
+    }
+    const position = calculateTooltipPosition(triggerElement);
+    setTooltip({
+      visible: true,
+      image,
+      position: { left: position.left, top: position.top },
+      arrowClass: position.arrowClass
+    });
+  };
+
+  // Hide tooltip
+  const hideTooltip = () => {
+    if (tooltipTimeoutRef.current) {
+      clearTimeout(tooltipTimeoutRef.current);
+      tooltipTimeoutRef.current = null;
+    }
+    setTooltip(prev => ({ ...prev, visible: false }));
+  };
+
+  // Portal-based Tooltip Component
+  const TooltipPortal = () => {
+    if (!tooltip.visible || !tooltip.image) return null;
+
+    return createPortal(
+      <>
+        {/* Mobile backdrop for click-to-dismiss */}
+        {isTouchDevice() && window.innerWidth < 768 && (
+          <div 
+            className="fixed inset-0 bg-black/20"
+            style={{ zIndex: 9999 }}
+            onClick={hideTooltip}
+            onTouchEnd={hideTooltip}
+          />
+        )}
+        
+        <div 
+          className="fixed bg-white rounded-xl shadow-2xl border border-gray-200 p-4 sm:p-6 md:p-8 transition-opacity duration-300 pointer-events-auto max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg"
+          style={{
+            left: tooltip.position.left,
+            top: tooltip.position.top,
+            zIndex: 10000,
+            opacity: tooltip.visible ? 1 : 0,
+            width: window.innerWidth < 768 ? `${Math.min(320, window.innerWidth - 40)}px` : 'auto'
+          }}
+          onClick={(e) => e.stopPropagation()}
+        >
+          <div className={tooltip.arrowClass}></div>
+          
+          {/* Close button for mobile */}
+          {isTouchDevice() && window.innerWidth < 768 && (
+            <button
+              onClick={hideTooltip}
+              className="absolute top-2 right-2 p-2 text-gray-400 hover:text-gray-600 transition-colors"
+              aria-label="Close tooltip"
+            >
+              <FiX className="w-5 h-5" />
+            </button>
+          )}
+          
+          <div className="flex items-start justify-between mb-4">
+            <h5 className="text-xl md:text-2xl font-bold text-secondary pr-4">{tooltip.image.title}</h5>
+            <div className="flex items-center gap-2 text-sm bg-primary/10 text-primary px-3 py-1 rounded-full whitespace-nowrap">
+              <FiCamera className="text-xs" />
+              Photo
+            </div>
+          </div>
+          
+          <p className="text-base md:text-lg text-gray-600 mb-4 leading-relaxed">
+            {tooltip.image.description}
+          </p>
+          
+          <div className="grid grid-cols-1 gap-3 mb-4">
+            <div className="flex items-center justify-between text-sm md:text-base">
+              <span className="flex items-center gap-2 text-gray-500">
+                <FiCalendar className="text-primary" />
+                Date:
+              </span>
+              <span className="font-medium text-gray-700">{tooltip.image.date}</span>
+            </div>
+            <div className="flex items-center justify-between text-sm md:text-base">
+              <span className="flex items-center gap-2 text-gray-500">
+                <FiMapPin className="text-primary" />
+                Location:
+              </span>
+              <span className="font-medium text-gray-700">{tooltip.image.location}</span>
+            </div>
+          </div>
+          
+          <div className="flex items-center gap-2 text-sm text-gray-500 pt-4 border-t border-gray-100">
+            <FiHeart className="text-red-500" />
+            <span>Part of our community impact initiatives</span>
+          </div>
+        </div>
+      </>,
+      document.body
+    );
+  };
+
+  return (
+    <MainLayout>
+      <Helmet>
+        <title>Gallery - Charity NGO</title>
+        <meta name="description" content="Photo gallery showcasing our charitable work and community impact." />
+      </Helmet>
+      
+      <style dangerouslySetInnerHTML={{
+        __html: `
+          .masonry-grid {
+            columns: 1;
+            column-gap: 24px;
+            width: 100%;
+          }
+          
+          .gallery-item {
+            break-inside: avoid;
+            margin-bottom: 24px;
+            display: inline-block;
+            width: 100%;
+          }
+          
+          @media (min-width: 640px) {
+            .masonry-grid {
+              columns: 2;
+            }
+          }
+          
+          @media (min-width: 1024px) {
+            .masonry-grid {
+              columns: 3;
+            }
+          }
+          
+          @media (min-width: 1280px) {
+            .masonry-grid {
+              columns: 4;
+            }
+          }
+          
+          @media (min-width: 1536px) {
+            .masonry-grid {
+              columns: 5;
+            }
+          }
+        `
+      }} />
+      
+      {/* Hero Section */}
+      <section className="relative py-20 md:py-32 overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-pink-500 to-pink-600"></div>
+        <div className="absolute inset-0 bg-black/20"></div>
+        <div className="container-custom relative z-10">
+          <motion.div 
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="text-center max-w-4xl mx-auto text-white"
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+              className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm rounded-full px-6 py-3 mb-8 border border-white/30"
+            >
+              <FiCamera className="text-pink-200" />
+              <span className="text-sm font-medium">Visual Stories of Impact</span>
+            </motion.div>
+            <h1 className="text-5xl md:text-7xl font-bold mb-8 bg-gradient-to-r from-white to-pink-100 bg-clip-text text-transparent">
+              Our Gallery
+            </h1>
+            <p className="text-xl md:text-2xl mb-12 text-blue-100 leading-relaxed">
+              Capturing moments of hope, healing, and community impact through our visual journey of transformation.
+            </p>
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              className="flex flex-col sm:flex-row gap-6 justify-center"
+            >
+              <button 
+                className="group relative px-8 py-4 bg-white text-pink-600 rounded-full font-semibold text-lg shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300 overflow-hidden"
+                onClick={() => {
+                  document.getElementById('gallery-content').scrollIntoView({ behavior: 'smooth' });
+                }}
+              >
+                <span className="relative z-10">Explore Gallery</span>
+                <div className="absolute inset-0 bg-gradient-to-r from-pink-500 to-pink-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <span className="absolute inset-0 z-10 flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 font-semibold">Explore Gallery</span>
+              </button>
+              <button 
+                className="px-8 py-4 border-2 border-white text-white rounded-full font-semibold text-lg hover:bg-white hover:text-pink-600 transition-all duration-300 backdrop-blur-sm"
+                onClick={() => {
+                  window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+                }}
+              >
+                Contact Us
+              </button>
+            </motion.div>
+          </motion.div>
+        </div>
+        <div className="absolute inset-0 opacity-10">
+          <img 
+            src="https://images.unsplash.com/photo-1559027615-cd4628902d4a?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80" 
+            alt="Community gallery moments" 
+            className="w-full h-full object-cover"
+          />
+        </div>
+      </section>
+
+      {/* Gallery Content */}
+      <div id="gallery-content" className="relative bg-gradient-to-br from-gray-50 via-white to-gray-50 py-20 md:py-32">
+        {/* Background decoration */}
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute -top-40 -right-40 w-80 h-80 bg-primary/5 rounded-full blur-3xl" />
+          <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-secondary/5 rounded-full blur-3xl" />
+        </div>
+
+        <div className="container-custom relative">
+          <motion.div
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px" }}
+            className="space-y-12"
+          >
+            {/* Gallery Header */}
+            <div className="text-center max-w-4xl mx-auto mb-16">
+              <h2 className="text-4xl md:text-5xl font-bold text-gray-800 mb-6">
+                Our Visual Journey
+              </h2>
+              <p className="text-xl text-gray-600 leading-relaxed">
+                Explore moments of impact, community stories, and the transformative work we do together.
+              </p>
+            </div>
+
+            {/* CSS Masonry Grid for all items */}
+            <div ref={gridRef} className="masonry-grid">
+              {/* Flatten all images from all categories */}
+              {galleryCategories.flatMap((category) => 
+                category.images.map((image, imageIndex) => (
+                     <motion.div
+                       key={`${category.id}-${imageIndex}`}
+                       variants={itemVariants}
+                       className="gallery-item group relative"
+                       onMouseEnter={(e) => {
+                         if (!isTouchDevice()) {
+                           showTooltip(image, e.currentTarget);
+                         }
+                       }}
+                     >
+                       <div className="absolute inset-0 bg-pink-500 rounded-2xl transform rotate-1 group-hover:rotate-2 transition-transform duration-300 opacity-10"></div>
+                       <div className="relative bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2"
+                       onMouseLeave={() => {
+                         if (!isTouchDevice()) {
+                           hideTooltip();
+                         }
+                       }}
+                       onClick={(e) => {
+                         if (isTouchDevice()) {
+                           e.preventDefault();
+                           showTooltip(image, e.currentTarget);
+                         }
+                       }}
+                     >
+                       <div className="relative overflow-hidden">
+                         <img
+                           src={image.src}
+                           alt={image.title}
+                           className="w-full h-auto object-cover group-hover:scale-110 transition-transform duration-700"
+                           loading="lazy"
+                           onLoad={handleImageLoad}
+                           style={{
+                             aspectRatio: 'auto',
+                             minHeight: '200px',
+                             maxHeight: '500px'
+                           }}
+                         />
+                         
+                         {/* Image overlay */}
+                         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                         
+                         {/* Image info overlay */}
+                         <div className="absolute bottom-0 left-0 right-0 p-4 text-white transform translate-y-full group-hover:translate-y-0 transition-transform duration-300">
+                           <h3 className="font-semibold text-sm mb-1 line-clamp-1">{image.title}</h3>
+                           <p className="text-xs text-white/80 line-clamp-2">{image.description}</p>
+                         </div>
+                         
+                         {/* Hover indicator */}
+                         <div className="absolute top-4 right-4 w-8 h-8 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                           <FiCamera className="text-white text-sm" />
+                         </div>
+                       </div>
+                       
+                       {/* Card content below image */}
+                       <div className="p-4">
+                         <h3 className="font-semibold text-gray-800 mb-2 line-clamp-2">{image.title}</h3>
+                         <p className="text-sm text-gray-600 mb-3 line-clamp-3">{image.description}</p>
+                         <div className="flex items-center justify-between text-xs text-gray-500">
+                           <div className="flex items-center gap-1">
+                             <FiCalendar className="text-primary" />
+                             <span>{image.date}</span>
+                           </div>
+                           <div className="flex items-center gap-1">
+                             <FiMapPin className="text-primary" />
+                             <span className="truncate max-w-20">{image.location}</span>
+                           </div>
+                         </div>
+                       </div>
+                     </div>
+                   </motion.div>
+                   ))
+                 )}
+               </div>
+            </motion.div>
+        </div>
+      </div>
+
+      {/* Tooltip Portal */}
+      <TooltipPortal />
+    </MainLayout>
+  );
+}

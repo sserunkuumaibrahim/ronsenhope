@@ -276,7 +276,7 @@ export default function ImageCarousel() {
              return (
                <motion.div
                  key={item.id}
-                 className="absolute top-1/2 left-1/2 w-48 h-64 cursor-pointer"
+                 className="absolute top-1/2 left-1/2 w-48 h-64 cursor-pointer group relative"
                  style={{
                    transform: `translate(-50%, -50%) translate3d(${x}px, 0, ${z}px)`,
                    transformStyle: 'preserve-3d',
@@ -297,6 +297,8 @@ export default function ImageCarousel() {
                  onMouseMove={(e) => handleItemHover(item, e)}
                  onMouseLeave={handleItemLeave}
                >
+                {/* Pink background overlay */}
+                <div className="absolute inset-0 bg-pink-500 rounded-2xl transform rotate-1 group-hover:rotate-2 transition-transform duration-300 opacity-10"></div>
                 {/* Card */}
                 <div className="relative w-full h-full bg-white rounded-2xl shadow-2xl overflow-hidden border border-gray-100">
                   {/* Image */}
@@ -312,13 +314,13 @@ export default function ImageCarousel() {
                   
                   {/* Content */}
                   <div className="absolute bottom-0 left-0 right-0 p-4 bg-white">
-                    <h3 className="text-lg font-bold text-gray-900 truncate">
+                    <h3 className="text-lg font-bold text-gray-800 truncate">
                       {item.name}
                     </h3>
                     <p className="text-sm text-gray-600 truncate">
                       {item.role}
                     </p>
-                    <p className="text-xs text-gray-500 truncate">
+                    <p className="text-xs text-gray-600 truncate">
                       {item.location}
                     </p>
                   </div>

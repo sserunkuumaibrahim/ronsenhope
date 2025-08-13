@@ -199,8 +199,9 @@ export default function Dashboard() {
         >
           {/* Stats Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-            <div className="card bg-base-100 shadow-lg">
-              <div className="card-body p-4">
+            <div className="card bg-base-100 shadow-lg relative group">
+              <div className="absolute inset-0 bg-pink-500 rounded-2xl transform rotate-1 group-hover:rotate-2 transition-transform duration-300 opacity-10"></div>
+              <div className="card-body p-4 relative">
                 <div className="flex justify-between items-center">
                   <div>
                     <p className="text-sm font-medium text-base-content/70">Total Donations</p>
@@ -227,8 +228,9 @@ export default function Dashboard() {
               </div>
             </div>
 
-            <div className="card bg-base-100 shadow-lg">
-              <div className="card-body p-4">
+            <div className="card bg-base-100 shadow-lg relative group">
+              <div className="absolute inset-0 bg-pink-500 rounded-2xl transform rotate-1 group-hover:rotate-2 transition-transform duration-300 opacity-10"></div>
+              <div className="card-body p-4 relative">
                 <div className="flex justify-between items-center">
                   <div>
                     <p className="text-sm font-medium text-base-content/70">Total Donors</p>
@@ -255,8 +257,9 @@ export default function Dashboard() {
               </div>
             </div>
 
-            <div className="card bg-base-100 shadow-lg">
-              <div className="card-body p-4">
+            <div className="card bg-base-100 shadow-lg relative group">
+              <div className="absolute inset-0 bg-pink-500 rounded-2xl transform rotate-1 group-hover:rotate-2 transition-transform duration-300 opacity-10"></div>
+              <div className="card-body p-4 relative">
                 <div className="flex justify-between items-center">
                   <div>
                     <p className="text-sm font-medium text-base-content/70">Active Programs</p>
@@ -283,8 +286,9 @@ export default function Dashboard() {
               </div>
             </div>
 
-            <div className="card bg-base-100 shadow-lg">
-              <div className="card-body p-4">
+            <div className="card bg-base-100 shadow-lg relative group">
+              <div className="absolute inset-0 bg-pink-500 rounded-2xl transform rotate-1 group-hover:rotate-2 transition-transform duration-300 opacity-10"></div>
+              <div className="card-body p-4 relative">
                 <div className="flex justify-between items-center">
                   <div>
                     <p className="text-sm font-medium text-base-content/70">Upcoming Events</p>
@@ -315,8 +319,9 @@ export default function Dashboard() {
           {/* Charts and Tables */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
             {/* Donations Chart */}
-            <div className="card bg-base-100 shadow-lg lg:col-span-2">
-              <div className="card-body">
+            <div className="card bg-base-100 shadow-lg lg:col-span-2 relative group">
+              <div className="absolute inset-0 bg-pink-500 rounded-2xl transform rotate-1 group-hover:rotate-2 transition-transform duration-300 opacity-10"></div>
+              <div className="card-body relative">
                 <div className="flex justify-between items-center mb-4">
                   <h3 className="card-title">Donations Overview</h3>
                   <div className="badge badge-primary">{timeRange}</div>
@@ -348,8 +353,9 @@ export default function Dashboard() {
             </div>
 
             {/* Program Distribution */}
-            <div className="card bg-base-100 shadow-lg">
-              <div className="card-body">
+            <div className="card bg-base-100 shadow-lg relative group">
+              <div className="absolute inset-0 bg-pink-500 rounded-2xl transform rotate-1 group-hover:rotate-2 transition-transform duration-300 opacity-10"></div>
+              <div className="card-body relative">
                 <h3 className="card-title mb-4">Program Distribution</h3>
                 
                 <div className="space-y-4">
@@ -378,8 +384,9 @@ export default function Dashboard() {
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Recent Donations */}
-            <div className="card bg-base-100 shadow-lg">
-              <div className="card-body">
+            <div className="card bg-base-100 shadow-lg relative group">
+              <div className="absolute inset-0 bg-pink-500 rounded-2xl transform rotate-1 group-hover:rotate-2 transition-transform duration-300 opacity-10"></div>
+              <div className="card-body relative">
                 <div className="flex justify-between items-center mb-4">
                   <h3 className="card-title">Recent Donations</h3>
                   <Link to="/admin/donations" className="btn btn-sm btn-ghost">View All</Link>
@@ -420,8 +427,9 @@ export default function Dashboard() {
             </div>
 
             {/* Recent Users */}
-            <div className="card bg-base-100 shadow-lg">
-              <div className="card-body">
+            <div className="card bg-base-100 shadow-lg relative group">
+              <div className="absolute inset-0 bg-pink-500 rounded-2xl transform rotate-1 group-hover:rotate-2 transition-transform duration-300 opacity-10"></div>
+              <div className="card-body relative">
                 <div className="flex justify-between items-center mb-4">
                   <h3 className="card-title">Recent Users</h3>
                   <Link to="/admin/users" className="btn btn-sm btn-ghost">View All</Link>
