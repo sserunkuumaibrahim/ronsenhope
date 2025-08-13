@@ -52,9 +52,9 @@ export default function Contact() {
       </Helmet>
 
       {/* Hero Section */}
-      <section className="relative min-h-[60vh] flex items-center justify-center overflow-hidden">
-        {/* Background with gradient */}
-        <div className="absolute inset-0 bg-gradient-to-br from-primary via-primary/90 to-secondary" />
+      <section className="relative py-20 md:py-32 overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-pink-400 via-pink-500 to-pink-600"></div>
+        <div className="absolute inset-0 bg-black/20"></div>
         
         {/* Animated background elements */}
         <div className="absolute inset-0">
@@ -94,50 +94,62 @@ export default function Contact() {
             <motion.div
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="mb-6"
+              transition={{ duration: 0.6, delay: 0.1 }}
+              className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm rounded-full px-6 py-3 mb-8 border border-white/30"
             >
-              <div className="inline-flex items-center justify-center w-20 h-20 bg-white/10 backdrop-blur-sm rounded-full mb-6">
-                <FiMail className="text-3xl text-white" />
-              </div>
+              <FiMail className="text-pink-200" />
+              <span className="text-sm font-medium">Let's Connect</span>
             </motion.div>
             
             <motion.h1
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.3 }}
-              className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 bg-gradient-to-r from-white to-white/80 bg-clip-text text-transparent"
+              className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 bg-gradient-to-r from-white to-pink-100 bg-clip-text text-transparent"
             >
-              Let's Connect
+              Get in Touch
             </motion.h1>
             
             <motion.p
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.4 }}
-              className="text-xl md:text-2xl text-white/90 mb-8 leading-relaxed"
+              className="text-xl md:text-2xl text-white/90 mb-12 leading-relaxed"
             >
-              Ready to make a difference together? We'd love to hear from you.
+              Ready to make a difference together? We'd love to hear from you and explore how we can work together.
             </motion.p>
             
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.5 }}
-              className="flex flex-wrap justify-center gap-6 text-white/80"
+              className="flex flex-col sm:flex-row gap-4 justify-center items-center"
             >
-              <div className="flex items-center gap-2">
-                <FiClock className="text-lg" />
-                <span>Quick Response</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <FiGlobe className="text-lg" />
-                <span>Global Impact</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <FiCheckCircle className="text-lg" />
-                <span>Trusted Partner</span>
-              </div>
+              <button 
+                className="group relative px-8 py-4 bg-white text-pink-600 rounded-full font-semibold text-lg shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300 overflow-hidden"
+                onClick={() => {
+                  document.getElementById('contact-form').scrollIntoView({ behavior: 'smooth' });
+                }}
+              >
+                <span className="relative z-10 flex items-center">
+                  <FiSend className="mr-2" />
+                  Send Message
+                </span>
+                <div className="absolute inset-0 bg-gradient-to-r from-pink-500 to-pink-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <span className="absolute inset-0 z-10 flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 font-semibold">
+                  <FiSend className="mr-2" />
+                  Send Message
+                </span>
+              </button>
+              <button 
+                className="px-8 py-4 border-2 border-white text-white rounded-full font-semibold text-lg hover:bg-white hover:text-pink-600 transition-all duration-300 backdrop-blur-sm flex items-center"
+                onClick={() => {
+                  document.getElementById('contact-info').scrollIntoView({ behavior: 'smooth' });
+                }}
+              >
+                <FiPhone className="mr-2" />
+                Contact Info
+              </button>
             </motion.div>
           </motion.div>
         </div>
@@ -161,6 +173,7 @@ export default function Contact() {
           >
             {/* Contact Form */}
             <motion.div
+              id="contact-form"
               variants={itemVariants}
               className="relative"
             >
@@ -331,6 +344,7 @@ export default function Contact() {
 
             {/* Contact Information */}
             <motion.div
+              id="contact-info"
               variants={itemVariants}
               className="space-y-8"
             >

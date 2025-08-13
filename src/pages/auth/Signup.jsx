@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { useForm } from 'react-hook-form';
 import { motion } from 'framer-motion';
-import { FiUser, FiMail, FiLock, FiAlertCircle } from 'react-icons/fi';
+import { FiUser, FiMail, FiLock, FiAlertCircle, FiEye, FiEyeOff } from 'react-icons/fi';
 import { useAuth } from '../../contexts/AuthContext';
 import MainLayout from '../../components/layout/MainLayout';
 
@@ -11,6 +11,8 @@ export default function Signup() {
   const { register, handleSubmit, watch, formState: { errors } } = useForm();
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const { signup } = useAuth();
   const navigate = useNavigate();
 
@@ -42,28 +44,82 @@ export default function Signup() {
         <title>Sign Up - Charity NGO</title>
         <meta name="description" content="Create a new account with Charity NGO to join our community, participate in forums, and stay updated with our initiatives." />
       </Helmet>
+      
+      <div className="min-h-screen bg-gradient-to-br from-white via-gray-50 to-gray-100 relative overflow-hidden">
 
-      <div className="container-custom py-16 md:py-24">
-        <div className="max-w-md mx-auto bg-base-200 rounded-lg shadow-xl overflow-hidden">
-          <div className="p-6 sm:p-8">
+      {/* Animated Background Elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <motion.div
+          className="absolute -top-4 -left-4 w-72 h-72 bg-gray-200/20 rounded-full mix-blend-multiply filter blur-xl"
+          animate={{
+            x: [0, 100, 0],
+            y: [0, -100, 0],
+          }}
+          transition={{
+            duration: 20,
+            repeat: Infinity,
+            repeatType: "reverse",
+          }}
+        />
+        <motion.div
+          className="absolute -top-4 -right-4 w-72 h-72 bg-gray-300/20 rounded-full mix-blend-multiply filter blur-xl"
+          animate={{
+            x: [0, -100, 0],
+            y: [0, 100, 0],
+          }}
+          transition={{
+            duration: 20,
+            repeat: Infinity,
+            repeatType: "reverse",
+            delay: 2,
+          }}
+        />
+        <motion.div
+          className="absolute -bottom-8 left-20 w-72 h-72 bg-gray-200/20 rounded-full mix-blend-multiply filter blur-xl"
+          animate={{
+            x: [0, -100, 0],
+            y: [0, -100, 0],
+          }}
+          transition={{
+            duration: 20,
+            repeat: Infinity,
+            repeatType: "reverse",
+            delay: 4,
+          }}
+        />
+      </div>
+
+      <div className="relative z-10 min-h-screen flex items-center justify-center px-4 py-12">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          className="w-full max-w-md"
+        >
+          <div className="bg-white/80 backdrop-blur-lg rounded-3xl shadow-2xl border border-white/20 overflow-hidden">
+            <div className="p-6 sm:p-8">
             <motion.div
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
               className="text-center mb-8"
             >
-              <h1 className="text-3xl font-bold">Create Account</h1>
-              <p className="mt-2 text-base-content/70">Join our community to make a difference</p>
+              <div className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-pink-500 to-pink-600 text-white text-sm font-medium rounded-full mb-4">
+                <FiUser className="mr-2" />
+                Join Our Community
+              </div>
+              <h1 className="text-3xl font-bold text-gray-900 mb-2">Create Account</h1>
+              <p className="text-gray-600">Join our community to make a difference together</p>
             </motion.div>
 
             {error && (
               <motion.div 
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: 'auto' }}
-                className="alert alert-error mb-6 flex items-center"
+                className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl mb-6 flex items-center"
               >
-                <FiAlertCircle className="text-lg mr-2" />
-                <span>{error}</span>
+                <FiAlertCircle className="text-lg mr-2 flex-shrink-0" />
+                <span className="text-sm">{error}</span>
               </motion.div>
             )}
 
@@ -74,18 +130,20 @@ export default function Signup() {
               onSubmit={handleSubmit(onSubmit)}
               className="space-y-6"
             >
-              <div className="form-control">
-                <label className="label">
-                  <span className="label-text">Full Name</span>
+              <div className="space-y-2">
+                <label className="block text-sm font-medium text-gray-700">
+                  Full Name
                 </label>
                 <div className="relative">
-                  <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-base-content/50">
-                    <FiUser />
+                  <span className="absolute inset-y-0 left-0 flex items-center pl-4 text-gray-400">
+                    <FiUser className="w-5 h-5" />
                   </span>
                   <input
                     type="text"
-                    className={`input input-bordered w-full pl-10 ${errors.displayName ? 'input-error' : ''}`}
-                    placeholder="John Doe"
+                    className={`w-full pl-12 pr-4 py-3 border rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 transition-colors bg-white/50 backdrop-blur-sm ${
+                      errors.displayName ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-200'
+                    }`}
+                    placeholder="Enter your full name"
                     {...register('displayName', { 
                       required: 'Full name is required',
                       minLength: {
@@ -96,24 +154,24 @@ export default function Signup() {
                   />
                 </div>
                 {errors.displayName && (
-                  <label className="label">
-                    <span className="label-text-alt text-error">{errors.displayName.message}</span>
-                  </label>
+                  <p className="text-sm text-red-600">{errors.displayName.message}</p>
                 )}
               </div>
 
-              <div className="form-control">
-                <label className="label">
-                  <span className="label-text">Email</span>
+              <div className="space-y-2">
+                <label className="block text-sm font-medium text-gray-700">
+                  Email Address
                 </label>
                 <div className="relative">
-                  <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-base-content/50">
-                    <FiMail />
+                  <span className="absolute inset-y-0 left-0 flex items-center pl-4 text-gray-400">
+                    <FiMail className="w-5 h-5" />
                   </span>
                   <input
                     type="email"
-                    className={`input input-bordered w-full pl-10 ${errors.email ? 'input-error' : ''}`}
-                    placeholder="your.email@example.com"
+                    className={`w-full pl-12 pr-4 py-3 border rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 transition-colors bg-white/50 backdrop-blur-sm ${
+                      errors.email ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-200'
+                    }`}
+                    placeholder="Enter your email address"
                     {...register('email', { 
                       required: 'Email is required',
                       pattern: {
@@ -124,24 +182,24 @@ export default function Signup() {
                   />
                 </div>
                 {errors.email && (
-                  <label className="label">
-                    <span className="label-text-alt text-error">{errors.email.message}</span>
-                  </label>
+                  <p className="text-sm text-red-600">{errors.email.message}</p>
                 )}
               </div>
 
-              <div className="form-control">
-                <label className="label">
-                  <span className="label-text">Password</span>
+              <div className="space-y-2">
+                <label className="block text-sm font-medium text-gray-700">
+                  Password
                 </label>
                 <div className="relative">
-                  <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-base-content/50">
-                    <FiLock />
+                  <span className="absolute inset-y-0 left-0 flex items-center pl-4 text-gray-400">
+                    <FiLock className="w-5 h-5" />
                   </span>
                   <input
-                    type="password"
-                    className={`input input-bordered w-full pl-10 ${errors.password ? 'input-error' : ''}`}
-                    placeholder="••••••••"
+                    type={showPassword ? 'text' : 'password'}
+                    className={`w-full pl-12 pr-12 py-3 border rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 transition-colors bg-white/50 backdrop-blur-sm ${
+                      errors.password ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-200'
+                    }`}
+                    placeholder="Create a secure password"
                     {...register('password', { 
                       required: 'Password is required',
                       minLength: {
@@ -150,48 +208,69 @@ export default function Signup() {
                       }
                     })}
                   />
+                  <button
+                    type="button"
+                    className="absolute inset-y-0 right-0 flex items-center pr-4 text-gray-400 hover:text-gray-600 transition-colors"
+                    onClick={() => setShowPassword(!showPassword)}
+                  >
+                    {showPassword ? <FiEyeOff className="w-5 h-5" /> : <FiEye className="w-5 h-5" />}
+                  </button>
                 </div>
                 {errors.password && (
-                  <label className="label">
-                    <span className="label-text-alt text-error">{errors.password.message}</span>
-                  </label>
+                  <p className="text-sm text-red-600">{errors.password.message}</p>
                 )}
               </div>
 
-              <div className="form-control">
-                <label className="label">
-                  <span className="label-text">Confirm Password</span>
+              <div className="space-y-2">
+                <label className="block text-sm font-medium text-gray-700">
+                  Confirm Password
                 </label>
                 <div className="relative">
-                  <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-base-content/50">
-                    <FiLock />
+                  <span className="absolute inset-y-0 left-0 flex items-center pl-4 text-gray-400">
+                    <FiLock className="w-5 h-5" />
                   </span>
                   <input
-                    type="password"
-                    className={`input input-bordered w-full pl-10 ${errors.confirmPassword ? 'input-error' : ''}`}
-                    placeholder="••••••••"
+                    type={showConfirmPassword ? 'text' : 'password'}
+                    className={`w-full pl-12 pr-12 py-3 border rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 transition-colors bg-white/50 backdrop-blur-sm ${
+                      errors.confirmPassword ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-200'
+                    }`}
+                    placeholder="Confirm your password"
                     {...register('confirmPassword', { 
                       required: 'Please confirm your password',
                       validate: value => value === watch('password') || 'Passwords do not match'
                     })}
                   />
+                  <button
+                    type="button"
+                    className="absolute inset-y-0 right-0 flex items-center pr-4 text-gray-400 hover:text-gray-600 transition-colors"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  >
+                    {showConfirmPassword ? <FiEyeOff className="w-5 h-5" /> : <FiEye className="w-5 h-5" />}
+                  </button>
                 </div>
                 {errors.confirmPassword && (
-                  <label className="label">
-                    <span className="label-text-alt text-error">{errors.confirmPassword.message}</span>
-                  </label>
+                  <p className="text-sm text-red-600">{errors.confirmPassword.message}</p>
                 )}
               </div>
 
-              <div className="form-control mt-6">
-                <button 
-                  type="submit" 
-                  className={`btn btn-primary w-full ${loading ? 'loading' : ''}`}
-                  disabled={loading}
-                >
-                  {loading ? 'Creating Account...' : 'Create Account'}
-                </button>
-              </div>
+              <motion.button
+                type="submit"
+                disabled={loading}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                className={`w-full py-3 px-4 bg-gradient-to-r from-pink-500 to-pink-600 text-white font-medium rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed ${
+                  loading ? 'animate-pulse' : ''
+                }`}
+              >
+                {loading ? (
+                  <div className="flex items-center justify-center">
+                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+                    Creating Account...
+                  </div>
+                ) : (
+                  'Create Account'
+                )}
+              </motion.button>
             </motion.form>
 
             <motion.div 
@@ -200,15 +279,17 @@ export default function Signup() {
               transition={{ duration: 0.5, delay: 0.4 }}
               className="mt-8 text-center"
             >
-              <p>
+              <p className="text-gray-600">
                 Already have an account?{' '}
-                <Link to="/login" className="text-primary hover:underline">
+                <Link to="/login" className="text-pink-600 hover:text-pink-700 font-medium transition-colors">
                   Sign in
                 </Link>
               </p>
             </motion.div>
+            </div>
           </div>
-        </div>
+        </motion.div>
+      </div>
       </div>
     </MainLayout>
   );
