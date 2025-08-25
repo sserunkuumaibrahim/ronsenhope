@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { FiMenu, FiX } from 'react-icons/fi';
-import { motion, AnimatePresence } from 'framer-motion';
+import {  motion,AnimatePresence } from 'framer-motion';
 
 export default function MainLayout({ children }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -33,14 +33,14 @@ export default function MainLayout({ children }) {
             {/* Desktop Navigation */}
             <nav className="hidden xl:flex space-x-6 items-center">
               <Link to="/" className="hover:opacity-80 transition-colors">Home</Link>
+               <Link to="/about" className="hover:opacity-80 transition-colors">About Us</Link>
               <Link to="/programs" className="hover:opacity-80 transition-colors">Programs</Link>
-              <Link to="/volunteer" className="hover:opacity-80 transition-colors">Volunteer</Link>
+              <Link to="/stories" className="hover:opacity-80 transition-colors">Stories</Link>
               <Link to="/gallery" className="hover:opacity-80 transition-colors">Gallery</Link>
-              <Link to="/blog" className="hover:opacity-80 transition-colors">Blog</Link>
               <Link to="/forum" className="hover:opacity-80 transition-colors">Forum</Link>
-              <Link to="/about" className="hover:opacity-80 transition-colors">About Us</Link>
+              <Link to="/volunteer" className="hover:opacity-80 transition-colors">Support us</Link>
               <Link to="/contact" className="hover:opacity-80 transition-colors">Contact</Link>
-              
+              {console.log(currentUser)}
               {currentUser ? (
                 <div className="flex items-center space-x-4">
                   <div className="dropdown dropdown-end">
@@ -52,11 +52,17 @@ export default function MainLayout({ children }) {
                       </div>
                     </div>
                     <ul tabIndex={0} className="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-52 text-neutral">
-                      <li><Link to="/profile">Profile</Link></li>
-                      {currentUser.role === 'admin' && (
-                        <li><Link to="/admin">Admin Dashboard</Link></li>
+                      {currentUser.role === 'admin' ? (
+                        <>
+                          <li><Link to="/admin">Dashboard</Link></li>
+                          <li><button onClick={handleLogout}>Logout</button></li>
+                        </>
+                      ) : (
+                        <>
+                          <li><Link to="/profile">Profile</Link></li>
+                          <li><button onClick={handleLogout}>Logout</button></li>
+                        </>
                       )}
-                      <li><button onClick={handleLogout}>Logout</button></li>
                     </ul>
                   </div>
                 </div>
@@ -80,11 +86,17 @@ export default function MainLayout({ children }) {
                     </div>
                   </div>
                   <ul tabIndex={0} className="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-52 text-neutral">
-                    <li><Link to="/profile">Profile</Link></li>
-                    {currentUser.role === 'admin' && (
-                      <li><Link to="/admin">Admin Dashboard</Link></li>
+                    {currentUser.role === 'admin' ? (
+                      <>
+                        <li><Link to="/admin">Dashboard</Link></li>
+                        <li><button onClick={handleLogout}>Logout</button></li>
+                      </>
+                    ) : (
+                      <>
+                        <li><Link to="/profile">Profile</Link></li>
+                        <li><button onClick={handleLogout}>Logout</button></li>
+                      </>
                     )}
-                    <li><button onClick={handleLogout}>Logout</button></li>
                   </ul>
                 </div>
               ) : (
@@ -119,9 +131,10 @@ export default function MainLayout({ children }) {
             <nav className="flex flex-col space-y-2 p-4">
               <Link to="/" className="text-gray-700 hover:text-white hover:bg-primary transition-all duration-200 py-3 px-4 rounded-lg">Home</Link>
               <Link to="/programs" className="text-gray-700 hover:text-white hover:bg-primary transition-all duration-200 py-3 px-4 rounded-lg">Programs</Link>
+              <Link to="/stories" className="text-gray-700 hover:text-white hover:bg-primary transition-all duration-200 py-3 px-4 rounded-lg">Stories</Link>
               <Link to="/volunteer" className="text-gray-700 hover:text-white hover:bg-primary transition-all duration-200 py-3 px-4 rounded-lg">Volunteer</Link>
               <Link to="/gallery" className="text-gray-700 hover:text-white hover:bg-primary transition-all duration-200 py-3 px-4 rounded-lg">Gallery</Link>
-              <Link to="/blog" className="text-gray-700 hover:text-white hover:bg-primary transition-all duration-200 py-3 px-4 rounded-lg">Blog</Link>
+              
               <Link to="/forum" className="text-gray-700 hover:text-white hover:bg-primary transition-all duration-200 py-3 px-4 rounded-lg">Forum</Link>
               <Link to="/about" className="text-gray-700 hover:text-white hover:bg-primary transition-all duration-200 py-3 px-4 rounded-lg">About Us</Link>
               <Link to="/contact" className="text-gray-700 hover:text-white hover:bg-primary transition-all duration-200 py-3 px-4 rounded-lg">Contact</Link>
@@ -131,16 +144,27 @@ export default function MainLayout({ children }) {
                 {currentUser ? (
                   <>
                     <div className="divider my-4"></div>
-                    <Link to="/profile" className="text-gray-700 hover:text-white hover:bg-primary transition-all duration-200 py-3 px-4 rounded-lg block">Profile</Link>
-                    {currentUser.role === 'admin' && (
-                      <Link to="/admin" className="text-gray-700 hover:text-white hover:bg-primary transition-all duration-200 py-3 px-4 rounded-lg block mt-2">Admin Dashboard</Link>
+                    {currentUser.role === 'admin' ? (
+                      <>
+                        <Link to="/admin" className="text-gray-700 hover:text-white hover:bg-primary transition-all duration-200 py-3 px-4 rounded-lg block">Dashboard</Link>
+                        <button 
+                          onClick={handleLogout}
+                          className="text-gray-700 hover:text-white hover:bg-red-500 transition-all duration-200 py-3 px-4 rounded-lg text-left w-full mt-2"
+                        >
+                          Logout
+                        </button>
+                      </>
+                    ) : (
+                      <>
+                        <Link to="/profile" className="text-gray-700 hover:text-white hover:bg-primary transition-all duration-200 py-3 px-4 rounded-lg block">Profile</Link>
+                        <button 
+                          onClick={handleLogout}
+                          className="text-gray-700 hover:text-white hover:bg-red-500 transition-all duration-200 py-3 px-4 rounded-lg text-left w-full mt-2"
+                        >
+                          Logout
+                        </button>
+                      </>
                     )}
-                    <button 
-                      onClick={handleLogout}
-                      className="text-gray-700 hover:text-white hover:bg-red-500 transition-all duration-200 py-3 px-4 rounded-lg text-left w-full mt-2"
-                    >
-                      Logout
-                    </button>
                   </>
                 ) : (
                   <>
@@ -163,56 +187,36 @@ export default function MainLayout({ children }) {
       </main>
       
       {/* Footer */}
-      <footer className="bg-secondary text-accent">
-        <div className="container-custom py-10">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+      <footer className="bg-primary text-accent py-12">
+        <div className="container-custom">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             <div>
-              <h3 className="text-lg font-bold mb-4">Charity NGO</h3>
-              <p className="text-sm mb-4">Making a difference in the world through compassion, action, and community.</p>
-              <div className="flex space-x-4 text-sm">
-                <a href="#" className="hover:text-primary transition-colors">Facebook</a>
-                <a href="#" className="hover:text-primary transition-colors">Twitter</a>
-                <a href="#" className="hover:text-primary transition-colors">Instagram</a>
-              </div>
+              <h3 className="text-xl font-bold mb-4">About Us</h3>
+              <p className="text-sm">
+                We are dedicated to making a positive impact in our community through various charitable initiatives and programs.
+              </p>
             </div>
-            
             <div>
-              <h4 className="text-base font-bold mb-4">Quick Links</h4>
-              <ul className="space-y-2 text-sm">
-                <li><Link to="/" className="hover:text-primary transition-colors">Home</Link></li>
-                <li><Link to="/blog" className="hover:text-primary transition-colors">Blog</Link></li>
-                <li><Link to="/forum" className="hover:text-primary transition-colors">Forum</Link></li>
-                <li><Link to="/about" className="hover:text-primary transition-colors">About Us</Link></li>
-                <li><Link to="/contact" className="hover:text-primary transition-colors">Contact</Link></li>
+              <h3 className="text-xl font-bold mb-4">Quick Links</h3>
+              <ul className="space-y-2">
+                <li><Link to="/programs" className="hover:opacity-80 transition-colors">Our Programs</Link></li>
+                <li><Link to="/volunteer" className="hover:opacity-80 transition-colors">Support us</Link></li>
+                <li><Link to="/stories" className="hover:opacity-80 transition-colors">Success Stories</Link></li>
+                <li><Link to="/contact" className="hover:opacity-80 transition-colors">Contact Us</Link></li>
+              </ul>
+            </div>
+            <div>
+              <h3 className="text-xl font-bold mb-4">Contact Info</h3>
+              <ul className="space-y-2">
+                <li>Email: contact@charity-ngo.org</li>
+                <li>Phone: +256 123 456 789</li>
+                <li>Address: Kampala, Uganda</li>
               </ul>
             </div>
             
-            <div>
-              <h4 className="text-base font-bold mb-4">Programs</h4>
-              <ul className="space-y-2 text-sm">
-                <li><a href="#" className="hover:text-primary transition-colors">Education</a></li>
-                <li><a href="#" className="hover:text-primary transition-colors">Healthcare</a></li>
-                <li><a href="#" className="hover:text-primary transition-colors">Environment</a></li>
-                <li><a href="#" className="hover:text-primary transition-colors">Community Development</a></li>
-                <li><a href="#" className="hover:text-primary transition-colors">Disaster Relief</a></li>
-              </ul>
-            </div>
-            
-            <div>
-              <h4 className="text-base font-bold mb-4">Contact Us</h4>
-              <address className="not-italic text-sm">
-                <p>123 Charity Street</p>
-                <p>New York, NY 10001</p>
-                <p>Email: info@charity-ngo.org</p>
-                <p>Phone: (123) 456-7890</p>
-              </address>
-            </div>
           </div>
-          
-          <div className="divider my-6"></div>
-          
-          <div className="text-center">
-            <p className="text-xs">&copy; {new Date().getFullYear()} Charity NGO. All rights reserved.</p>
+          <div className="mt-8 pt-8 border-t border-accent/20 text-center">
+            <p>&copy; {new Date().getFullYear()} Charity NGO. All rights reserved.</p>
           </div>
         </div>
       </footer>

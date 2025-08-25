@@ -1,9 +1,11 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
 import { createPortal } from 'react-dom';
 import MainLayout from '../components/layout/MainLayout';
 import { FiCamera, FiHeart, FiUsers, FiCalendar, FiMapPin, FiX } from 'react-icons/fi';
+import { db } from '../firebase/config';
+import { collection, getDocs } from 'firebase/firestore';
 
 export default function Gallery() {
   // State for tooltip
@@ -13,283 +15,75 @@ export default function Gallery() {
     position: { left: 0, top: 0 },
     arrowClass: ''
   });
+  
+  // State for gallery data
+  const [photos, setPhotos] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [selectedCategory, setSelectedCategory] = useState('all');
 
   // Ref for tooltip timeout
   const tooltipTimeoutRef = useRef(null);
   
   // Ref for grid container
   const gridRef = useRef(null);
+  
+  // Fetch photos from Firebase
+  useEffect(() => {
+    const fetchPhotos = async () => {
+      setLoading(true);
+      try {
+        const photosCollection = collection(db, 'gallery');
+        const photosSnapshot = await getDocs(photosCollection);
+        const photosData = photosSnapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data(),
+          uploadDate: doc.data().uploadDate?.toDate ? doc.data().uploadDate.toDate() : new Date(doc.data().uploadDate)
+        }));
+        setPhotos(photosData);
+      } catch (error) {
+        console.error('Error fetching photos:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  // Gallery data organized by categories
-  const galleryCategories = [
-    {
-      id: 'home-carousel',
-      title: 'Community Highlights',
-      description: 'Showcasing our vibrant community and impactful moments',
-      images: [
-        {
-          src: '/Photos/Home - Carousel/9f8f8672-e795-4a39-b222-7b889d67d1cf.JPG',
-          title: 'Community Gathering',
-          description: 'A heartwarming community gathering where families came together to celebrate our shared mission of hope and healing.',
-          date: '2023',
-          location: 'Community Center'
-        },
-        {
-          src: '/Photos/Home - Carousel/Copy of 04df00e8-cb17-4a57-b84a-09040c91be26.JPG',
-          title: 'Volunteer Training',
-          description: 'Dedicated volunteers participating in our comprehensive training program to better serve our community members.',
-          date: '2023',
-          location: 'Training Facility'
-        },
-        {
-          src: '/Photos/Home - Carousel/Copy of 416e2cf5-9d06-4495-ba53-1b5ced6f20bb.JPG',
-          title: 'Support Group Session',
-          description: 'An intimate support group session where participants share experiences and find strength in community.',
-          date: '2023',
-          location: 'Support Center'
-        },
-        {
-          src: '/Photos/Home - Carousel/Copy of 771f668d-b598-4110-9125-e1e8594c9b0e.JPG',
-          title: 'Educational Workshop',
-          description: 'Educational workshop focusing on health awareness and prevention strategies for our community.',
-          date: '2023',
-          location: 'Workshop Hall'
-        },
-        {
-          src: '/Photos/Home - Carousel/Copy of 864df133-6b4a-437e-8030-4be67e6f35c2.JPG',
-          title: 'Community Outreach',
-          description: 'Our team conducting outreach activities to connect with and support community members in need.',
-          date: '2023',
-          location: 'Various Locations'
-        },
-        {
-          src: '/Photos/Home - Carousel/Copy of bfa758b3-2f2f-4374-9239-8f5b49bb956a.JPG',
-          title: 'Celebration Event',
-          description: 'A joyful celebration marking another milestone in our journey of community service and support.',
-          date: '2023',
-          location: 'Event Center'
-        }
-      ]
-    },
-    {
-      id: 'pink-october',
-      title: 'Pink October Campaign 2023',
-      description: 'Breast cancer awareness and support initiatives',
-      images: [
-        {
-          src: '/Photos/Pink October campaign 2023/0d892a96-cc0c-4088-8ab8-ab548a7ef704.JPG',
-          title: 'Pink October Launch',
-          description: 'The official launch of our Pink October breast cancer awareness campaign, bringing together survivors, families, and supporters.',
-          date: 'October 2023',
-          location: 'Campaign Headquarters'
-        },
-        {
-          src: '/Photos/Pink October campaign 2023/golden tulip talk/05f4fc1a-b7e5-4896-891c-1e58d241d556.JPG',
-          title: 'Golden Tulip Health Talk',
-          description: 'An informative health talk at Golden Tulip focusing on breast cancer prevention, early detection, and treatment options.',
-          date: 'October 2023',
-          location: 'Golden Tulip Hotel'
-        },
-        {
-          src: '/Photos/Pink October campaign 2023/golden tulip talk/86b25a5e-018e-47b2-9e54-76b803ad6ce6.JPG',
-          title: 'Expert Panel Discussion',
-          description: 'Medical experts and survivors sharing valuable insights about breast cancer awareness and support systems.',
-          date: 'October 2023',
-          location: 'Golden Tulip Hotel'
-        },
-        {
-          src: '/Photos/Pink October campaign 2023/golden tulip talk/8cf7b50e-36ff-4e9d-9218-2c627083d182.JPG',
-          title: 'Interactive Q&A Session',
-          description: 'Attendees engaging in meaningful discussions about breast health, asking questions and sharing experiences.',
-          date: 'October 2023',
-          location: 'Golden Tulip Hotel'
-        },
-        {
-          src: '/Photos/Pink October campaign 2023/golden tulip talk/IMG_0932.jpg',
-          title: 'Community Engagement',
-          description: 'Community members actively participating in our breast cancer awareness educational session.',
-          date: 'October 2023',
-          location: 'Golden Tulip Hotel'
-        },
-        {
-          src: '/Photos/Pink October campaign 2023/movie night/1d12aa2f-c38b-44e4-84bb-c86ebb7d045c.JPG',
-          title: 'Awareness Movie Night',
-          description: 'A special movie screening event to raise awareness about breast cancer while bringing the community together.',
-          date: 'October 2023',
-          location: 'Community Cinema'
-        },
-        {
-          src: '/Photos/Pink October campaign 2023/movie night/2bf899b8-4a77-4d01-9568-6c39ae8b0370.JPG',
-          title: 'Movie Night Gathering',
-          description: 'Families and friends enjoying an evening of entertainment while supporting breast cancer awareness.',
-          date: 'October 2023',
-          location: 'Community Cinema'
-        },
-        {
-          src: '/Photos/Pink October campaign 2023/survivors luncheon /02e82319-1a12-45eb-b3dc-ad3b311795c4.JPG',
-          title: 'Survivors Luncheon',
-          description: 'A special luncheon honoring breast cancer survivors, celebrating their strength, courage, and inspiring journeys.',
-          date: 'October 2023',
-          location: 'Event Venue'
-        }
-      ]
-    },
-    {
-      id: 'breast-prosthetics',
-      title: 'Breast Prosthetics Program',
-      description: 'Supporting survivors with prosthetic solutions',
-      images: [
-        {
-          src: '/Photos/breast prosthetics/Copy of 7660d958-836f-4fbc-9d93-fcede9b62649.JPG',
-          title: 'Prosthetic Consultation',
-          description: 'Professional consultation session helping survivors find the right prosthetic solutions for their needs.',
-          date: '2023',
-          location: 'Medical Center'
-        },
-        {
-          src: '/Photos/breast prosthetics/Copy of 81f09672-efb3-4416-8ddf-5218cc74c3b4.JPG',
-          title: 'Fitting Session',
-          description: 'Personalized fitting session ensuring comfort and confidence for breast cancer survivors.',
-          date: '2023',
-          location: 'Prosthetics Center'
-        },
-        {
-          src: '/Photos/breast prosthetics/Copy of IMG_7388.JPG',
-          title: 'Support and Care',
-          description: 'Providing compassionate care and support throughout the prosthetic selection and fitting process.',
-          date: '2023',
-          location: 'Care Facility'
-        },
-        {
-          src: '/Photos/breast prosthetics/Copy of b3e8fbe3-58d1-40fd-a76b-5b59cc353253.JPG',
-          title: 'Quality Assurance',
-          description: 'Ensuring the highest quality prosthetic solutions to help survivors regain confidence and comfort.',
-          date: '2023',
-          location: 'Quality Center'
-        }
-      ]
-    },
-    {
-      id: 'kitintale-drive',
-      title: 'Kitintale Community Drive',
-      description: 'Outreach and support in Kitintale community',
-      images: [
-        {
-          src: '/Photos/kitintale drive/285c7378-d5ca-4861-8a17-a20d634b8a70.JPG',
-          title: 'Community Outreach',
-          description: 'Reaching out to the Kitintale community with essential health services and support programs.',
-          date: '2023',
-          location: 'Kitintale'
-        },
-        {
-          src: '/Photos/kitintale drive/3d991f9f-84ed-4d90-a772-15804278ec29.JPG',
-          title: 'Health Screening',
-          description: 'Providing free health screenings and consultations to community members in Kitintale.',
-          date: '2023',
-          location: 'Kitintale'
-        },
-        {
-          src: '/Photos/kitintale drive/533470f9-fe62-4501-b204-f3aeb5ebe674(1).JPG',
-          title: 'Educational Session',
-          description: 'Conducting educational sessions about health awareness and prevention in the Kitintale community.',
-          date: '2023',
-          location: 'Kitintale'
-        },
-        {
-          src: '/Photos/kitintale drive/615c7481-c93a-4fbf-a624-fd0b29ae2aba.JPG',
-          title: 'Community Engagement',
-          description: 'Engaging with local community leaders and residents to understand their health needs and concerns.',
-          date: '2023',
-          location: 'Kitintale'
-        },
-        {
-          src: '/Photos/kitintale drive/77577e24-9851-44b8-95ed-aa6ed0ffd4e7.JPG',
-          title: 'Support Distribution',
-          description: 'Distributing essential supplies and resources to families in need within the Kitintale community.',
-          date: '2023',
-          location: 'Kitintale'
-        },
-        {
-          src: '/Photos/kitintale drive/864df133-6b4a-437e-8030-4be67e6f35c2.JPG',
-          title: 'Team Collaboration',
-          description: 'Our dedicated team working together to provide comprehensive support to the Kitintale community.',
-          date: '2023',
-          location: 'Kitintale'
-        },
-        {
-          src: '/Photos/kitintale drive/IMG_0918.jpg',
-          title: 'Community Impact',
-          description: 'Witnessing the positive impact of our outreach efforts on the lives of Kitintale community members.',
-          date: '2023',
-          location: 'Kitintale'
-        },
-        {
-          src: '/Photos/kitintale drive/e0025788-8bea-41c0-af86-2b7824335216.JPG',
-          title: 'Follow-up Care',
-          description: 'Providing follow-up care and continued support to ensure lasting positive impact in the community.',
-          date: '2023',
-          location: 'Kitintale'
-        }
-      ]
-    },
-    {
-      id: 'general-activities',
-      title: 'General Activities',
-      description: 'Various community activities and initiatives',
-      images: [
-        {
-          src: '/Photos/68415bd2-f89c-45f7-9b16-7236f1982710.JPG',
-          title: 'Community Workshop',
-          description: 'Interactive workshop session focusing on health education and community empowerment.',
-          date: '2023',
-          location: 'Community Center'
-        },
-        {
-          src: '/Photos/Copy of 02418244-1E6A-4CAE-8BB5-FACF5FA983A6.JPG',
-          title: 'Support Group Meeting',
-          description: 'Regular support group meeting where participants share experiences and provide mutual encouragement.',
-          date: '2023',
-          location: 'Support Center'
-        },
-        {
-          src: '/Photos/Copy of 66e14dc3-bba4-45fa-96a4-fd2ab081304c.JPG',
-          title: 'Health Awareness Campaign',
-          description: 'Community health awareness campaign promoting early detection and prevention strategies.',
-          date: '2023',
-          location: 'Various Locations'
-        },
-        {
-          src: '/Photos/Copy of 6d58e49d-6d98-47cd-b070-2d23d1e43427.JPG',
-          title: 'Volunteer Training',
-          description: 'Comprehensive training session for new volunteers joining our mission of community support.',
-          date: '2023',
-          location: 'Training Center'
-        },
-        {
-          src: '/Photos/Copy of 77577e24-9851-44b8-95ed-aa6ed0ffd4e7.JPG',
-          title: 'Community Celebration',
-          description: 'Celebrating milestones and achievements with our wonderful community members and supporters.',
-          date: '2023',
-          location: 'Event Venue'
-        },
-        {
-          src: '/Photos/Copy of 8d97ae04-9c95-485f-9e4f-f75bc6c3e245.JPG',
-          title: 'Educational Seminar',
-          description: 'Educational seminar providing valuable information about health, wellness, and community resources.',
-          date: '2023',
-          location: 'Seminar Hall'
-        },
-        {
-          src: '/Photos/Toliva & Linda.jpg',
-          title: 'Leadership Team',
-          description: 'Our dedicated leadership team, Toliva and Linda, working tirelessly to serve our community.',
-          date: '2023',
-          location: 'Office'
-        }
-      ]
+    fetchPhotos();
+  }, []);
+  
+  // Group photos by category
+  const groupedPhotos = photos.reduce((acc, photo) => {
+    const category = photo.category || 'community';
+    if (!acc[category]) {
+      acc[category] = [];
     }
-  ];
+    acc[category].push(photo);
+    return acc;
+  }, {});
+  
+  // Filter photos based on selected category
+  const filteredPhotos = selectedCategory === 'all' ? photos : photos.filter(photo => photo.category === selectedCategory);
+  
+  // Get unique categories
+  const categories = ['all', ...new Set(photos.map(photo => photo.category || 'community'))];
 
+  // Category display configuration
+  const categoryConfig = {
+    all: { title: 'All Photos', description: 'Browse all our gallery photos' },
+    community: { title: 'Community', description: 'Community events and gatherings' },
+    water: { title: 'Water Projects', description: 'Clean water initiatives' },
+    education: { title: 'Education', description: 'Educational programs and workshops' },
+    healthcare: { title: 'Healthcare', description: 'Health awareness and medical support' },
+    relief: { title: 'Relief Efforts', description: 'Emergency and disaster relief' },
+    training: { title: 'Training', description: 'Volunteer and skills training' },
+    environment: { title: 'Environment', description: 'Environmental conservation projects' },
+    housing: { title: 'Housing', description: 'Housing and shelter initiatives' }
+  };
+  
+  // Get category info
+  const getCategoryInfo = (category) => {
+    return categoryConfig[category] || { title: category, description: '' };
+  };
+  
   // Handle image load for better performance
   const handleImageLoad = () => {
     // Optional: Add any image load handling here
@@ -620,7 +414,7 @@ export default function Gallery() {
             viewport={{ once: true, margin: "-100px" }}
             className="space-y-12"
           >
-            {/* Gallery Header */}
+            {/* Gallery Content */}
             <div className="text-center max-w-4xl mx-auto mb-16">
               <h2 className="text-4xl md:text-5xl font-bold text-gray-800 mb-6">
                 Our Visual Journey
@@ -629,19 +423,56 @@ export default function Gallery() {
                 Explore moments of impact, community stories, and the transformative work we do together.
               </p>
             </div>
+            
+            {/* Category Filter */}
+            <div className="flex flex-wrap justify-center gap-3 mb-12">
+              {categories.map((category) => {
+                const categoryInfo = getCategoryInfo(category);
+                return (
+                  <button
+                    key={category}
+                    onClick={() => setSelectedCategory(category)}
+                    className={`px-6 py-3 rounded-full font-medium transition-all duration-300 ${
+                      selectedCategory === category
+                        ? 'bg-primary text-white shadow-lg transform scale-105'
+                        : 'bg-white text-gray-600 hover:bg-gray-50 border border-gray-200 hover:border-primary/30'
+                    }`}
+                  >
+                    {categoryInfo.title}
+                  </button>
+                );
+              })}
+            </div>
+            
+            {/* Loading State */}
+            {loading && (
+              <div className="text-center py-20">
+                <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+                <p className="mt-4 text-gray-600">Loading gallery...</p>
+              </div>
+            )}
+            
+            {/* Empty State */}
+            {!loading && filteredPhotos.length === 0 && (
+              <div className="text-center py-20">
+                <FiCamera className="mx-auto h-16 w-16 text-gray-400 mb-4" />
+                <h3 className="text-xl font-semibold text-gray-600 mb-2">No photos found</h3>
+                <p className="text-gray-500">There are no photos in this category yet.</p>
+              </div>
+            )}
 
             {/* CSS Masonry Grid for all items */}
-            <div ref={gridRef} className="masonry-grid">
-              {/* Flatten all images from all categories */}
-              {galleryCategories.flatMap((category) => 
-                category.images.map((image, imageIndex) => (
+             {!loading && filteredPhotos.length > 0 && (
+               <div ref={gridRef} className="masonry-grid">
+                 {/* Display photos from Firebase */}
+                 {filteredPhotos.map((photo, index) => (
                      <motion.div
-                       key={`${category.id}-${imageIndex}`}
+                       key={photo.id}
                        variants={itemVariants}
                        className="gallery-item group relative"
                        onMouseEnter={(e) => {
                          if (!isTouchDevice()) {
-                           showTooltip(image, e.currentTarget);
+                           showTooltip(photo, e.currentTarget);
                          }
                        }}
                      >
@@ -655,14 +486,14 @@ export default function Gallery() {
                        onClick={(e) => {
                          if (isTouchDevice()) {
                            e.preventDefault();
-                           showTooltip(image, e.currentTarget);
+                           showTooltip(photo, e.currentTarget);
                          }
                        }}
                      >
                        <div className="relative overflow-hidden">
                          <img
-                           src={image.src}
-                           alt={image.title}
+                           src={photo.imageUrl}
+                           alt={photo.title}
                            className="w-full h-auto object-cover group-hover:scale-110 transition-transform duration-700"
                            loading="lazy"
                            onLoad={handleImageLoad}
@@ -678,8 +509,8 @@ export default function Gallery() {
                          
                          {/* Image info overlay */}
                          <div className="absolute bottom-0 left-0 right-0 p-4 text-white transform translate-y-full group-hover:translate-y-0 transition-transform duration-300">
-                           <h3 className="font-semibold text-sm mb-1 line-clamp-1">{image.title}</h3>
-                           <p className="text-xs text-white/80 line-clamp-2">{image.description}</p>
+                           <h3 className="font-semibold text-sm mb-1 line-clamp-1">{photo.title}</h3>
+                           <p className="text-xs text-white/80 line-clamp-2">{photo.description}</p>
                          </div>
                          
                          {/* Hover indicator */}
@@ -690,25 +521,25 @@ export default function Gallery() {
                        
                        {/* Card content below image */}
                        <div className="p-4">
-                         <h3 className="font-semibold text-gray-800 mb-2 line-clamp-2">{image.title}</h3>
-                         <p className="text-sm text-gray-600 mb-3 line-clamp-3">{image.description}</p>
+                         <h3 className="font-semibold text-gray-800 mb-2 line-clamp-2">{photo.title}</h3>
+                         <p className="text-sm text-gray-600 mb-3 line-clamp-3">{photo.description}</p>
                          <div className="flex items-center justify-between text-xs text-gray-500">
                            <div className="flex items-center gap-1">
                              <FiCalendar className="text-primary" />
-                             <span>{image.date}</span>
+                             <span>{photo.uploadDate ? photo.uploadDate.toLocaleDateString() : 'N/A'}</span>
                            </div>
                            <div className="flex items-center gap-1">
                              <FiMapPin className="text-primary" />
-                             <span className="truncate max-w-20">{image.location}</span>
+                             <span className="truncate max-w-20">{photo.location || 'N/A'}</span>
                            </div>
                          </div>
                        </div>
                      </div>
                    </motion.div>
-                   ))
-                 )}
-               </div>
-            </motion.div>
+                 ))}
+                </div>
+             )}
+             </motion.div>
         </div>
       </div>
 

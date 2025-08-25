@@ -492,10 +492,13 @@ Our approach involves close collaboration with local communities to ensure that 
               </div>
               
               <div className="p-6 bg-white">
-                <div className="space-y-3">
-                  <Link to="/donate" className="w-full bg-gradient-to-r from-pink-500 to-rose-600 hover:from-pink-600 hover:to-rose-700 text-white font-semibold py-3 px-4 rounded-lg transition-all duration-300 flex items-center justify-center gap-2 shadow-lg hover:shadow-xl">
-                    <FiDollarSign className="w-5 h-5" /> Donate to This Program
-                  </Link>
+                  <div className="space-y-3">
+                    <div dangerouslySetInnerHTML={{
+                      __html: `
+                        <script type="text/javascript" defer src="https://donorbox.org/install-popup-button.js"></script>
+                        <a class="dbox-donation-button" style="background: rgb(223, 24, 167); color: rgb(255, 255, 255); text-decoration: none; font-family: Verdana, sans-serif; display: flex; gap: 8px; width: 100%; font-size: 16px; border-radius: 5px; line-height: 24px; padding: 8px 24px; justify-content: center;" href="https://donorbox.org/survive-and-thrive-804282?"><img src="https://donorbox.org/images/white_logo.svg" alt="Donate with DonorBox"/>Donate to This Program</a>
+                      `
+                    }} />
                   <Link to="/volunteer" className="w-full border-2 border-pink-500 text-pink-600 hover:bg-pink-50 font-semibold py-3 px-4 rounded-lg transition-all duration-300 flex items-center justify-center gap-2">
                     <FiClock className="w-5 h-5" /> Volunteer Your Time
                   </Link>

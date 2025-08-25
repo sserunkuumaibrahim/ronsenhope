@@ -18,21 +18,22 @@ import Dashboard from './pages/admin/Dashboard';
 import Users from './pages/admin/Users';
 import Donations from './pages/admin/Donations';
 import AdminPrograms from './pages/admin/Programs';
+import Applications from './pages/admin/Applications';
 import Reports from './pages/admin/Reports';
-import Events from './pages/admin/Events';
-import Settings from './pages/admin/Settings';
-import BlogManagement from './pages/admin/Blog';
-import BlogCreate from './pages/admin/BlogCreate';
-import BlogEdit from './pages/admin/BlogEdit';
+import AdminGallery from './pages/admin/Gallery';
+
+import AdminStories from './pages/admin/Stories';
 import ForumManagement from './pages/admin/Forum';
 import AdminForumDetail from './pages/admin/ForumDetail';
+import Opportunities from './pages/admin/Opportunities';
+import Teams from './pages/admin/Teams';
 
 // User Pages
 import Programs from './pages/Programs';
 import ProgramDetail from './pages/ProgramDetail';
 import Donate from './pages/Donate';
-import Blog from './pages/Blog';
-import BlogDetail from './pages/BlogDetail';
+import Stories from './pages/Stories';
+import StoryDetail from './pages/StoryDetail';
 import Contact from './pages/Contact';
 import Profile from './pages/Profile';
 import Forum from './pages/Forum';
@@ -40,6 +41,8 @@ import ForumDetail from './pages/ForumDetail';
 
 // Placeholder for pages not yet implemented
 import Volunteer from './pages/Volunteer';
+import AdminSetup from './components/AdminSetup';
+import AdminDebug from './components/AdminDebug';
 const UserDonations = () => <div>User Donations (Coming Soon)</div>;
 
 function App() {
@@ -54,6 +57,8 @@ function App() {
             <Route path="/signup" element={<Signup />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/unauthorized" element={<Unauthorized />} />
+            {/* <Route path="/admin-setup" element={<AdminSetup />} /> */}
+            {/* <Route path="/admin-debug" element={<AdminDebug />} /> */}
             
             {/* Content Routes */}
             <Route path="/programs" element={<Programs />} />
@@ -61,8 +66,8 @@ function App() {
             <Route path="/gallery" element={<Gallery />} />
             <Route path="/donate" element={<Donate />} />
             <Route path="/volunteer" element={<Volunteer />} />
-            <Route path="/blog" element={<Blog />} />
-            <Route path="/blog/:id" element={<BlogDetail />} />
+            <Route path="/stories" element={<Stories />} />
+            <Route path="/stories/:id" element={<StoryDetail />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/about" element={<About />} />
             <Route path="/forum" element={<Forum />} />
@@ -120,50 +125,66 @@ function App() {
               } 
             />
             <Route 
+              path="/admin/teams" 
+              element={
+                <ProtectedRoute requiredRole="admin">
+                  <Teams />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/admin/opportunities" 
+              element={
+                <ProtectedRoute requiredRole="admin">
+                  <Opportunities />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/admin/applications" 
+              element={
+                <ProtectedRoute requiredRole="admin">
+                  <Applications />
+                </ProtectedRoute>
+              } 
+            />
+            {/* <Route 
               path="/admin/reports" 
               element={
                 <ProtectedRoute requiredRole="admin">
                   <Reports />
                 </ProtectedRoute>
               } 
-            />
+            /> */}
             <Route 
-              path="/admin/events" 
+              path="/admin/gallery" 
               element={
                 <ProtectedRoute requiredRole="admin">
-                  <Events />
+                  <AdminGallery />
                 </ProtectedRoute>
               } 
             />
             <Route 
-              path="/admin/settings" 
+              path="/admin/stories" 
               element={
                 <ProtectedRoute requiredRole="admin">
-                  <Settings />
+                  <AdminStories />
                 </ProtectedRoute>
               } 
             />
             <Route 
-              path="/admin/blog" 
+              path="/admin/stories/create" 
               element={
                 <ProtectedRoute requiredRole="admin">
-                  <BlogManagement />
+                  <AdminStories />
                 </ProtectedRoute>
               } 
             />
             <Route 
-              path="/admin/blog/create" 
+              path="/admin/stories/edit/:id" 
               element={
                 <ProtectedRoute requiredRole="admin">
-                  <BlogCreate />
-                </ProtectedRoute>
-              } 
-            />
-            <Route 
-              path="/admin/blog/edit/:id" 
-              element={
-                <ProtectedRoute requiredRole="admin">
-                  <BlogEdit />
+                  <AdminStories />
                 </ProtectedRoute>
               } 
             />

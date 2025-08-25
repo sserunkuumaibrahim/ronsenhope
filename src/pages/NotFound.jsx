@@ -56,7 +56,7 @@ export default function NotFound() {
               <span className="text-base-content/70"> - Join our community</span>
             </li>
             <li>
-              <Link to="/blog" className="text-primary hover:underline">Blog</Link>
+              <Link to="/stories" className="text-primary hover:underline">Stories</Link>
               <span className="text-base-content/70"> - Read our latest updates</span>
             </li>
           </ul>

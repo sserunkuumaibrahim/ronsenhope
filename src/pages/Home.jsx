@@ -4,7 +4,9 @@ import { motion } from 'framer-motion';
 import { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import MainLayout from '../components/layout/MainLayout';
-import { FiHeart, FiUsers, FiGlobe } from 'react-icons/fi';
+import { FiHeart, FiUsers, FiGlobe, FiMail, FiFacebook, FiTwitter, FiInstagram, FiLinkedin, FiYoutube } from 'react-icons/fi';
+import { db } from '../firebase/config';
+import { collection, getDocs } from 'firebase/firestore';
 
 
 export default function Home() {
@@ -30,6 +32,60 @@ export default function Home() {
 
   // Ref for tooltip timeout
   const tooltipTimeoutRef = useRef(null);
+  
+  // Programs state
+  const [programs, setPrograms] = useState([]);
+  const [programsLoading, setProgramsLoading] = useState(true);
+  
+  // Stories state
+  const [stories, setStories] = useState([]);
+  const [storiesLoading, setStoriesLoading] = useState(true);
+
+  // Fetch programs and stories from Firebase
+  useEffect(() => {
+    const fetchPrograms = async () => {
+      setProgramsLoading(true);
+      try {
+        const programsCollection = collection(db, 'programs');
+        const programsSnapshot = await getDocs(programsCollection);
+        const programsData = programsSnapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data(),
+          createdAt: doc.data().createdAt?.toDate?.() || new Date(),
+          updatedAt: doc.data().updatedAt?.toDate?.() || new Date()
+        }));
+        setPrograms(programsData.slice(0, 5)); // Show only first 5 programs
+      } catch (error) {
+        console.error('Error fetching programs:', error);
+      } finally {
+        setProgramsLoading(false);
+      }
+    };
+    
+    const fetchStories = async () => {
+      setStoriesLoading(true);
+      try {
+        const storiesCollection = collection(db, 'stories');
+        const storiesSnapshot = await getDocs(storiesCollection);
+        const storiesData = storiesSnapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data(),
+          createdAt: doc.data().createdAt?.toDate?.() || new Date(),
+          publishDate: doc.data().publishDate?.toDate?.() || doc.data().createdAt?.toDate?.() || new Date()
+        }));
+        // Sort by publish date and get latest 3 stories
+        const sortedStories = storiesData.sort((a, b) => b.publishDate - a.publishDate);
+        setStories(sortedStories.slice(0, 3));
+      } catch (error) {
+        console.error('Error fetching stories:', error);
+      } finally {
+        setStoriesLoading(false);
+      }
+    };
+
+    fetchPrograms();
+    fetchStories();
+  }, []);
 
   // Autoplay functionality
   useEffect(() => {
@@ -198,16 +254,16 @@ export default function Home() {
         
         <div className="grid grid-cols-1 gap-4 mb-6">
           <div className="flex justify-between text-sm md:text-base">
-            <span className="text-gray-500">Locations:</span>
-            <span className="font-semibold text-secondary">{tooltip.program.stats.locations}</span>
+            <span className="text-gray-500">Location:</span>
+            <span className="font-semibold text-secondary">{tooltip.program.location}</span>
           </div>
           <div className="flex justify-between text-sm md:text-base">
-            <span className="text-gray-500">Impact:</span>
-            <span className="font-semibold text-primary">{tooltip.program.stats.impact}</span>
+            <span className="text-gray-500">Progress:</span>
+            <span className="font-semibold text-primary">{tooltip.program.progress || 0}% complete</span>
           </div>
           <div className="flex justify-between text-sm md:text-base">
-            <span className="text-gray-500">Investment:</span>
-            <span className="font-semibold text-secondary">{tooltip.program.stats.budget}</span>
+            <span className="text-gray-500">Budget:</span>
+            <span className="font-semibold text-secondary">${tooltip.program.budget?.toLocaleString() || '0'}</span>
           </div>
         </div>
         
@@ -340,17 +396,12 @@ export default function Home() {
                   transition={{ type: "spring", stiffness: 400, damping: 17 }}
                   className="w-full sm:w-auto"
                 >
-                  <Link to="/donate" className="group relative px-8 py-4 bg-white text-pink-600 rounded-full font-semibold text-lg shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300 overflow-hidden inline-flex items-center justify-center w-full sm:w-auto">
-                    <span className="relative z-10 flex items-center">
-                      <FiHeart className="mr-2" />
-                      Donate Now
-                    </span>
-                    <div className="absolute inset-0 bg-gradient-to-r from-pink-500 to-pink-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                    <span className="absolute inset-0 z-10 flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 font-semibold">
-                      <FiHeart className="mr-2" />
-                      Donate Now
-                    </span>
-                  </Link>
+                  <div dangerouslySetInnerHTML={{
+                    __html: `
+                      <script type="text/javascript" defer src="https://donorbox.org/install-popup-button.js"></script>
+                      <a class="dbox-donation-button" style="background: rgb(223, 24, 167); color: rgb(255, 255, 255); text-decoration: none; font-family: Verdana, sans-serif; display: flex; gap: 8px; width: fit-content; font-size: 16px; border-radius: 5px; line-height: 24px; padding: 8px 24px;" href="https://donorbox.org/survive-and-thrive-804282?"><img src="https://donorbox.org/images/white_logo.svg" alt="Donate with DonorBox" />Donate Now</a>
+                    `
+                  }} />
                 </motion.div>
                 <motion.div
                   whileHover={{ scale: 1.05, y: -2 }}
@@ -578,48 +629,18 @@ export default function Home() {
                     
                     {/* Twitter-style Programs List */}
                     <div className="flex flex-col lg:flex-row lg:flex-wrap gap-2 max-w-full">
-                    {[
-                      {
-                        id: 1,
-                        title: "🎓 Education",
-                        subtitle: "Quality learning for all",
-                        followers: "12K+ beneficiaries",
-                        description: "Providing access to quality education and learning resources for underserved communities. Building schools, training teachers, and implementing digital learning solutions.",
-                        stats: { locations: "25 countries", impact: "95% literacy rate", budget: "$2.5M invested" }
-                      },
-                      {
-                        id: 2,
-                        title: "🏥 Healthcare",
-                        subtitle: "Medical care & wellness",
-                        followers: "8.5K+ patients",
-                        description: "Mobile clinics and healthcare services for remote communities. Training local healthcare workers and providing essential medical equipment.",
-                        stats: { locations: "18 countries", impact: "80% health improvement", budget: "$1.8M invested" }
-                      },
-                      {
-                        id: 3,
-                        title: "🌱 Environment",
-                        subtitle: "Sustainable future",
-                        followers: "50K+ trees planted",
-                        description: "Reforestation projects, clean energy initiatives, and waste management systems. Creating sustainable solutions for environmental challenges.",
-                        stats: { locations: "30 countries", impact: "2M trees planted", budget: "$3.2M invested" }
-                      },
-                      {
-                        id: 4,
-                        title: "👥 Community",
-                        subtitle: "Building stronger societies",
-                        followers: "25K+ families",
-                        description: "Infrastructure development, economic opportunities, and social programs. Empowering communities through sustainable development initiatives.",
-                        stats: { locations: "22 countries", impact: "85% employment rate", budget: "$4.1M invested" }
-                      },
-                      {
-                        id: 5,
-                        title: "🚨 Emergency Relief",
-                        subtitle: "Rapid response support",
-                        followers: "15K+ rescued",
-                        description: "Immediate disaster response and long-term recovery support. Providing emergency supplies, shelter, and rebuilding assistance.",
-                        stats: { locations: "Global", impact: "72 hours response time", budget: "$2.8M emergency fund" }
-                      }
-                    ].map((program, index) => (
+                    {programsLoading ? (
+                      <div className="flex justify-center items-center py-8 w-full">
+                        <div className="text-center">
+                          <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-2"></div>
+                          <p className="text-sm text-gray-600">Loading programs...</p>
+                        </div>
+                      </div>
+                    ) : programs.length === 0 ? (
+                      <div className="text-center py-8 w-full">
+                        <p className="text-gray-600">No programs available</p>
+                      </div>
+                    ) : programs.map((program, index) => (
                       <motion.div
                         key={program.id}
                         initial={{ opacity: 0, x: 50 }}
@@ -659,10 +680,10 @@ export default function Home() {
                                    <h4 className="font-semibold text-secondary group-hover:text-primary transition-colors text-sm truncate">
                                      {program.title}
                                    </h4>
-                                   <p className="text-xs text-gray-600 truncate">{program.subtitle}</p>
+                                   <p className="text-xs text-gray-600 truncate">{program.location}</p>
                                  </div>
                                  <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full whitespace-nowrap flex-shrink-0">
-                                   {program.followers}
+                                   {program.participants?.toLocaleString() || '0'} participants
                                  </span>
                                </div>
                           
@@ -768,48 +789,18 @@ export default function Home() {
                 
                 {/* Mobile Programs List */}
                 <div className="flex flex-col gap-2">
-                {[
-                  {
-                    id: 1,
-                    title: "🎓 Education",
-                    subtitle: "Quality learning for all",
-                    followers: "12K+ beneficiaries",
-                    description: "Providing access to quality education and learning resources for underserved communities. Building schools, training teachers, and implementing digital learning solutions.",
-                    stats: { locations: "25 countries", impact: "95% literacy rate", budget: "$2.5M invested" }
-                  },
-                  {
-                    id: 2,
-                    title: "🏥 Healthcare",
-                    subtitle: "Medical care & wellness",
-                    followers: "8.5K+ patients",
-                    description: "Mobile clinics and healthcare services for remote communities. Training local healthcare workers and providing essential medical equipment.",
-                    stats: { locations: "18 countries", impact: "80% health improvement", budget: "$1.8M invested" }
-                  },
-                  {
-                    id: 3,
-                    title: "🌱 Environment",
-                    subtitle: "Sustainable future",
-                    followers: "50K+ trees planted",
-                    description: "Reforestation projects, clean energy initiatives, and waste management systems. Creating sustainable solutions for environmental challenges.",
-                    stats: { locations: "30 countries", impact: "2M trees planted", budget: "$3.2M invested" }
-                  },
-                  {
-                    id: 4,
-                    title: "👥 Community",
-                    subtitle: "Building stronger societies",
-                    followers: "25K+ families",
-                    description: "Infrastructure development, economic opportunities, and social programs. Empowering communities through sustainable development initiatives.",
-                    stats: { locations: "22 countries", impact: "85% employment rate", budget: "$4.1M invested" }
-                  },
-                  {
-                    id: 5,
-                    title: "🚨 Emergency Relief",
-                    subtitle: "Rapid response support",
-                    followers: "15K+ rescued",
-                    description: "Immediate disaster response and long-term recovery support. Providing emergency supplies, shelter, and rebuilding assistance.",
-                    stats: { locations: "Global", impact: "72 hours response time", budget: "$2.8M emergency fund" }
-                  }
-                ].map((program, index) => (
+                {programsLoading ? (
+                  <div className="flex justify-center items-center py-8">
+                    <div className="text-center">
+                      <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-2"></div>
+                      <p className="text-xs text-gray-600">Loading programs...</p>
+                    </div>
+                  </div>
+                ) : programs.length === 0 ? (
+                  <div className="text-center py-8">
+                    <p className="text-xs text-gray-600">No programs available</p>
+                  </div>
+                ) : programs.map((program, index) => (
                   <motion.div
                     key={program.id}
                     initial={{ opacity: 0, y: 20 }}
@@ -849,10 +840,10 @@ export default function Home() {
                           <h4 className="font-semibold text-secondary group-hover:text-primary transition-colors text-sm">
                             {program.title}
                           </h4>
-                          <p className="text-xs text-gray-500 truncate">{program.subtitle}</p>
+                          <p className="text-xs text-gray-500 truncate">{program.location}</p>
                         </div>
                         <div className="text-xs text-gray-400 whitespace-nowrap">
-                          {program.followers}
+                          {program.participants?.toLocaleString() || '0'} participants
                         </div>
                       </div>
                     </div>
@@ -895,7 +886,7 @@ export default function Home() {
               transition={{ duration: 0.7 }}
               className="text-3xl md:text-5xl font-bold mb-6 md:mb-0 apple-text tracking-tight"
             >
-              Latest Blog Posts
+              Latest Stories
             </motion.h2>
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -903,8 +894,8 @@ export default function Home() {
               viewport={{ once: true }}
               transition={{ duration: 0.7 }}
             >
-              <Link to="/blog" className="apple-button">
-                View All Posts
+              <Link to="/stories" className="apple-button">
+                View All Stories
               </Link>
             </motion.div>
           </div>
@@ -930,41 +921,64 @@ export default function Home() {
               }
             }}
           >
-            {[
-              {
-                title: "The Impact of Clean Water Initiatives",
-                excerpt: "Exploring how access to clean water transforms communities and improves public health outcomes.",
-                date: "June 15, 2023",
-                image: "https://source.unsplash.com/random/600x400/?water"
-              },
-              {
-                title: "Education in Remote Communities",
-                excerpt: "How digital learning tools are bridging the education gap in remote and underserved areas.",
-                date: "May 28, 2023",
-                image: "https://source.unsplash.com/random/600x400/?school"
-              },
-              {
-                title: "Sustainable Farming Practices",
-                excerpt: "Implementing eco-friendly farming techniques to improve food security and protect the environment.",
-                date: "April 10, 2023",
-                image: "https://source.unsplash.com/random/600x400/?farming"
-              }
-            ].map((blog, index) => (
-              <motion.div key={index} variants={itemVariants} className="apple-blog-card">
-                <div className="apple-blog-image">
-                  <img src={blog.image} alt={blog.title} loading="eager" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300"></div>
-                </div>
-                <div className="apple-blog-content">
-                  <div className="apple-date">{blog.date}</div>
-                  <h3 className="text-2xl font-bold mb-3 apple-text tracking-tight">{blog.title}</h3>
-                  <p className="apple-text opacity-80 leading-relaxed mb-6">{blog.excerpt}</p>
-                  <Link to={`/blog/${index + 1}`} className="apple-link-button">
-                    Read Article
-                  </Link>
-                </div>
-              </motion.div>
-            ))}
+            {storiesLoading ? (
+              // Loading skeleton
+              Array.from({ length: 3 }).map((_, index) => (
+                <motion.div key={index} variants={itemVariants} className="apple-blog-card">
+                  <div className="apple-blog-image">
+                    <div className="w-full h-full bg-gray-200 animate-pulse"></div>
+                  </div>
+                  <div className="apple-blog-content">
+                    <div className="h-4 bg-gray-200 animate-pulse mb-2 w-24"></div>
+                    <div className="h-6 bg-gray-200 animate-pulse mb-3 w-3/4"></div>
+                    <div className="h-4 bg-gray-200 animate-pulse mb-6 w-full"></div>
+                    <div className="h-10 bg-gray-200 animate-pulse w-32"></div>
+                  </div>
+                </motion.div>
+              ))
+            ) : stories.length > 0 ? (
+              stories.map((story, index) => (
+                <motion.div key={story.id} variants={itemVariants} className="apple-blog-card">
+                  <div className="apple-blog-image">
+                    <img 
+                      src={story.imageUrl || story.image || `https://source.unsplash.com/random/600x400/?${story.category || 'charity'}`} 
+                      alt={story.title} 
+                      loading="eager" 
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300"></div>
+                    {story.category && (
+                      <div className="absolute top-4 left-4">
+                        <span className="px-3 py-1 bg-primary/90 backdrop-blur-sm text-white text-xs font-semibold rounded-full">
+                          {story.category.charAt(0).toUpperCase() + story.category.slice(1)}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                  <div className="apple-blog-content">
+                    <div className="apple-date">
+                      {story.publishDate ? story.publishDate.toLocaleDateString('en-US', { 
+                        year: 'numeric', 
+                        month: 'long', 
+                        day: 'numeric' 
+                      }) : 'Recent'}
+                    </div>
+                    <h3 className="text-2xl font-bold mb-3 apple-text tracking-tight">{story.title}</h3>
+                    <p className="apple-text opacity-80 leading-relaxed mb-6">{story.excerpt}</p>
+                    <Link to={`/stories/${story.id}`} className="apple-link-button">
+                      Read Story
+                    </Link>
+                  </div>
+                </motion.div>
+              ))
+            ) : (
+              // No stories fallback
+              <div className="col-span-full text-center py-12">
+                <p className="text-gray-500 text-lg">No stories available at the moment.</p>
+                <Link to="/stories" className="apple-button mt-4 inline-block">
+                  Check Back Later
+                </Link>
+              </div>
+            )}
           </motion.div>
         </div>
       </section>
@@ -1122,6 +1136,172 @@ export default function Home() {
            </motion.div>
          </div>
        </section>
+
+      {/* Inspirational Quote Section */}
+      <section className="py-20 bg-gradient-to-br from-pink-50 to-purple-50">
+        <div className="container-custom">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+            className="text-center max-w-4xl mx-auto"
+          >
+            <div className="relative">
+              <div className="absolute -top-8 -left-8 text-8xl text-pink-200 font-serif opacity-50">"</div>
+              <blockquote className="text-3xl md:text-4xl font-light text-gray-800 leading-relaxed mb-8 italic">
+                The best way to find yourself is to lose yourself in the service of others.
+              </blockquote>
+              <div className="absolute -bottom-8 -right-8 text-8xl text-pink-200 font-serif opacity-50">"</div>
+            </div>
+            <cite className="text-xl text-pink-600 font-semibold not-italic">- Mahatma Gandhi</cite>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Partners Section */}
+      <section className="py-20 bg-white">
+        <div className="container-custom">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-16"
+          >
+            <h2 className="text-4xl md:text-5xl font-bold mb-6 text-gray-800">Our Partners</h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Working together with amazing organizations to create lasting impact.
+            </p>
+          </motion.div>
+          
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-8 items-center"
+          >
+            {[
+              { name: 'CAO', logo: '/partners/CAO.jpg' },
+              { name: 'CC', logo: '/partners/CC.jpg' },
+              { name: 'CISSU', logo: '/partners/CISSU.jpg' },
+              { name: 'Golden Tulip', logo: '/partners/Golden Tulip.jpg' },
+              { name: 'Nama', logo: '/partners/Nama.jpg' },
+              { name: 'Oakwood', logo: '/partners/Oakwood.jpg' },
+              { name: 'TWICE', logo: '/partners/TWICE.jpg' },
+              { name: 'UWACASO', logo: '/partners/UWACASO.jpg' }
+            ].map((partner, index) => (
+              <motion.div
+                key={partner.name}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                className="group"
+              >
+                <div className="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 border border-gray-100">
+                  <img
+                    src={partner.logo}
+                    alt={partner.name}
+                    className="w-full h-16 object-contain grayscale group-hover:grayscale-0 transition-all duration-300"
+                  />
+                </div>
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Social Media Section */}
+      <section className="py-16 bg-gray-50">
+        <div className="container-custom">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-12"
+          >
+            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-gray-800">Follow Our Journey</h2>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+              Stay connected with us on social media for updates, stories, and ways to get involved.
+            </p>
+          </motion.div>
+          
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="flex justify-center space-x-6"
+          >
+            {[
+              { icon: FiFacebook, name: 'Facebook', color: 'hover:bg-blue-600', link: '#' },
+              { icon: FiTwitter, name: 'Twitter', color: 'hover:bg-blue-400', link: '#' },
+              { icon: FiInstagram, name: 'Instagram', color: 'hover:bg-pink-500', link: '#' },
+              { icon: FiLinkedin, name: 'LinkedIn', color: 'hover:bg-blue-700', link: '#' },
+              { icon: FiYoutube, name: 'YouTube', color: 'hover:bg-red-600', link: '#' }
+            ].map((social, index) => (
+              <motion.a
+                key={social.name}
+                href={social.link}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                whileHover={{ scale: 1.1, y: -2 }}
+                className={`w-14 h-14 bg-white rounded-full flex items-center justify-center shadow-lg transition-all duration-300 ${social.color} hover:text-white group`}
+              >
+                <social.icon className="text-xl text-gray-600 group-hover:text-white transition-colors duration-300" />
+              </motion.a>
+            ))}
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Newsletter Section */}
+      <section className="py-20 bg-gradient-to-r from-pink-500 to-purple-600">
+        <div className="container-custom">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+            className="text-center max-w-4xl mx-auto text-white"
+          >
+            <div className="mb-8">
+              <FiMail className="text-5xl mx-auto mb-6 text-white/90" />
+              <h2 className="text-4xl md:text-5xl font-bold mb-6">Stay Updated</h2>
+              <p className="text-xl text-white/90 leading-relaxed">
+                Subscribe to our newsletter and be the first to know about our latest projects, success stories, and ways to make a difference.
+              </p>
+            </div>
+            
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="max-w-md mx-auto"
+            >
+              <div className="flex flex-col sm:flex-row gap-4">
+                <input
+                  type="email"
+                  placeholder="Enter your email address"
+                  className="flex-1 px-6 py-4 rounded-full text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-4 focus:ring-white/30 transition-all duration-300"
+                />
+                <button className="px-8 py-4 bg-white text-pink-600 rounded-full font-semibold hover:bg-gray-100 transition-all duration-300 transform hover:-translate-y-1 shadow-lg hover:shadow-xl">
+                  Subscribe
+                </button>
+              </div>
+              <p className="text-sm text-white/70 mt-4">
+                We respect your privacy. Unsubscribe at any time.
+              </p>
+            </motion.div>
+          </motion.div>
+        </div>
+      </section>
 
       {/* Call to Action */}
       <section className="py-24 md:py-36 bg-white text-secondary bg-mesh-gradient-3 bg-dot-pattern mt-[-1px]">

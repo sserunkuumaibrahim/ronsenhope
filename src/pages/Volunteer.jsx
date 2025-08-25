@@ -1,8 +1,13 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
+import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { FiCalendar, FiMapPin, FiClock, FiUsers, FiHeart, FiStar, FiUser, FiMail, FiPhone, FiMessageSquare } from 'react-icons/fi';
+import { FiCalendar, FiMapPin, FiClock, FiUsers, FiHeart, FiStar, FiUser, FiMail, FiPhone, FiMessageSquare, FiDollarSign } from 'react-icons/fi';
 import MainLayout from '../components/layout/MainLayout';
+import { db } from '../firebase/config';
+import { collection, addDoc } from 'firebase/firestore';
+import { realtimeDb } from '../firebase/config';
+import { ref, onValue, off } from 'firebase/database';
 
 export default function Volunteer() {
   const [activeTab, setActiveTab] = useState('opportunities');
@@ -16,6 +21,7 @@ export default function Volunteer() {
     experience: '',
     message: ''
   });
+  const [loadingOpportunities, setLoadingOpportunities] = useState(true);
   const [formSubmitted, setFormSubmitted] = useState(false);
   
   // Animation variants
@@ -40,8 +46,19 @@ export default function Volunteer() {
     }
   };
 
+  const fadeInUp = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.5
+      }
+    }
+  };
+
   // Volunteer opportunities data
-  const opportunities = [
+  const [opportunities, setOpportunities] = useState([
     {
       id: 1,
       title: 'Community Health Educator',
@@ -102,7 +119,30 @@ export default function Volunteer() {
       skills: ['Social Media', 'Content Creation', 'Communication'],
       category: 'Marketing'
     }
-  ];
+  ]);
+
+  // Fetch opportunities from Firebase Realtime Database
+  useEffect(() => {
+    const opportunitiesRef = ref(realtimeDb, 'opportunities');
+    
+    const unsubscribe = onValue(opportunitiesRef, (snapshot) => {
+      if (snapshot.exists()) {
+        const data = snapshot.val();
+        const opportunitiesList = Object.keys(data)
+          .map(key => ({
+            id: key,
+            ...data[key]
+          }))
+          .filter(opp => opp.isActive); // Only show active opportunities
+        setOpportunities(opportunitiesList);
+      } else {
+        setOpportunities([]);
+      }
+      setLoadingOpportunities(false);
+    });
+
+    return () => off(opportunitiesRef, 'value', unsubscribe);
+  }, []);
 
   // Testimonials data
   const testimonials = [
@@ -155,25 +195,38 @@ export default function Volunteer() {
   };
 
   // Handle form submission
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // In a real app, you would send this data to your backend
-    console.log('Form submitted:', formData);
-    setFormSubmitted(true);
-    // Reset form after submission
-    setTimeout(() => {
-      setFormSubmitted(false);
-      setFormData({
-        name: '',
-        email: '',
-        phone: '',
-        opportunity: '',
-        interests: [],
-        availability: [],
-        experience: '',
-        message: ''
+    try {
+      // Save application to Firebase
+      await addDoc(collection(db, 'applications'), {
+        ...formData,
+        status: 'pending',
+        submittedAt: new Date(),
+        createdAt: new Date()
       });
-    }, 5000);
+      
+      console.log('Application submitted successfully');
+      setFormSubmitted(true);
+      
+      // Reset form after submission
+      setTimeout(() => {
+        setFormSubmitted(false);
+        setFormData({
+          name: '',
+          email: '',
+          phone: '',
+          opportunity: '',
+          interests: [],
+          availability: [],
+          experience: '',
+          message: ''
+        });
+      }, 5000);
+    } catch (error) {
+      console.error('Error submitting application:', error);
+      // You might want to show an error message to the user here
+    }
   };
 
   return (
@@ -204,7 +257,7 @@ export default function Volunteer() {
               <span className="text-sm font-medium">Make a Difference Today</span>
             </motion.div>
             <h1 className="text-5xl md:text-7xl font-bold mb-8 bg-gradient-to-r from-white to-pink-100 bg-clip-text text-transparent">
-              Volunteer With Us
+              How Can You Help
             </h1>
             <p className="text-xl md:text-2xl mb-12 text-blue-100 leading-relaxed">
               Join our global community of volunteers and use your skills to make a lasting difference in the lives of others.
@@ -235,6 +288,12 @@ export default function Volunteer() {
               >
                 View Opportunities
               </button>
+              <div dangerouslySetInnerHTML={{
+                __html: `
+                  <script type="text/javascript" defer src="https://donorbox.org/install-popup-button.js"></script>
+                  <a class="dbox-donation-button" style="background: rgb(223, 24, 167); color: rgb(255, 255, 255); text-decoration: none; font-family: Verdana, sans-serif; display: flex; gap: 8px; width: fit-content; font-size: 16px; border-radius: 5px; line-height: 24px; padding: 8px 24px;" href="https://donorbox.org/survive-and-thrive-804282?"><img src="https://donorbox.org/images/white_logo.svg" alt="Donate with DonorBox"/>Donate Now</a>
+                `
+              }} />
             </motion.div>
           </motion.div>
         </div>
@@ -341,7 +400,7 @@ export default function Volunteer() {
                 }`}
                 onClick={() => setActiveTab('testimonials')}
               >
-                Volunteer Stories
+                Testimonials
               </button>
               <button 
                 className={`px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
@@ -380,14 +439,24 @@ export default function Volunteer() {
                 </p>
               </div>
               
-              <motion.div 
-                variants={containerVariants}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true }}
-                className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-              >
-                {opportunities.map((opportunity, index) => {
+              {loadingOpportunities ? (
+                <div className="flex justify-center py-12">
+                  <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-pink-500"></div>
+                </div>
+              ) : opportunities.length === 0 ? (
+                <div className="text-center py-12">
+                  <p className="text-xl text-gray-600">No volunteer opportunities available at the moment.</p>
+                  <p className="text-gray-500 mt-2">Please check back later for new opportunities.</p>
+                </div>
+              ) : (
+                <motion.div 
+                  variants={containerVariants}
+                  initial="hidden"
+                  whileInView="visible"
+                  viewport={{ once: true }}
+                  className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+                >
+                  {opportunities.map((opportunity, index) => {
                   
                   return (
                     <motion.div key={opportunity.id} variants={itemVariants} className="group relative">
@@ -443,9 +512,10 @@ export default function Volunteer() {
                         </button>
                       </div>
                     </motion.div>
-                  );
-                })}
-              </motion.div>
+                    );
+                  })}
+                </motion.div>
+              )}
             </motion.div>
           )}
           
@@ -466,7 +536,7 @@ export default function Volunteer() {
                     <span>Success Stories</span>
                   </motion.div>
                   <h2 className="text-4xl md:text-5xl font-bold mb-6 text-gray-800">
-                    Volunteer Stories
+                    Testimonials
                   </h2>
                   <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
                     Hear from our volunteers about their experiences and the impact they've made.
@@ -741,123 +811,104 @@ export default function Volunteer() {
           </div>
        
       </section>
-      
-      {/* FAQ Section */}
-      <section className="py-20 bg-gray-50">
+
+      {/* Mobile Money Donation Section */}
+      <section className="py-20 bg-gradient-to-br from-white to-pink-50">
         <div className="container-custom">
-          <div className="text-center mb-16">
-            <motion.div
-              initial={{ scale: 0.9, opacity: 0 }}
-              whileInView={{ scale: 1, opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-              className="inline-flex items-center gap-2 bg-pink-100 text-pink-600 rounded-full px-6 py-3 mb-6 font-medium"
-            >
-              <FiClock className="text-pink-500" />
-              <span>Got Questions?</span>
-            </motion.div>
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 text-gray-800">
-              Frequently Asked Questions
-            </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-              Have questions about volunteering with us? Find answers to common questions below.
+          <motion.div
+            variants={fadeInUp}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-6 py-3 rounded-full text-sm font-medium mb-6">
+              <FiDollarSign className="text-xl" />
+              Quick and Secure Donations
+            </div>
+            <h2 className="text-4xl md:text-5xl font-bold mb-6 text-gray-800">Support Via Mobile Money</h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Make a difference today through our secure mobile money channels. Every contribution helps us support more cancer patients.
             </p>
-          </div>
-          
-          <div className="max-w-4xl mx-auto space-y-6">
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.1 }}
-              className="group"
+          </motion.div>
+
+          <motion.div
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto"
+          >
+            {/* MTN Mobile Money */}
+            <motion.div
+              variants={itemVariants}
+              className="bg-white rounded-3xl p-8 shadow-xl hover:shadow-2xl transition-all duration-300 border border-yellow-100 group"
             >
-              <div className="collapse collapse-plus bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100">
-                <input type="radio" name="faq-accordion" defaultChecked /> 
-                <div className="collapse-title text-xl font-bold text-gray-800 group-hover:text-pink-600 transition-colors duration-300">
-                  Do I need special qualifications to volunteer?
+              <div className="flex items-center gap-6 mb-6">
+                <div className="w-16 h-16 bg-yellow-400 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                  <img src="/payment-logos/mtn-logo.png" alt="MTN Logo" className="w-12 h-12 object-contain" />
                 </div>
-                <div className="collapse-content">
-                  <p className="text-gray-600 leading-relaxed">Most of our volunteer opportunities don't require specific qualifications. We value enthusiasm, commitment, and a willingness to learn. For specialized roles (like medical volunteers), relevant qualifications may be necessary.</p>
+                <div className="text-left">
+                  <h3 className="text-2xl font-bold text-gray-800 mb-1">MTN Mobile Money</h3>
+                  <p className="text-yellow-600 font-medium">Account Details</p>
                 </div>
               </div>
-            </motion.div>
-            
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-              className="group"
-            >
-              <div className="collapse collapse-plus bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100">
-                <input type="radio" name="faq-accordion" /> 
-                <div className="collapse-title text-xl font-bold text-gray-800 group-hover:text-pink-600 transition-colors duration-300">
-                  How much time do I need to commit?
+              <div className="bg-yellow-50 rounded-xl p-6 mb-4">
+                <div className="mb-2">
+                  <p className="text-sm text-yellow-700 mb-1">Account Name</p>
+                  <p className="text-xl font-bold text-gray-800">Lumps Away Foundation</p>
                 </div>
-                <div className="collapse-content">
-                  <p className="text-gray-600 leading-relaxed">We offer flexible volunteering opportunities to accommodate different schedules. Some roles require as little as 2-3 hours per week, while others may need a more substantial commitment. Each opportunity listing specifies the expected time commitment.</p>
+                <div>
+                  <p className="text-sm text-yellow-700 mb-1">Phone Number</p>
+                  <p className="text-3xl font-bold text-yellow-600 font-mono tracking-wider">0784 012 345</p>
                 </div>
               </div>
+              <p className="text-sm text-gray-600">*MTN Mobile Money charges may apply</p>
             </motion.div>
-            
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.3 }}
-              className="group"
+
+            {/* Airtel Money */}
+            <motion.div
+              variants={itemVariants}
+              className="bg-white rounded-3xl p-8 shadow-xl hover:shadow-2xl transition-all duration-300 border border-red-100 group"
             >
-              <div className="collapse collapse-plus bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100">
-                <input type="radio" name="faq-accordion" /> 
-                <div className="collapse-title text-xl font-bold text-gray-800 group-hover:text-pink-600 transition-colors duration-300">
-                  Can I volunteer remotely?
+              <div className="flex items-center gap-6 mb-6">
+                <div className="w-16 h-16 bg-red-500 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                  <img src="/payment-logos/airtel-logo.png" alt="Airtel Logo" className="w-12 h-12 object-contain" />
                 </div>
-                <div className="collapse-content">
-                  <p className="text-gray-600 leading-relaxed">Yes! We offer several remote volunteering opportunities, including social media management, content creation, grant writing, and virtual mentoring. These roles allow you to make an impact from anywhere in the world.</p>
+                <div className="text-left">
+                  <h3 className="text-2xl font-bold text-gray-800 mb-1">Airtel Money</h3>
+                  <p className="text-red-600 font-medium">Account Details</p>
                 </div>
               </div>
-            </motion.div>
-            
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.4 }}
-              className="group"
-            >
-              <div className="collapse collapse-plus bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100">
-                <input type="radio" name="faq-accordion" /> 
-                <div className="collapse-title text-xl font-bold text-gray-800 group-hover:text-pink-600 transition-colors duration-300">
-                  Will I receive training?
+              <div className="bg-red-50 rounded-xl p-6 mb-4">
+                <div className="mb-2">
+                  <p className="text-sm text-red-700 mb-1">Account Name</p>
+                  <p className="text-xl font-bold text-gray-800">Lumps Away Foundation</p>
                 </div>
-                <div className="collapse-content">
-                  <p className="text-gray-600 leading-relaxed">Absolutely! All volunteers receive orientation and role-specific training. We're committed to ensuring you have the knowledge and resources needed to be effective and confident in your volunteer role.</p>
+                <div>
+                  <p className="text-sm text-red-700 mb-1">Phone Number</p>
+                  <p className="text-3xl font-bold text-red-600 font-mono tracking-wider">0755 012 345</p>
                 </div>
               </div>
+              <p className="text-sm text-gray-600">*Airtel Money charges may apply</p>
             </motion.div>
-            
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.5 }}
-              className="group"
-            >
-              <div className="collapse collapse-plus bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100">
-                <input type="radio" name="faq-accordion" /> 
-                <div className="collapse-title text-xl font-bold text-gray-800 group-hover:text-pink-600 transition-colors duration-300">
-                  Can I volunteer as a group or team?
-                </div>
-                <div className="collapse-content">
-                  <p className="text-gray-600 leading-relaxed">Yes, we welcome group volunteering! Whether it's a corporate team, school group, or community organization, we can arrange meaningful volunteer experiences for groups of various sizes. Please contact us directly to discuss group volunteering options.</p>
-                </div>
-              </div>
-            </motion.div>
-          </div>
+          </motion.div>
+
+          <motion.div
+            variants={fadeInUp}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            className="mt-12 text-center"
+          >
+            <p className="text-gray-600 max-w-2xl mx-auto">
+              After sending your donation, you'll receive a confirmation message. For donations above UGX 500,000, 
+              please contact us for a receipt at <a href="mailto:donations@lumpsaway.org" className="text-primary hover:underline">donations@lumpsaway.org</a>
+            </p>
+          </motion.div>
         </div>
       </section>
-      
+
       {/* Call to Action */}
       <section className="relative py-20 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-pink-500 to-pink-600"></div>

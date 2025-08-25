@@ -1,83 +1,41 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
 import { FiSearch, FiFilter, FiMapPin, FiCalendar, FiUsers, FiArrowRight, FiTarget, FiTrendingUp, FiGlobe, FiHeart } from 'react-icons/fi';
 import MainLayout from '../components/layout/MainLayout';
+import { db } from '../firebase/config';
+import { collection, getDocs } from 'firebase/firestore';
 
 export default function Programs() {
   const [searchTerm, setSearchTerm] = useState('');
   const [activeFilter, setActiveFilter] = useState('all');
-  
-  // Sample program data
-  const programs = [
-    {
-      id: 1,
-      title: 'Clean Water Initiative',
-      category: 'environment',
-      location: 'East Africa',
-      participants: 5000,
-      startDate: 'January 2023',
-      description: 'Providing clean and safe drinking water to communities in need through sustainable water solutions.',
-      image: 'https://images.unsplash.com/photo-1541252260730-0412e8e2108e?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60',
-      progress: 75
-    },
-    {
-      id: 2,
-      title: 'Education for All',
-      category: 'education',
-      location: 'South Asia',
-      participants: 12000,
-      startDate: 'March 2022',
-      description: 'Ensuring access to quality education for underprivileged children through school building and teacher training.',
-      image: 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60',
-      progress: 60
-    },
-    {
-      id: 3,
-      title: 'Healthcare Outreach',
-      category: 'health',
-      location: 'Latin America',
-      participants: 8500,
-      startDate: 'June 2022',
-      description: 'Mobile clinics and healthcare services for remote communities with limited access to medical facilities.',
-      image: 'https://images.unsplash.com/photo-1584515933487-779824d29309?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60',
-      progress: 80
-    },
-    {
-      id: 4,
-      title: 'Sustainable Farming',
-      category: 'environment',
-      location: 'Southeast Asia',
-      participants: 3200,
-      startDate: 'April 2023',
-      description: 'Teaching sustainable agricultural practices to improve food security and economic stability in rural areas.',
-      image: 'https://images.unsplash.com/photo-1500937386664-56d1dfef3854?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60',
-      progress: 40
-    },
-    {
-      id: 5,
-      title: 'Women Empowerment',
-      category: 'social',
-      location: 'Global',
-      participants: 15000,
-      startDate: 'February 2022',
-      description: 'Skills training and microfinance opportunities for women to achieve economic independence and leadership roles.',
-      image: 'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60',
-      progress: 65
-    },
-    {
-      id: 6,
-      title: 'Youth Development',
-      category: 'education',
-      location: 'Urban Centers',
-      participants: 7800,
-      startDate: 'September 2022',
-      description: 'Mentorship, leadership training, and educational support for at-risk youth in urban communities.',
-      image: 'https://images.unsplash.com/photo-1529390079861-591de354faf5?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60',
-      progress: 55
-    }
-  ];
+  const [programs, setPrograms] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  // Fetch programs from Firebase
+  useEffect(() => {
+    const fetchPrograms = async () => {
+      setLoading(true);
+      try {
+        const programsCollection = collection(db, 'programs');
+        const programsSnapshot = await getDocs(programsCollection);
+        const programsData = programsSnapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data(),
+          createdAt: doc.data().createdAt?.toDate?.() || new Date(),
+          updatedAt: doc.data().updatedAt?.toDate?.() || new Date()
+        }));
+        setPrograms(programsData);
+      } catch (error) {
+        console.error('Error fetching programs:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPrograms();
+  }, []);
 
   const categories = [
     { id: 'all', name: 'All Programs' },
@@ -133,7 +91,7 @@ export default function Programs() {
             </p>
             
             {/* Stats */}
-            <motion.div
+            {/* <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.4 }}
@@ -160,7 +118,7 @@ export default function Programs() {
                 <div className="text-3xl md:text-4xl font-bold text-accent mb-2">15</div>
                 <div className="text-base-content/60">Countries Served</div>
               </div>
-            </motion.div>
+            </motion.div> */}
           </motion.div>
         </div>
       </div>
@@ -242,7 +200,15 @@ export default function Programs() {
           </div>
         </motion.div>
 
-        {filteredPrograms.length === 0 ? (
+        {/* Loading State */}
+        {loading ? (
+          <div className="flex justify-center items-center py-20">
+            <div className="text-center">
+              <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+              <p className="text-gray-600">Loading programs...</p>
+            </div>
+          </div>
+        ) : filteredPrograms.length === 0 ? (
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -384,7 +350,7 @@ export default function Programs() {
             </p>
             
             {/* Impact Stats */}
-            <motion.div
+            {/* <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 1, duration: 0.6 }}
@@ -411,7 +377,7 @@ export default function Programs() {
                 <div className="text-2xl md:text-3xl font-bold text-accent mb-1">98%</div>
                 <div className="text-sm text-base-content/60">Impact Rate</div>
               </div>
-            </motion.div>
+            </motion.div> */}
             
             {/* Action Buttons */}
             <motion.div
@@ -420,20 +386,19 @@ export default function Programs() {
               transition={{ delay: 1.2, duration: 0.6 }}
               className="flex flex-col sm:flex-row gap-4 justify-center"
             >
-              <Link 
-                to="/donate" 
-                className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-primary to-secondary text-white rounded-xl font-semibold text-lg hover:from-primary/90 hover:to-secondary/90 hover:shadow-xl hover:shadow-primary/25 transition-all duration-300"
-              >
-                <FiHeart className="w-5 h-5" />
-                Donate Now
-              </Link>
-              <Link 
-                to="/volunteer" 
-                className="inline-flex items-center gap-2 px-8 py-4 bg-white border-2 border-primary text-primary rounded-xl font-semibold text-lg hover:bg-gradient-to-r hover:from-primary hover:to-secondary hover:text-white hover:border-transparent hover:shadow-lg hover:shadow-primary/25 transition-all duration-300"
-              >
-                <FiUsers className="w-5 h-5" />
-                Volunteer With Us
-              </Link>
+              <div dangerouslySetInnerHTML={{
+                  __html: `
+                    <script type="text/javascript" defer src="https://donorbox.org/install-popup-button.js"></script>
+                    <a class="dbox-donation-button" style="background: rgb(223, 24, 167); color: rgb(255, 255, 255); text-decoration: none; font-family: Verdana, sans-serif; display: flex; gap: 8px; width: fit-content; font-size: 16px; border-radius: 5px; line-height: 24px; padding: 8px 24px;" href="https://donorbox.org/survive-and-thrive-804282?"><img src="https://donorbox.org/images/white_logo.svg" alt="Donate with DonorBox"/>Donate Now</a>
+                  `
+                }} />
+                <Link 
+                  to="/volunteer" 
+                  className="inline-flex items-center gap-2 px-8 py-4 bg-white border-2 border-primary text-primary rounded-xl font-semibold text-lg hover:bg-gradient-to-r hover:from-primary hover:to-secondary hover:text-white hover:border-transparent hover:shadow-lg hover:shadow-primary/25 transition-all duration-300"
+                >
+                  <FiUsers className="w-5 h-5" />
+                  Volunteer With Us
+                </Link>
             </motion.div>
             
             {/* Additional Info */}

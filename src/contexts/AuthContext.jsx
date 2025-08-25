@@ -5,12 +5,18 @@ import {
   signOut, 
   onAuthStateChanged,
   sendPasswordResetEmail,
-  updateProfile
+  updateProfile,
+  GoogleAuthProvider,
+  signInWithPopup
 } from 'firebase/auth';
 import { auth, db } from '../firebase/config';
 import { doc, setDoc, getDoc, serverTimestamp } from 'firebase/firestore';
+import { createAdminUser } from '../utils/seedAdmin';
 
 const AuthContext = createContext();
+
+// Admin credentials
+const ADMIN_EMAIL = '28labs@lumpsaway.org';
 
 export function useAuth() {
   return useContext(AuthContext);
@@ -28,12 +34,15 @@ export function AuthProvider({ children }) {
       // Update profile with display name
       await updateProfile(user, { displayName });
       
+      // Determine role based on email
+      const role = email === ADMIN_EMAIL ? 'admin' : 'user';
+      
       // Create user document in Firestore
       await setDoc(doc(db, 'users', user.uid), {
         uid: user.uid,
         email: user.email,
         displayName,
-        role: 'user',
+        role,
         createdAt: serverTimestamp(),
       });
       
@@ -43,8 +52,59 @@ export function AuthProvider({ children }) {
     }
   }
 
-  function login(email, password) {
-    return signInWithEmailAndPassword(auth, email, password);
+  async function login(email, password) {
+    try {
+      console.log('Attempting login for:', email);
+      const result = await signInWithEmailAndPassword(auth, email, password);
+      console.log('Login successful for:', email);
+      
+      // Check if user document exists and get role
+      const userDoc = await getDoc(doc(db, 'users', result.user.uid));
+      if (userDoc.exists()) {
+        console.log('User role:', userDoc.data().role);
+      } else {
+        console.log('User document not found in Firestore');
+      }
+      
+      return result;
+    } catch (error) {
+      console.error('Login error:', error);
+      throw error;
+    }
+  }
+
+  async function signInWithGoogle() {
+    try {
+      const provider = new GoogleAuthProvider();
+      console.log('Starting Google sign-in...');
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+      console.log('Google sign-in successful:', user.email);
+      
+      // Check if user document exists, if not create one
+      const userDoc = await getDoc(doc(db, 'users', user.uid));
+      if (!userDoc.exists()) {
+        console.log('Creating new user document for:', user.email);
+        // Determine role based on email
+        const role = user.email === ADMIN_EMAIL ? 'admin' : 'user';
+        
+        await setDoc(doc(db, 'users', user.uid), {
+          uid: user.uid,
+          email: user.email,
+          displayName: user.displayName,
+          role,
+          createdAt: serverTimestamp(),
+        });
+        console.log('User document created with role:', role);
+      } else {
+        console.log('User document already exists');
+      }
+      
+      return result;
+    } catch (error) {
+      console.error('Google sign-in error:', error);
+      throw error;
+    }
   }
 
   function logout() {
@@ -72,8 +132,37 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      setCurrentUser(user);
-      setLoading(false);
+      try {
+        if (user) {
+          // Ensure user document exists in Firestore
+          const userDoc = await getDoc(doc(db, 'users', user.uid));
+          let userData = null;
+          
+          if (!userDoc.exists()) {
+            // Create user document if it doesn't exist
+            const role = user.email === ADMIN_EMAIL ? 'admin' : 'user';
+            userData = {
+              uid: user.uid,
+              email: user.email,
+              displayName: user.displayName || user.email.split('@')[0],
+              role,
+              createdAt: serverTimestamp(),
+            };
+            await setDoc(doc(db, 'users', user.uid), userData);
+          } else {
+            userData = userDoc.data();
+          }
+          
+          // Attach role to user object
+          user.role = userData.role;
+        }
+        setCurrentUser(user);
+      } catch (error) {
+        console.error('Error in auth state change:', error);
+        setCurrentUser(user);
+      } finally {
+        setLoading(false);
+      }
     });
 
     return unsubscribe;
@@ -83,9 +172,11 @@ export function AuthProvider({ children }) {
     currentUser,
     signup,
     login,
+    signInWithGoogle,
     logout,
     resetPassword,
-    getUserRole
+    getUserRole,
+    createAdminUser
   };
 
   return (

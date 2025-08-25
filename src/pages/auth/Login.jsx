@@ -1,9 +1,12 @@
+
+
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { useForm } from 'react-hook-form';
 import { motion } from 'framer-motion';
 import { FiMail, FiLock, FiAlertCircle, FiHeart, FiEye, FiEyeOff } from 'react-icons/fi';
+import { FcGoogle } from 'react-icons/fc';
 import { useAuth } from '../../contexts/AuthContext';
 import MainLayout from '../../components/layout/MainLayout';
 
@@ -12,7 +15,7 @@ export default function Login() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const { login } = useAuth();
+  const { login, signInWithGoogle, getUserRole } = useAuth();
   const navigate = useNavigate();
 
   const onSubmit = async (data) => {
@@ -20,11 +23,69 @@ export default function Login() {
       setError('');
       setLoading(true);
       await login(data.email, data.password);
-      navigate('/');
+      
+      // Wait a bit for auth state to update, then check role and redirect
+      setTimeout(async () => {
+        try {
+          const role = await getUserRole();
+          if (role === 'admin') {
+            navigate('/admin');
+          } else {
+            navigate('/');
+          }
+        } catch (error) {
+          console.error('Error getting user role:', error);
+          navigate('/'); // Default to home if role check fails
+        }
+      }, 100);
     } catch (err) {
-      setError('Failed to sign in. Please check your credentials.');
-      console.error(err);
-    } finally {
+      console.error('Login error:', err);
+      if (err.code === 'auth/user-not-found') {
+        setError('No account found with this email address.');
+      } else if (err.code === 'auth/wrong-password') {
+        setError('Incorrect password. Please try again.');
+      } else if (err.code === 'auth/invalid-email') {
+        setError('Invalid email address format.');
+      } else if (err.code === 'auth/user-disabled') {
+        setError('This account has been disabled.');
+      } else {
+        setError('Failed to sign in. Please check your credentials.');
+      }
+      setLoading(false);
+    }
+  };
+
+  const handleGoogleSignIn = async () => {
+    try {
+      setError('');
+      setLoading(true);
+      await signInWithGoogle();
+      
+      // Wait a bit for auth state to update, then check role and redirect
+      setTimeout(async () => {
+        try {
+          const role = await getUserRole();
+          if (role === 'admin') {
+            navigate('/admin');
+          } else {
+            navigate('/');
+          }
+        } catch (error) {
+          console.error('Error getting user role:', error);
+          navigate('/'); // Default to home if role check fails
+        }
+      }, 100);
+    } catch (err) {
+      console.error('Google sign-in error:', err);
+      if (err.code === 'auth/popup-closed-by-user') {
+        setError('Sign-in was cancelled. Please try again.');
+      } else if (err.code === 'auth/popup-blocked') {
+        setError('Pop-up was blocked. Please allow pop-ups and try again.');
+      } else if (err.code === 'auth/cancelled-popup-request') {
+        setError('Sign-in was cancelled. Please try again.');
+      } else {
+        setError('Failed to sign in with Google. Please try again.');
+      }
       setLoading(false);
     }
   };
@@ -253,6 +314,46 @@ export default function Login() {
                     )}
                   </motion.button>
                 </motion.form>
+
+                {/* Google Sign In Section */}
+                <motion.div 
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.5, delay: 0.4 }}
+                  className="mt-6"
+                >
+                  <div className="relative">
+                    <div className="absolute inset-0 flex items-center">
+                      <div className="w-full border-t border-gray-200"></div>
+                    </div>
+                    <div className="relative flex justify-center text-sm">
+                      <span className="px-4 bg-white text-gray-500 font-medium">Or continue with</span>
+                    </div>
+                  </div>
+                  
+                  <div className="mt-4">
+                    {/* Google Sign In Button */}
+                    <motion.button 
+                      onClick={handleGoogleSignIn}
+                      disabled={loading}
+                      whileHover={{ scale: loading ? 1 : 1.02 }}
+                      whileTap={{ scale: loading ? 1 : 0.98 }}
+                      className={`w-full py-3 px-6 bg-white border-2 border-gray-200 text-gray-700 rounded-xl font-medium shadow-lg hover:shadow-xl hover:border-gray-300 transition-all duration-300 ${loading ? 'cursor-not-allowed opacity-70' : 'hover:-translate-y-0.5'}`}
+                    >
+                      {loading ? (
+                        <div className="flex items-center justify-center">
+                          <div className="animate-spin rounded-full h-4 w-4 border-2 border-gray-400 border-t-transparent mr-2"></div>
+                          Signing in...
+                        </div>
+                      ) : (
+                        <div className="flex items-center justify-center">
+                          <FcGoogle className="text-xl mr-3" />
+                          <span>Continue with Google</span>
+                        </div>
+                      )}
+                    </motion.button>
+                  </div>
+                </motion.div>
 
                 {/* Sign Up Link */}
                 <motion.div 

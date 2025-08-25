@@ -2,8 +2,12 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
-import { FiSearch, FiEdit, FiTrash2, FiPlus, FiFilter, FiDownload, FiEye, FiCheck, FiX, FiCalendar } from 'react-icons/fi';
+import { FiSearch, FiEdit, FiTrash2, FiPlus, FiFilter, FiDownload, FiEye, FiCheck, FiX, FiCalendar, FiMapPin, FiUsers, FiTarget, FiTrendingUp, FiGlobe, FiUpload } from 'react-icons/fi';
 import AdminLayout from '../../components/layout/AdminLayout';
+import { db } from '../../firebase/config';
+import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc, serverTimestamp } from 'firebase/firestore';
+import { storage } from '../../firebase/config';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
 export default function Programs() {
   const [programs, setPrograms] = useState([]);
@@ -11,360 +15,360 @@ export default function Programs() {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [selectedStatus, setSelectedStatus] = useState('all');
-  const [currentPage, setCurrentPage] = useState(1);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [programToDelete, setProgramToDelete] = useState(null);
-  const [showDetailsModal, setShowDetailsModal] = useState(false);
   const [selectedProgram, setSelectedProgram] = useState(null);
-  const [sortConfig, setSortConfig] = useState({ key: 'startDate', direction: 'desc' });
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [editingProgram, setEditingProgram] = useState(null);
+  const [showEnrollModal, setShowEnrollModal] = useState(false);
+  const [enrollingProgram, setEnrollingProgram] = useState(null);
+  const [availableUsers, setAvailableUsers] = useState([]);
+  const [selectedUsers, setSelectedUsers] = useState([]);
+  const [userSearchTerm, setUserSearchTerm] = useState('');
+  const [formData, setFormData] = useState({
+    title: '',
+    category: 'education',
+    location: '',
+    description: '',
+    budget: '',
+    startDate: '',
+    image: ''
+  });
+  const [imageFile, setImageFile] = useState(null);
+  const [uploading, setUploading] = useState(false);
   
-  const programsPerPage = 10;
+
 
   useEffect(() => {
-    // Simulate API fetch
     const fetchPrograms = async () => {
       setLoading(true);
-      // In a real app, this would be an API call
-      await new Promise(resolve => setTimeout(resolve, 800));
-      
-      // Sample programs data
-      const programsData = [
-        {
-          id: 1,
-          name: 'Clean Water Initiative',
-          description: 'Providing clean water solutions to communities in need.',
-          category: 'Water & Sanitation',
-          status: 'active',
-          startDate: '2023-01-15',
-          endDate: '2023-12-31',
-          budget: 50000,
-          raised: 32500,
-          beneficiaries: 5000,
-          location: 'Multiple Regions',
-          coordinator: 'Sarah Johnson',
-          image: 'https://example.com/images/water-initiative.jpg'
-        },
-        {
-          id: 2,
-          name: 'Education for All',
-          description: 'Supporting education in underprivileged communities.',
-          category: 'Education',
-          status: 'active',
-          startDate: '2023-02-01',
-          endDate: '2023-11-30',
-          budget: 75000,
-          raised: 45000,
-          beneficiaries: 2000,
-          location: 'Urban Centers',
-          coordinator: 'Michael Brown',
-          image: 'https://example.com/images/education-program.jpg'
-        },
-        {
-          id: 3,
-          name: 'Emergency Relief Fund',
-          description: 'Providing immediate assistance to disaster-affected areas.',
-          category: 'Emergency',
-          status: 'active',
-          startDate: '2023-03-10',
-          endDate: null, // Ongoing program
-          budget: 100000,
-          raised: 85000,
-          beneficiaries: 10000,
-          location: 'Global',
-          coordinator: 'David Wilson',
-          image: 'https://example.com/images/emergency-relief.jpg'
-        },
-        {
-          id: 4,
-          name: 'Community Development',
-          description: 'Building sustainable infrastructure in rural communities.',
-          category: 'Development',
-          status: 'active',
-          startDate: '2023-01-01',
-          endDate: '2023-12-31',
-          budget: 120000,
-          raised: 78000,
-          beneficiaries: 15000,
-          location: 'Rural Areas',
-          coordinator: 'Jennifer Lee',
-          image: 'https://example.com/images/community-dev.jpg'
-        },
-        {
-          id: 5,
-          name: 'Healthcare Access',
-          description: 'Improving access to healthcare in underserved regions.',
-          category: 'Health',
-          status: 'active',
-          startDate: '2023-04-01',
-          endDate: '2024-03-31',
-          budget: 90000,
-          raised: 42000,
-          beneficiaries: 8000,
-          location: 'Multiple Regions',
-          coordinator: 'Robert Taylor',
-          image: 'https://example.com/images/healthcare.jpg'
-        },
-        {
-          id: 6,
-          name: 'Youth Empowerment',
-          description: 'Providing skills and opportunities for disadvantaged youth.',
-          category: 'Education',
-          status: 'active',
-          startDate: '2023-03-15',
-          endDate: '2023-09-15',
-          budget: 45000,
-          raised: 30000,
-          beneficiaries: 1000,
-          location: 'Urban Centers',
-          coordinator: 'Patricia White',
-          image: 'https://example.com/images/youth-program.jpg'
-        },
-        {
-          id: 7,
-          name: 'Sustainable Agriculture',
-          description: 'Promoting sustainable farming practices in rural communities.',
-          category: 'Food & Agriculture',
-          status: 'active',
-          startDate: '2023-02-15',
-          endDate: '2024-02-14',
-          budget: 65000,
-          raised: 40000,
-          beneficiaries: 3000,
-          location: 'Rural Areas',
-          coordinator: 'James Martin',
-          image: 'https://example.com/images/agriculture.jpg'
-        },
-        {
-          id: 8,
-          name: 'Women Empowerment',
-          description: 'Supporting women entrepreneurs and leaders in communities.',
-          category: 'Gender Equality',
-          status: 'active',
-          startDate: '2023-05-01',
-          endDate: '2024-04-30',
-          budget: 55000,
-          raised: 25000,
-          beneficiaries: 2500,
-          location: 'Multiple Regions',
-          coordinator: 'Lisa Anderson',
-          image: 'https://example.com/images/women-empowerment.jpg'
-        },
-        {
-          id: 9,
-          name: 'Digital Literacy',
-          description: 'Teaching digital skills to bridge the technology gap.',
-          category: 'Education',
-          status: 'planned',
-          startDate: '2023-07-01',
-          endDate: '2023-12-31',
-          budget: 40000,
-          raised: 15000,
-          beneficiaries: 1500,
-          location: 'Urban Centers',
-          coordinator: 'Thomas Harris',
-          image: 'https://example.com/images/digital-literacy.jpg'
-        },
-        {
-          id: 10,
-          name: 'Environmental Conservation',
-          description: 'Protecting natural habitats and promoting conservation.',
-          category: 'Environment',
-          status: 'active',
-          startDate: '2023-01-01',
-          endDate: '2023-12-31',
-          budget: 80000,
-          raised: 50000,
-          beneficiaries: 0, // Indirect beneficiaries
-          location: 'Protected Areas',
-          coordinator: 'Jessica Clark',
-          image: 'https://example.com/images/conservation.jpg'
-        },
-        {
-          id: 11,
-          name: 'Mental Health Support',
-          description: 'Providing mental health services and awareness programs.',
-          category: 'Health',
-          status: 'planned',
-          startDate: '2023-08-01',
-          endDate: '2024-07-31',
-          budget: 60000,
-          raised: 20000,
-          beneficiaries: 5000,
-          location: 'Urban Centers',
-          coordinator: 'Daniel Lewis',
-          image: 'https://example.com/images/mental-health.jpg'
-        },
-        {
-          id: 12,
-          name: 'Elderly Care',
-          description: 'Supporting elderly individuals with care and community services.',
-          category: 'Social Services',
-          status: 'active',
-          startDate: '2023-03-01',
-          endDate: '2024-02-29',
-          budget: 70000,
-          raised: 45000,
-          beneficiaries: 2000,
-          location: 'Multiple Regions',
-          coordinator: 'Nancy Walker',
-          image: 'https://example.com/images/elderly-care.jpg'
-        },
-        {
-          id: 13,
-          name: 'Refugee Support',
-          description: 'Providing assistance to refugees and displaced persons.',
-          category: 'Humanitarian',
-          status: 'active',
-          startDate: '2023-01-15',
-          endDate: null, // Ongoing program
-          budget: 110000,
-          raised: 75000,
-          beneficiaries: 7500,
-          location: 'Global',
-          coordinator: 'Christopher Young',
-          image: 'https://example.com/images/refugee-support.jpg'
-        },
-        {
-          id: 14,
-          name: 'Childhood Nutrition',
-          description: 'Ensuring proper nutrition for children in vulnerable communities.',
-          category: 'Health',
-          status: 'completed',
-          startDate: '2022-07-01',
-          endDate: '2023-06-30',
-          budget: 55000,
-          raised: 55000,
-          beneficiaries: 4000,
-          location: 'Multiple Regions',
-          coordinator: 'Emily Davis',
-          image: 'https://example.com/images/child-nutrition.jpg'
-        },
-        {
-          id: 15,
-          name: 'Vocational Training',
-          description: 'Providing job skills training for unemployed individuals.',
-          category: 'Education',
-          status: 'planned',
-          startDate: '2023-09-01',
-          endDate: '2024-08-31',
-          budget: 65000,
-          raised: 25000,
-          beneficiaries: 1200,
-          location: 'Urban Centers',
-          coordinator: 'John Smith',
-          image: 'https://example.com/images/vocational-training.jpg'
-        }
-      ];
-      
-      setPrograms(programsData);
-      setLoading(false);
+      try {
+        const programsCollection = collection(db, 'programs');
+        const programsSnapshot = await getDocs(programsCollection);
+        const programsData = programsSnapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data(),
+          createdAt: doc.data().createdAt?.toDate?.() || new Date(),
+          updatedAt: doc.data().updatedAt?.toDate?.() || new Date()
+        }));
+        setPrograms(programsData);
+      } catch (error) {
+        console.error('Error fetching programs:', error);
+        alert('Failed to fetch programs. Please try again.');
+      } finally {
+        setLoading(false);
+      }
     };
 
     fetchPrograms();
   }, []);
 
-  // Get all unique categories
-  const categories = ['all', ...new Set(programs.map(program => program.category))];
-  
-  // Get all unique statuses
-  const statuses = ['all', ...new Set(programs.map(program => program.status))];
+  // Sample user data for enrollment
+  useEffect(() => {
+    const fetchUsers = async () => {
+      const usersData = [
+        {
+          id: 1,
+          name: 'John Smith',
+          email: 'john.smith@email.com',
+          role: 'volunteer',
+          avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80'
+        },
+        {
+          id: 2,
+          name: 'Sarah Johnson',
+          email: 'sarah.johnson@email.com',
+          role: 'coordinator',
+          avatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80'
+        },
+        {
+          id: 3,
+          name: 'Michael Brown',
+          email: 'michael.brown@email.com',
+          role: 'volunteer',
+          avatar: 'https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80'
+        },
+        {
+          id: 4,
+          name: 'Emily Davis',
+          email: 'emily.davis@email.com',
+          role: 'specialist',
+          avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80'
+        },
+        {
+          id: 5,
+          name: 'David Wilson',
+          email: 'david.wilson@email.com',
+          role: 'volunteer',
+          avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80'
+        }
+      ];
+      setAvailableUsers(usersData);
+    };
 
-  // Sort programs
-  const sortedPrograms = [...programs].sort((a, b) => {
-    if (sortConfig.key === 'raised' || sortConfig.key === 'budget' || sortConfig.key === 'beneficiaries') {
-      return sortConfig.direction === 'asc' ? a[sortConfig.key] - b[sortConfig.key] : b[sortConfig.key] - a[sortConfig.key];
-    }
-    
-    if (sortConfig.key === 'progress') {
-      const progressA = (a.raised / a.budget) * 100;
-      const progressB = (b.raised / b.budget) * 100;
-      return sortConfig.direction === 'asc' ? progressA - progressB : progressB - progressA;
-    }
-    
-    if (sortConfig.key === 'startDate' || sortConfig.key === 'endDate') {
-      // Handle null endDate (ongoing programs)
-      if (sortConfig.key === 'endDate') {
-        if (a.endDate === null && b.endDate === null) return 0;
-        if (a.endDate === null) return sortConfig.direction === 'asc' ? 1 : -1;
-        if (b.endDate === null) return sortConfig.direction === 'asc' ? -1 : 1;
-      }
-      
-      return sortConfig.direction === 'asc' 
-        ? new Date(a[sortConfig.key]) - new Date(b[sortConfig.key])
-        : new Date(b[sortConfig.key]) - new Date(a[sortConfig.key]);
-    }
-    
-    // Default sort by name
-    return sortConfig.direction === 'asc' 
-      ? a.name.localeCompare(b.name)
-      : b.name.localeCompare(a.name);
-  });
+    fetchUsers();
+  }, []);
 
-  // Filter programs based on search term, category, and status
-  const filteredPrograms = sortedPrograms.filter(program => {
-    const matchesSearch = 
-      program.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
-      program.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      program.coordinator.toLowerCase().includes(searchTerm.toLowerCase());
-    
+  const categories = ['all', 'environment', 'education', 'health', 'community'];
+  const statuses = ['all', 'active', 'planned', 'completed'];
+
+  const filteredPrograms = programs.filter(program => {
+    const matchesSearch = program.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         program.description.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesCategory = selectedCategory === 'all' || program.category === selectedCategory;
-    
     const matchesStatus = selectedStatus === 'all' || program.status === selectedStatus;
     
     return matchesSearch && matchesCategory && matchesStatus;
   });
 
-  // Pagination logic
-  const indexOfLastProgram = currentPage * programsPerPage;
-  const indexOfFirstProgram = indexOfLastProgram - programsPerPage;
-  const currentPrograms = filteredPrograms.slice(indexOfFirstProgram, indexOfLastProgram);
-  const totalPages = Math.ceil(filteredPrograms.length / programsPerPage);
-
-  const paginate = (pageNumber) => setCurrentPage(pageNumber);
-
-  const handleSort = (key) => {
-    let direction = 'asc';
-    if (sortConfig.key === key && sortConfig.direction === 'asc') {
-      direction = 'desc';
-    }
-    setSortConfig({ key, direction });
-  };
-
-  const handleDeleteClick = (program) => {
+  const handleDeleteProgram = (program) => {
     setProgramToDelete(program);
     setShowDeleteModal(true);
   };
 
-  const confirmDelete = () => {
-    // In a real app, this would call an API to delete the program
-    setPrograms(programs.filter(program => program.id !== programToDelete.id));
-    setShowDeleteModal(false);
-    setProgramToDelete(null);
+  const confirmDelete = async () => {
+    try {
+      await deleteDoc(doc(db, 'programs', programToDelete.id));
+      setPrograms(programs.filter(p => p.id !== programToDelete.id));
+      setShowDeleteModal(false);
+      setProgramToDelete(null);
+    } catch (error) {
+      console.error('Error deleting program:', error);
+      alert('Failed to delete program. Please try again.');
+    }
   };
 
-  const handleViewDetails = (program) => {
-    setSelectedProgram(program);
-    setShowDetailsModal(true);
+  // Upload image to Firebase Storage
+  const uploadImageToFirebase = async (file) => {
+    try {
+      setUploading(true);
+      const timestamp = Date.now();
+      const fileName = `programs/${timestamp}_${file.name}`;
+      const storageRef = ref(storage, fileName);
+      
+      const snapshot = await uploadBytes(storageRef, file);
+      const downloadURL = await getDownloadURL(snapshot.ref);
+      
+      return downloadURL;
+    } catch (error) {
+      console.error('Error uploading to Firebase Storage:', error);
+      throw new Error('Failed to upload image');
+    } finally {
+      setUploading(false);
+    }
   };
 
-  const exportPrograms = () => {
-    // In a real app, this would generate a CSV file for download
-    alert('In a real application, this would download a CSV file with program data.');
+  const getCategoryColor = (category) => {
+    const colors = {
+      environment: 'bg-green-100 text-green-800',
+      education: 'bg-blue-100 text-blue-800',
+      health: 'bg-red-100 text-red-800',
+      community: 'bg-purple-100 text-purple-800'
+    };
+    return colors[category] || 'bg-gray-100 text-gray-800';
   };
 
-  // Calculate progress percentage
-  const calculateProgress = (raised, budget) => {
-    return Math.min(Math.round((raised / budget) * 100), 100);
+  const handleCreateProgram = () => {
+    setFormData({
+      title: '',
+      category: 'education',
+      location: '',
+      description: '',
+      budget: '',
+      startDate: '',
+      image: ''
+    });
+    setShowCreateModal(true);
+  };
+
+  const handleEditProgram = (program) => {
+    setFormData({
+      title: program.title,
+      category: program.category,
+      location: program.location,
+      description: program.description,
+      budget: program.budget.toString(),
+      startDate: program.startDate,
+      image: program.image
+    });
+    setEditingProgram(program);
+    setShowEditModal(true);
+  };
+
+  const handleFormSubmit = async (e) => {
+    e.preventDefault();
+    
+    try {
+      let imageUrl = formData.image;
+      
+      // Upload image to Contentful if a new file is selected
+      if (imageFile) {
+        imageUrl = await uploadImageToFirebase(imageFile);
+      }
+      
+      const programData = {
+        ...formData,
+        budget: parseInt(formData.budget),
+        image: imageUrl,
+        updatedAt: serverTimestamp()
+      };
+      
+      if (editingProgram) {
+        // Update existing program
+        await updateDoc(doc(db, 'programs', editingProgram.id), programData);
+        setPrograms(programs.map(p => 
+          p.id === editingProgram.id 
+            ? {
+                ...p,
+                ...programData,
+                participants: p.participants, // Keep existing participants
+                progress: p.progress, // Keep existing progress
+                raised: p.raised // Keep existing raised amount
+              }
+            : p
+        ));
+        setShowEditModal(false);
+        setEditingProgram(null);
+      } else {
+        // Create new program
+        const newProgramData = {
+          ...programData,
+          participants: 0,
+          progress: 0,
+          status: 'planned',
+          raised: 0,
+          enrolledUsers: [],
+          createdAt: serverTimestamp()
+        };
+        
+        const docRef = await addDoc(collection(db, 'programs'), newProgramData);
+        setPrograms([...programs, { id: docRef.id, ...newProgramData }]);
+        setShowCreateModal(false);
+      }
+      
+      // Reset form
+      setFormData({
+        title: '',
+        category: 'education',
+        location: '',
+        description: '',
+        budget: '',
+        startDate: '',
+        image: ''
+      });
+      setImageFile(null);
+      
+    } catch (error) {
+      console.error('Error saving program:', error);
+      alert('Failed to save program. Please try again.');
+    }
+  };
+  
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setImageFile(file);
+      // Create preview URL
+      const previewUrl = URL.createObjectURL(file);
+      setFormData(prev => ({ ...prev, image: previewUrl }));
+    }
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  // User enrollment functions
+  const handleEnrollUsers = (program) => {
+    setEnrollingProgram(program);
+    setShowEnrollModal(true);
+    setSelectedUsers([]);
+    setUserSearchTerm('');
+  };
+
+  const handleUserSelection = (user) => {
+    setSelectedUsers(prev => {
+      const isSelected = prev.find(u => u.id === user.id);
+      if (isSelected) {
+        return prev.filter(u => u.id !== user.id);
+      } else {
+        return [...prev, { ...user, isActive: true }];
+      }
+    });
+  };
+
+  const handleUserStatusToggle = (userId) => {
+    setSelectedUsers(prev => 
+      prev.map(user => 
+        user.id === userId ? { ...user, isActive: !user.isActive } : user
+      )
+    );
+  };
+
+  const confirmEnrollment = () => {
+    if (enrollingProgram && selectedUsers.length > 0) {
+      setPrograms(prev => 
+        prev.map(program => 
+          program.id === enrollingProgram.id 
+            ? { 
+                ...program, 
+                enrolledUsers: [...(program.enrolledUsers || []), ...selectedUsers],
+                participants: program.participants + selectedUsers.length
+              }
+            : program
+        )
+      );
+      setShowEnrollModal(false);
+      setEnrollingProgram(null);
+      setSelectedUsers([]);
+    }
+  };
+
+  const removeUserFromProgram = (programId, userId) => {
+    setPrograms(prev => 
+      prev.map(program => 
+        program.id === programId 
+          ? { 
+              ...program, 
+              enrolledUsers: program.enrolledUsers.filter(user => user.id !== userId),
+              participants: Math.max(0, program.participants - 1)
+            }
+          : program
+      )
+    );
+  };
+
+  const toggleUserActiveStatus = (programId, userId) => {
+    setPrograms(prev => 
+      prev.map(program => 
+        program.id === programId 
+          ? { 
+              ...program, 
+              enrolledUsers: program.enrolledUsers.map(user => 
+                user.id === userId ? { ...user, isActive: !user.isActive } : user
+              )
+            }
+          : program
+      )
+    );
+  };
+
+  const getStatusColor = (status) => {
+    const colors = {
+      active: 'bg-green-100 text-green-800',
+      planned: 'bg-yellow-100 text-yellow-800',
+      completed: 'bg-blue-100 text-blue-800'
+    };
+    return colors[status] || 'bg-gray-100 text-gray-800';
   };
 
   if (loading) {
     return (
       <AdminLayout>
-        <div className="flex justify-center items-center h-96">
-          <div className="text-center">
-            <span className="loading loading-spinner loading-lg text-primary"></span>
-            <p className="mt-4">Loading programs...</p>
-          </div>
+        <div className="flex items-center justify-center min-h-screen">
+          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary"></div>
         </div>
       </AdminLayout>
     );
@@ -373,522 +377,814 @@ export default function Programs() {
   return (
     <AdminLayout>
       <Helmet>
-        <title>Manage Programs - Charity NGO Admin</title>
-        <meta name="description" content="Admin panel for managing charity programs" />
+        <title>Programs Management - Admin Dashboard</title>
+        <meta name="description" content="Manage and oversee all programs and initiatives." />
       </Helmet>
 
-      <div className="p-4 sm:p-6">
+      {/* Header Section */}
+      <div className="relative overflow-hidden bg-gradient-to-br from-primary/10 via-secondary/5 to-accent/10 rounded-2xl mb-8">
+        <div className="absolute inset-0 bg-[url('/src/assets/dot-pattern.svg')] opacity-20"></div>
+        
+        <div className="relative p-8 md:p-12">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="text-center mb-8"
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-full text-sm font-medium mb-6"
+            >
+              <FiGlobe className="w-4 h-4" />
+              Programs Management
+            </motion.div>
+            
+            <h1 className="text-4xl md:text-5xl font-bold mb-4 text-gray-900 leading-tight">
+              Manage Programs
+            </h1>
+            
+            <p className="text-lg md:text-xl text-base-content/70 max-w-3xl mx-auto leading-relaxed mb-8">
+              Oversee and manage all programs and initiatives. Create, edit, and monitor the impact of your organization's work.
+            </p>
+
+            {/* Action Button */}
+            <button
+              onClick={handleCreateProgram}
+              className="inline-flex items-center gap-2 bg-primary text-white px-6 py-3 rounded-xl font-medium hover:bg-primary/90 transition-all duration-300 shadow-lg hover:shadow-xl"
+            >
+              <FiPlus className="w-5 h-5" />
+              Create New Program
+            </button>
+          </motion.div>
+
+          {/* Stats */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+            className="grid grid-cols-1 md:grid-cols-4 gap-6 max-w-4xl mx-auto"
+          >
+            <div className="text-center bg-white/50 backdrop-blur-sm rounded-xl p-4">
+              <div className="w-12 h-12 bg-sky-500 rounded-full flex items-center justify-center mx-auto mb-3">
+                <FiTarget className="w-6 h-6 text-white" />
+              </div>
+              <div className="text-2xl font-bold text-primary mb-1">{programs.length}</div>
+              <div className="text-sm text-base-content/60">Total Programs</div>
+            </div>
+            <div className="text-center bg-white/50 backdrop-blur-sm rounded-xl p-4">
+              <div className="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-3">
+                <FiCheck className="w-6 h-6 text-white" />
+              </div>
+              <div className="text-2xl font-bold text-green-600 mb-1">{programs.filter(p => p.status === 'active').length}</div>
+              <div className="text-sm text-base-content/60">Active Programs</div>
+            </div>
+            <div className="text-center bg-white/50 backdrop-blur-sm rounded-xl p-4">
+              <div className="w-12 h-12 bg-orange-500 rounded-full flex items-center justify-center mx-auto mb-3">
+                <FiUsers className="w-6 h-6 text-white" />
+              </div>
+              <div className="text-2xl font-bold text-orange-600 mb-1">{programs.reduce((sum, p) => sum + p.participants, 0).toLocaleString()}</div>
+              <div className="text-sm text-base-content/60">Total Participants</div>
+            </div>
+            <div className="text-center bg-white/50 backdrop-blur-sm rounded-xl p-4">
+              <div className="w-12 h-12 bg-purple-500 rounded-full flex items-center justify-center mx-auto mb-3">
+                <FiTrendingUp className="w-6 h-6 text-white" />
+              </div>
+              <div className="text-2xl font-bold text-purple-600 mb-1">{Math.round(programs.reduce((sum, p) => sum + p.progress, 0) / programs.length)}%</div>
+              <div className="text-sm text-base-content/60">Avg Progress</div>
+            </div>
+          </motion.div>
+        </div>
+      </div>
+
+      {/* Search and Filter Section */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.2 }}
+        className="mb-8"
+      >
+        <div className="bg-white backdrop-blur-sm border border-gray-200 rounded-2xl p-6 shadow-xl">
+          <div className="flex flex-col lg:flex-row gap-6">
+            {/* Search Input */}
+            <div className="relative flex-grow">
+              <div className="absolute inset-y-0 left-0 flex items-center pl-4 text-base-content/50">
+                <FiSearch className="w-5 h-5" />
+              </div>
+              <input
+                type="text"
+                className="w-full pl-12 pr-4 py-4 bg-gray-50 border border-gray-300 rounded-xl text-base-content placeholder-base-content/50 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 transition-all duration-300"
+                placeholder="Search programs by name or description..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </div>
+            
+            {/* Category Filter */}
+            <select
+              className="px-4 py-4 bg-gray-50 border border-gray-300 rounded-xl text-base-content focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 transition-all duration-300"
+              value={selectedCategory}
+              onChange={(e) => setSelectedCategory(e.target.value)}
+            >
+              {categories.map(category => (
+                <option key={category} value={category}>
+                  {category === 'all' ? 'All Categories' : category.charAt(0).toUpperCase() + category.slice(1)}
+                </option>
+              ))}
+            </select>
+
+            {/* Status Filter */}
+            <select
+              className="px-4 py-4 bg-gray-50 border border-gray-300 rounded-xl text-base-content focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 transition-all duration-300"
+              value={selectedStatus}
+              onChange={(e) => setSelectedStatus(e.target.value)}
+            >
+              {statuses.map(status => (
+                <option key={status} value={status}>
+                  {status === 'all' ? 'All Statuses' : status.charAt(0).toUpperCase() + status.slice(1)}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+      </motion.div>
+
+      {/* Programs Grid */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.4 }}
+        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+      >
+        {filteredPrograms.map((program, index) => (
+          <motion.div
+            key={program.id}
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: index * 0.1 }}
+            className="group bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden border border-gray-100"
+          >
+            {/* Image */}
+            <div className="relative h-48 overflow-hidden">
+              <img
+                src={program.image}
+                alt={program.title}
+                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent"></div>
+              
+              {/* Status Badge */}
+              <div className="absolute top-4 left-4">
+                <span className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(program.status)}`}>
+                  {program.status.charAt(0).toUpperCase() + program.status.slice(1)}
+                </span>
+              </div>
+
+              {/* Admin Actions */}
+              <div className="absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <button
+                  onClick={() => setSelectedProgram(program)}
+                  className="p-2 bg-white/90 backdrop-blur-sm rounded-lg hover:bg-white transition-colors duration-200"
+                  title="View Details"
+                >
+                  <FiEye className="w-4 h-4 text-gray-700" />
+                </button>
+                <button
+                  onClick={() => handleEnrollUsers(program)}
+                  className="p-2 bg-white/90 backdrop-blur-sm rounded-lg hover:bg-white transition-colors duration-200"
+                  title="Enroll Users"
+                >
+                  <FiUsers className="w-4 h-4 text-green-600" />
+                </button>
+                <button
+                  onClick={() => handleEditProgram(program)}
+                  className="p-2 bg-white/90 backdrop-blur-sm rounded-lg hover:bg-white transition-colors duration-200"
+                  title="Edit Program"
+                >
+                  <FiEdit className="w-4 h-4 text-blue-600" />
+                </button>
+                <button
+                  onClick={() => handleDeleteProgram(program)}
+                  className="p-2 bg-white/90 backdrop-blur-sm rounded-lg hover:bg-white transition-colors duration-200"
+                  title="Delete Program"
+                >
+                  <FiTrash2 className="w-4 h-4 text-red-600" />
+                </button>
+              </div>
+            </div>
+
+            {/* Content */}
+            <div className="p-6">
+              {/* Category Badge */}
+              <div className="mb-3">
+                <span className={`px-3 py-1 rounded-full text-xs font-medium ${getCategoryColor(program.category)}`}>
+                  {program.category.charAt(0).toUpperCase() + program.category.slice(1)}
+                </span>
+              </div>
+
+              {/* Title */}
+              <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-primary transition-colors duration-300">
+                {program.title}
+              </h3>
+
+              {/* Description */}
+              <p className="text-gray-600 mb-4 line-clamp-2">
+                {program.description}
+              </p>
+
+              {/* Meta Info */}
+              <div className="space-y-2 mb-4">
+                <div className="flex items-center gap-2 text-sm text-gray-500">
+                  <FiMapPin className="w-4 h-4" />
+                  <span>{program.location}</span>
+                </div>
+                <div className="flex items-center gap-2 text-sm text-gray-500">
+                  <FiUsers className="w-4 h-4" />
+                  <span>{program.participants.toLocaleString()} participants</span>
+                </div>
+                <div className="flex items-center gap-2 text-sm text-gray-500">
+                  <FiCalendar className="w-4 h-4" />
+                  <span>Started {program.startDate}</span>
+                </div>
+              </div>
+
+              {/* Progress Bar */}
+              <div className="mb-4">
+                <div className="flex justify-between items-center mb-2">
+                  <span className="text-sm font-medium text-gray-700">Progress</span>
+                  <span className="text-sm font-medium text-gray-700">{program.progress}%</span>
+                </div>
+                <div className="w-full bg-gray-200 rounded-full h-2">
+                  <div
+                    className="bg-gradient-to-r from-primary to-secondary h-2 rounded-full transition-all duration-500"
+                    style={{ width: `${program.progress}%` }}
+                  ></div>
+                </div>
+              </div>
+
+              {/* Budget Info */}
+              <div className="flex justify-between items-center text-sm">
+                <span className="text-gray-500">Budget: ${program.budget.toLocaleString()}</span>
+                <span className="text-green-600 font-medium">Raised: ${program.raised.toLocaleString()}</span>
+              </div>
+            </div>
+          </motion.div>
+        ))}
+      </motion.div>
+
+      {/* Empty State */}
+      {filteredPrograms.length === 0 && (
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
+          transition={{ duration: 0.6 }}
+          className="text-center py-16"
         >
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
-            <h1 className="text-2xl font-bold">Manage Programs</h1>
-            
-            <div className="flex gap-2">
-              <Link to="/admin/programs/new" className="btn btn-primary btn-sm gap-1">
-                <FiPlus size={16} /> Add Program
-              </Link>
-              <button 
-                className="btn btn-outline btn-sm gap-1"
-                onClick={exportPrograms}
-              >
-                <FiDownload size={16} /> Export
-              </button>
-            </div>
+          <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
+            <FiTarget className="w-12 h-12 text-gray-400" />
           </div>
-
-          {/* Stats Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-            <div className="bg-base-100 rounded-lg shadow-md p-4">
-              <div className="flex items-center gap-3">
-                <div className="bg-primary/10 p-3 rounded-full">
-                  <FiCalendar className="text-primary" size={24} />
-                </div>
-                <div>
-                  <h3 className="text-sm font-medium text-base-content/70">Active Programs</h3>
-                  <p className="text-2xl font-bold">
-                    {programs.filter(p => p.status === 'active').length}
-                  </p>
-                </div>
-              </div>
-            </div>
-            
-            <div className="bg-base-100 rounded-lg shadow-md p-4">
-              <div className="flex items-center gap-3">
-                <div className="bg-secondary/10 p-3 rounded-full">
-                  <FiCheck className="text-secondary" size={24} />
-                </div>
-                <div>
-                  <h3 className="text-sm font-medium text-base-content/70">Total Budget</h3>
-                  <p className="text-2xl font-bold">
-                    ${programs.reduce((sum, p) => sum + p.budget, 0).toLocaleString()}
-                  </p>
-                </div>
-              </div>
-            </div>
-            
-            <div className="bg-base-100 rounded-lg shadow-md p-4">
-              <div className="flex items-center gap-3">
-                <div className="bg-accent/10 p-3 rounded-full">
-                  <FiCheck className="text-accent" size={24} />
-                </div>
-                <div>
-                  <h3 className="text-sm font-medium text-base-content/70">Total Raised</h3>
-                  <p className="text-2xl font-bold">
-                    ${programs.reduce((sum, p) => sum + p.raised, 0).toLocaleString()}
-                  </p>
-                </div>
-              </div>
-            </div>
-            
-            <div className="bg-base-100 rounded-lg shadow-md p-4">
-              <div className="flex items-center gap-3">
-                <div className="bg-success/10 p-3 rounded-full">
-                  <FiCheck className="text-success" size={24} />
-                </div>
-                <div>
-                  <h3 className="text-sm font-medium text-base-content/70">Beneficiaries</h3>
-                  <p className="text-2xl font-bold">
-                    {programs.reduce((sum, p) => sum + p.beneficiaries, 0).toLocaleString()}
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-base-100 rounded-lg shadow-lg p-4 mb-6">
-            <div className="flex flex-col md:flex-row gap-4 mb-4">
-              <div className="relative flex-grow">
-                <input 
-                  type="text" 
-                  placeholder="Search programs..." 
-                  className="input input-bordered w-full pr-10" 
-                  value={searchTerm}
-                  onChange={(e) => {
-                    setSearchTerm(e.target.value);
-                    setCurrentPage(1); // Reset to first page on search
-                  }}
-                />
-                <FiSearch className="absolute right-3 top-1/2 -translate-y-1/2 text-base-content/50" />
-              </div>
-              
-              <div className="flex gap-2">
-                <select 
-                  className="select select-bordered w-full md:w-auto" 
-                  value={selectedCategory}
-                  onChange={(e) => {
-                    setSelectedCategory(e.target.value);
-                    setCurrentPage(1); // Reset to first page on filter change
-                  }}
-                >
-                  {categories.map((category, index) => (
-                    <option key={index} value={category}>
-                      {category === 'all' ? 'All Categories' : category}
-                    </option>
-                  ))}
-                </select>
-                
-                <select 
-                  className="select select-bordered w-full md:w-auto" 
-                  value={selectedStatus}
-                  onChange={(e) => {
-                    setSelectedStatus(e.target.value);
-                    setCurrentPage(1); // Reset to first page on filter change
-                  }}
-                >
-                  {statuses.map((status, index) => (
-                    <option key={index} value={status}>
-                      {status === 'all' ? 'All Statuses' : status.charAt(0).toUpperCase() + status.slice(1)}
-                    </option>
-                  ))}
-                </select>
-                
-                <button 
-                  className="btn btn-ghost btn-sm"
-                  onClick={() => {
-                    setSearchTerm('');
-                    setSelectedCategory('all');
-                    setSelectedStatus('all');
-                    setCurrentPage(1);
-                  }}
-                >
-                  Clear
-                </button>
-              </div>
-            </div>
-            
-            <div className="overflow-x-auto">
-              <table className="table table-zebra w-full">
-                <thead>
-                  <tr>
-                    <th 
-                      className="cursor-pointer"
-                      onClick={() => handleSort('name')}
-                    >
-                      <div className="flex items-center">
-                        Program Name
-                        {sortConfig.key === 'name' && (
-                          <span className="ml-1">
-                            {sortConfig.direction === 'asc' ? '↑' : '↓'}
-                          </span>
-                        )}
-                      </div>
-                    </th>
-                    <th>Category</th>
-                    <th 
-                      className="cursor-pointer"
-                      onClick={() => handleSort('startDate')}
-                    >
-                      <div className="flex items-center">
-                        Start Date
-                        {sortConfig.key === 'startDate' && (
-                          <span className="ml-1">
-                            {sortConfig.direction === 'asc' ? '↑' : '↓'}
-                          </span>
-                        )}
-                      </div>
-                    </th>
-                    <th 
-                      className="cursor-pointer"
-                      onClick={() => handleSort('budget')}
-                    >
-                      <div className="flex items-center">
-                        Budget
-                        {sortConfig.key === 'budget' && (
-                          <span className="ml-1">
-                            {sortConfig.direction === 'asc' ? '↑' : '↓'}
-                          </span>
-                        )}
-                      </div>
-                    </th>
-                    <th 
-                      className="cursor-pointer"
-                      onClick={() => handleSort('progress')}
-                    >
-                      <div className="flex items-center">
-                        Progress
-                        {sortConfig.key === 'progress' && (
-                          <span className="ml-1">
-                            {sortConfig.direction === 'asc' ? '↑' : '↓'}
-                          </span>
-                        )}
-                      </div>
-                    </th>
-                    <th>Status</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {currentPrograms.length === 0 ? (
-                    <tr>
-                      <td colSpan="7" className="text-center py-4">
-                        No programs found matching your filters.
-                      </td>
-                    </tr>
-                  ) : (
-                    currentPrograms.map((program) => (
-                      <tr key={program.id}>
-                        <td>
-                          <div className="font-medium">{program.name}</div>
-                          <div className="text-xs text-base-content/70 truncate max-w-xs">{program.description}</div>
-                        </td>
-                        <td>{program.category}</td>
-                        <td>
-                          <div>{new Date(program.startDate).toLocaleDateString()}</div>
-                          <div className="text-xs text-base-content/70">
-                            {program.endDate ? `to ${new Date(program.endDate).toLocaleDateString()}` : 'Ongoing'}
-                          </div>
-                        </td>
-                        <td>
-                          <div className="font-medium">${program.budget.toLocaleString()}</div>
-                          <div className="text-xs text-base-content/70">${program.raised.toLocaleString()} raised</div>
-                        </td>
-                        <td>
-                          <div className="flex items-center gap-2">
-                            <progress 
-                              className={`progress ${getProgressColor(calculateProgress(program.raised, program.budget))} w-24`} 
-                              value={program.raised} 
-                              max={program.budget}
-                            ></progress>
-                            <span className="text-sm">
-                              {calculateProgress(program.raised, program.budget)}%
-                            </span>
-                          </div>
-                        </td>
-                        <td>
-                          <span className={`badge ${getStatusBadgeColor(program.status)}`}>
-                            {program.status.charAt(0).toUpperCase() + program.status.slice(1)}
-                          </span>
-                        </td>
-                        <td>
-                          <div className="flex gap-1">
-                            <button 
-                              className="btn btn-xs btn-ghost"
-                              onClick={() => handleViewDetails(program)}
-                            >
-                              <FiEye size={14} />
-                            </button>
-                            <Link to={`/admin/programs/${program.id}/edit`} className="btn btn-xs btn-ghost">
-                              <FiEdit size={14} />
-                            </Link>
-                            <button 
-                              className="btn btn-xs btn-ghost text-error"
-                              onClick={() => handleDeleteClick(program)}
-                            >
-                              <FiTrash2 size={14} />
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    ))
-                  )}
-                </tbody>
-              </table>
-            </div>
-            
-            {/* Pagination */}
-            {totalPages > 1 && (
-              <div className="flex justify-between items-center mt-4">
-                <div className="text-sm text-base-content/70">
-                  Showing {indexOfFirstProgram + 1}-{Math.min(indexOfLastProgram, filteredPrograms.length)} of {filteredPrograms.length} programs
-                </div>
-                <div className="join">
-                  <button 
-                    className="join-item btn btn-sm"
-                    onClick={() => paginate(Math.max(1, currentPage - 1))}
-                    disabled={currentPage === 1}
-                  >
-                    «
-                  </button>
-                  
-                  {[...Array(totalPages).keys()].map(number => (
-                    <button
-                      key={number + 1}
-                      onClick={() => paginate(number + 1)}
-                      className={`join-item btn btn-sm ${currentPage === number + 1 ? 'btn-active' : ''}`}
-                    >
-                      {number + 1}
-                    </button>
-                  ))}
-                  
-                  <button 
-                    className="join-item btn btn-sm"
-                    onClick={() => paginate(Math.min(totalPages, currentPage + 1))}
-                    disabled={currentPage === totalPages}
-                  >
-                    »
-                  </button>
-                </div>
-              </div>
-            )}
-          </div>
+          <h3 className="text-xl font-semibold text-gray-900 mb-2">No programs found</h3>
+          <p className="text-gray-600 mb-6">Try adjusting your search or filter criteria.</p>
+          <Link
+            to="/admin/programs/create"
+            className="inline-flex items-center gap-2 bg-primary text-white px-6 py-3 rounded-xl font-medium hover:bg-primary/90 transition-all duration-300"
+          >
+            <FiPlus className="w-5 h-5" />
+            Create First Program
+          </Link>
         </motion.div>
-      </div>
-
-      {/* Program Details Modal */}
-      {showDetailsModal && selectedProgram && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-base-100 p-6 rounded-lg shadow-lg max-w-3xl w-full">
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="font-bold text-lg">{selectedProgram.name}</h3>
-              <button 
-                className="btn btn-sm btn-ghost"
-                onClick={() => {
-                  setShowDetailsModal(false);
-                  setSelectedProgram(null);
-                }}
-              >
-                ×
-              </button>
-            </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
-              <div>
-                <div className="mb-4">
-                  <h4 className="font-medium mb-2">Description</h4>
-                  <p className="text-base-content/80">{selectedProgram.description}</p>
-                </div>
-                
-                <div className="mb-4">
-                  <h4 className="font-medium mb-2">Program Details</h4>
-                  <div className="space-y-2">
-                    <div className="flex justify-between">
-                      <span className="text-base-content/70">Category:</span>
-                      <span className="font-medium">{selectedProgram.category}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-base-content/70">Status:</span>
-                      <span className={`font-medium ${getStatusTextColor(selectedProgram.status)}`}>
-                        {selectedProgram.status.charAt(0).toUpperCase() + selectedProgram.status.slice(1)}
-                      </span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-base-content/70">Start Date:</span>
-                      <span className="font-medium">{new Date(selectedProgram.startDate).toLocaleDateString()}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-base-content/70">End Date:</span>
-                      <span className="font-medium">
-                        {selectedProgram.endDate ? new Date(selectedProgram.endDate).toLocaleDateString() : 'Ongoing'}
-                      </span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-base-content/70">Location:</span>
-                      <span className="font-medium">{selectedProgram.location}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-base-content/70">Coordinator:</span>
-                      <span className="font-medium">{selectedProgram.coordinator}</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              
-              <div>
-                <div className="mb-4">
-                  <h4 className="font-medium mb-2">Budget & Progress</h4>
-                  <div className="space-y-4">
-                    <div className="flex justify-between items-center">
-                      <span className="text-base-content/70">Total Budget:</span>
-                      <span className="font-medium">${selectedProgram.budget.toLocaleString()}</span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-base-content/70">Amount Raised:</span>
-                      <span className="font-medium">${selectedProgram.raised.toLocaleString()}</span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-base-content/70">Remaining:</span>
-                      <span className="font-medium">
-                        ${Math.max(0, selectedProgram.budget - selectedProgram.raised).toLocaleString()}
-                      </span>
-                    </div>
-                    <div>
-                      <div className="flex justify-between mb-1">
-                        <span className="text-base-content/70">Funding Progress:</span>
-                        <span className="font-medium">
-                          {calculateProgress(selectedProgram.raised, selectedProgram.budget)}%
-                        </span>
-                      </div>
-                      <progress 
-                        className={`progress ${getProgressColor(calculateProgress(selectedProgram.raised, selectedProgram.budget))} w-full`} 
-                        value={selectedProgram.raised} 
-                        max={selectedProgram.budget}
-                      ></progress>
-                    </div>
-                  </div>
-                </div>
-                
-                <div className="mb-4">
-                  <h4 className="font-medium mb-2">Impact</h4>
-                  <div className="space-y-2">
-                    <div className="flex justify-between">
-                      <span className="text-base-content/70">Beneficiaries:</span>
-                      <span className="font-medium">{selectedProgram.beneficiaries.toLocaleString()}</span>
-                    </div>
-                    <div className="mt-4">
-                      <Link to={`/admin/programs/${selectedProgram.id}/reports`} className="btn btn-sm btn-outline w-full">
-                        View Detailed Reports
-                      </Link>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            
-            <div className="divider"></div>
-            
-            <div className="flex justify-between">
-              <div className="flex gap-2">
-                <Link to={`/admin/programs/${selectedProgram.id}/edit`} className="btn btn-sm btn-primary">
-                  <FiEdit size={16} /> Edit Program
-                </Link>
-                <button 
-                  className="btn btn-sm btn-error"
-                  onClick={() => {
-                    setShowDetailsModal(false);
-                    handleDeleteClick(selectedProgram);
-                  }}
-                >
-                  <FiTrash2 size={16} /> Delete
-                </button>
-              </div>
-              <button 
-                className="btn btn-sm"
-                onClick={() => {
-                  setShowDetailsModal(false);
-                  setSelectedProgram(null);
-                }}
-              >
-                Close
-              </button>
-            </div>
-          </div>
-        </div>
       )}
 
       {/* Delete Confirmation Modal */}
       {showDeleteModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-base-100 p-6 rounded-lg shadow-lg max-w-md w-full">
-            <h3 className="font-bold text-lg mb-4">Confirm Deletion</h3>
-            <p className="mb-6">Are you sure you want to delete the program <span className="font-semibold">{programToDelete?.name}</span>? This action cannot be undone.</p>
-            <div className="flex justify-end gap-2">
-              <button 
-                className="btn btn-ghost"
-                onClick={() => {
-                  setShowDeleteModal(false);
-                  setProgramToDelete(null);
-                }}
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.9 }}
+            className="bg-white rounded-2xl p-6 max-w-md w-full"
+          >
+            <div className="text-center">
+              <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <FiTrash2 className="w-8 h-8 text-red-600" />
+              </div>
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">Delete Program</h3>
+              <p className="text-gray-600 mb-6">
+                Are you sure you want to delete "{programToDelete?.title}"? This action cannot be undone.
+              </p>
+              <div className="flex gap-3">
+                <button
+                  onClick={() => setShowDeleteModal(false)}
+                  className="flex-1 px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors duration-200"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={confirmDelete}
+                  className="flex-1 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors duration-200"
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      )}
+
+      {/* Program Details Modal */}
+      {selectedProgram && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.9 }}
+            className="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+          >
+            <div className="relative">
+              <img
+                src={selectedProgram.image}
+                alt={selectedProgram.title}
+                className="w-full h-64 object-cover"
+              />
+              <button
+                onClick={() => setSelectedProgram(null)}
+                className="absolute top-4 right-4 p-2 bg-white/90 backdrop-blur-sm rounded-lg hover:bg-white transition-colors duration-200"
               >
-                Cancel
-              </button>
-              <button 
-                className="btn btn-error"
-                onClick={confirmDelete}
-              >
-                Delete
+                <FiX className="w-5 h-5 text-gray-700" />
               </button>
             </div>
-          </div>
+            
+            <div className="p-6">
+              <div className="flex gap-2 mb-4">
+                <span className={`px-3 py-1 rounded-full text-xs font-medium ${getCategoryColor(selectedProgram.category)}`}>
+                  {selectedProgram.category.charAt(0).toUpperCase() + selectedProgram.category.slice(1)}
+                </span>
+                <span className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(selectedProgram.status)}`}>
+                  {selectedProgram.status.charAt(0).toUpperCase() + selectedProgram.status.slice(1)}
+                </span>
+              </div>
+              
+              <h2 className="text-2xl font-bold text-gray-900 mb-4">{selectedProgram.title}</h2>
+              <p className="text-gray-600 mb-6">{selectedProgram.description}</p>
+              
+              <div className="grid grid-cols-2 gap-4 mb-6">
+                <div>
+                  <div className="text-sm text-gray-500 mb-1">Location</div>
+                  <div className="font-medium">{selectedProgram.location}</div>
+                </div>
+                <div>
+                  <div className="text-sm text-gray-500 mb-1">Participants</div>
+                  <div className="font-medium">{selectedProgram.participants.toLocaleString()}</div>
+                </div>
+                <div>
+                  <div className="text-sm text-gray-500 mb-1">Start Date</div>
+                  <div className="font-medium">{selectedProgram.startDate}</div>
+                </div>
+                <div>
+                  <div className="text-sm text-gray-500 mb-1">Progress</div>
+                  <div className="font-medium">{selectedProgram.progress}%</div>
+                </div>
+              </div>
+              
+              <div className="mb-6">
+                <div className="flex justify-between items-center mb-2">
+                  <span className="text-sm font-medium text-gray-700">Funding Progress</span>
+                  <span className="text-sm font-medium text-gray-700">
+                    ${selectedProgram.raised.toLocaleString()} / ${selectedProgram.budget.toLocaleString()}
+                  </span>
+                </div>
+                <div className="w-full bg-gray-200 rounded-full h-3">
+                  <div
+                    className="bg-gradient-to-r from-primary to-secondary h-3 rounded-full"
+                    style={{ width: `${(selectedProgram.raised / selectedProgram.budget) * 100}%` }}
+                  ></div>
+                </div>
+              </div>
+              
+              {/* Enrolled Users Section */}
+              {selectedProgram.enrolledUsers && selectedProgram.enrolledUsers.length > 0 && (
+                <div className="mb-6">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                    Enrolled Users ({selectedProgram.enrolledUsers.length})
+                  </h3>
+                  <div className="space-y-3 max-h-60 overflow-y-auto">
+                    {selectedProgram.enrolledUsers.map(user => (
+                      <div key={user.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                        <div className="flex items-center gap-3">
+                          <img
+                            src={user.avatar}
+                            alt={user.name}
+                            className="w-10 h-10 rounded-full object-cover"
+                          />
+                          <div>
+                            <h4 className="font-medium text-gray-900">{user.name}</h4>
+                            <p className="text-sm text-gray-600">{user.email}</p>
+                            <span className="inline-block px-2 py-1 text-xs bg-blue-100 text-blue-800 rounded-full mt-1">
+                              {user.role}
+                            </span>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-3">
+                          <button
+                            onClick={() => toggleUserActiveStatus(selectedProgram.id, user.id)}
+                            className={`px-3 py-1 rounded-full text-xs font-medium transition-colors duration-200 ${
+                              user.isActive 
+                                ? 'bg-green-100 text-green-800 hover:bg-green-200' 
+                                : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
+                            }`}
+                          >
+                            {user.isActive ? 'Active' : 'Inactive'}
+                          </button>
+                          <button
+                            onClick={() => removeUserFromProgram(selectedProgram.id, user.id)}
+                            className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors duration-200"
+                            title="Remove from program"
+                          >
+                            <FiX className="w-4 h-4" />
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+              
+              <div className="flex gap-3">
+                <button
+                  onClick={() => {
+                    setSelectedProgram(null);
+                    handleEnrollUsers(selectedProgram);
+                  }}
+                  className="flex-1 flex items-center justify-center gap-2 bg-green-600 text-white px-4 py-3 rounded-lg hover:bg-green-700 transition-colors duration-200"
+                >
+                  <FiUsers className="w-4 h-4" />
+                  Enroll Users
+                </button>
+                <button
+                  onClick={() => {
+                    setSelectedProgram(null);
+                    handleEditProgram(selectedProgram);
+                  }}
+                  className="flex-1 flex items-center justify-center gap-2 bg-primary text-white px-4 py-3 rounded-lg hover:bg-primary/90 transition-colors duration-200"
+                >
+                  <FiEdit className="w-4 h-4" />
+                  Edit Program
+                </button>
+                <button
+                  onClick={() => {
+                    setSelectedProgram(null);
+                    handleDeleteProgram(selectedProgram);
+                  }}
+                  className="px-4 py-3 border border-red-300 text-red-600 rounded-lg hover:bg-red-50 transition-colors duration-200"
+                >
+                  <FiTrash2 className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      )}
+
+      {/* Create/Edit Program Modal */}
+      {(showCreateModal || showEditModal) && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.9 }}
+            className="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+          >
+            <div className="p-6">
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-2xl font-bold text-gray-900">
+                  {editingProgram ? 'Edit Program' : 'Create New Program'}
+                </h2>
+                <button
+                  onClick={() => {
+                    setShowCreateModal(false);
+                    setShowEditModal(false);
+                    setEditingProgram(null);
+                  }}
+                  className="p-2 hover:bg-gray-100 rounded-lg transition-colors duration-200"
+                >
+                  <FiX className="w-5 h-5 text-gray-500" />
+                </button>
+              </div>
+
+              <form onSubmit={handleFormSubmit} className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Program Title
+                    </label>
+                    <input
+                      type="text"
+                      name="title"
+                      value={formData.title}
+                      onChange={handleInputChange}
+                      required
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                      placeholder="Enter program title"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Category
+                    </label>
+                    <select
+                      name="category"
+                      value={formData.category}
+                      onChange={handleInputChange}
+                      required
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                    >
+                      <option value="education">Education</option>
+                      <option value="health">Health</option>
+                      <option value="environment">Environment</option>
+                      <option value="community">Community</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Location
+                    </label>
+                    <input
+                      type="text"
+                      name="location"
+                      value={formData.location}
+                      onChange={handleInputChange}
+                      required
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                      placeholder="Enter location"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Budget ($)
+                    </label>
+                    <input
+                      type="number"
+                      name="budget"
+                      value={formData.budget}
+                      onChange={handleInputChange}
+                      required
+                      min="0"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                      placeholder="Enter budget amount"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Start Date
+                    </label>
+                    <input
+                      type="text"
+                      name="startDate"
+                      value={formData.startDate}
+                      onChange={handleInputChange}
+                      required
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                      placeholder="e.g., January 2024"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Program Image
+                    </label>
+                    <div className="space-y-3">
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleImageChange}
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                      />
+                      {formData.image && (
+                        <div className="relative">
+                          <img
+                            src={formData.image}
+                            alt="Preview"
+                            className="w-full h-32 object-cover rounded-lg"
+                          />
+                          {uploading && (
+                            <div className="absolute inset-0 bg-black/50 flex items-center justify-center rounded-lg">
+                              <div className="flex items-center gap-2 text-white">
+                                <FiUpload className="w-5 h-5 animate-pulse" />
+                                <span>Uploading...</span>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Description
+                  </label>
+                  <textarea
+                    name="description"
+                    value={formData.description}
+                    onChange={handleInputChange}
+                    required
+                    rows={4}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                    placeholder="Enter program description"
+                  />
+                </div>
+
+                <div className="flex gap-3 pt-4">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setShowCreateModal(false);
+                      setShowEditModal(false);
+                      setEditingProgram(null);
+                    }}
+                    className="flex-1 px-4 py-3 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors duration-200"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    className="flex-1 px-4 py-3 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors duration-200"
+                  >
+                    {editingProgram ? 'Update Program' : 'Create Program'}
+                  </button>
+                </div>
+              </form>
+            </div>
+          </motion.div>
+        </div>
+      )}
+
+      {/* User Enrollment Modal */}
+      {showEnrollModal && enrollingProgram && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.9 }}
+            className="bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden"
+          >
+            <div className="p-6 border-b border-gray-200">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h2 className="text-2xl font-bold text-gray-900">Enroll Users</h2>
+                  <p className="text-gray-600 mt-1">Add users to "{enrollingProgram.title}"</p>
+                </div>
+                <button
+                  onClick={() => {
+                    setShowEnrollModal(false);
+                    setEnrollingProgram(null);
+                    setSelectedUsers([]);
+                  }}
+                  className="p-2 hover:bg-gray-100 rounded-lg transition-colors duration-200"
+                >
+                  <FiX className="w-5 h-5 text-gray-500" />
+                </button>
+              </div>
+            </div>
+
+            <div className="p-6 max-h-[70vh] overflow-y-auto">
+              {/* Search Users */}
+              <div className="mb-6">
+                <div className="relative">
+                  <FiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                  <input
+                    type="text"
+                    placeholder="Search users by name or email..."
+                    value={userSearchTerm}
+                    onChange={(e) => setUserSearchTerm(e.target.value)}
+                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                  />
+                </div>
+              </div>
+
+              {/* Available Users */}
+              <div className="mb-6">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">Available Users</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-h-60 overflow-y-auto">
+                  {availableUsers
+                    .filter(user => 
+                      user.name.toLowerCase().includes(userSearchTerm.toLowerCase()) ||
+                      user.email.toLowerCase().includes(userSearchTerm.toLowerCase())
+                    )
+                    .filter(user => 
+                      !enrollingProgram.enrolledUsers?.some(enrolled => enrolled.id === user.id)
+                    )
+                    .map(user => {
+                      const isSelected = selectedUsers.find(u => u.id === user.id);
+                      return (
+                        <div
+                          key={user.id}
+                          onClick={() => handleUserSelection(user)}
+                          className={`p-4 border rounded-lg cursor-pointer transition-all duration-200 ${
+                            isSelected 
+                              ? 'border-primary bg-primary/5' 
+                              : 'border-gray-200 hover:border-gray-300'
+                          }`}
+                        >
+                          <div className="flex items-center gap-3">
+                            <img
+                              src={user.avatar}
+                              alt={user.name}
+                              className="w-10 h-10 rounded-full object-cover"
+                            />
+                            <div className="flex-1">
+                              <h4 className="font-medium text-gray-900">{user.name}</h4>
+                              <p className="text-sm text-gray-600">{user.email}</p>
+                              <span className="inline-block px-2 py-1 text-xs bg-blue-100 text-blue-800 rounded-full mt-1">
+                                {user.role}
+                              </span>
+                            </div>
+                            {isSelected && (
+                              <FiCheck className="w-5 h-5 text-primary" />
+                            )}
+                          </div>
+                        </div>
+                      );
+                    })
+                  }
+                </div>
+              </div>
+
+              {/* Selected Users */}
+              {selectedUsers.length > 0 && (
+                <div className="mb-6">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                    Selected Users ({selectedUsers.length})
+                  </h3>
+                  <div className="space-y-3 max-h-40 overflow-y-auto">
+                    {selectedUsers.map(user => (
+                      <div key={user.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                        <div className="flex items-center gap-3">
+                          <img
+                            src={user.avatar}
+                            alt={user.name}
+                            className="w-8 h-8 rounded-full object-cover"
+                          />
+                          <div>
+                            <h4 className="font-medium text-gray-900">{user.name}</h4>
+                            <p className="text-sm text-gray-600">{user.email}</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-3">
+                          <label className="flex items-center gap-2">
+                            <input
+                              type="checkbox"
+                              checked={user.isActive}
+                              onChange={() => handleUserStatusToggle(user.id)}
+                              className="rounded border-gray-300 text-primary focus:ring-primary"
+                            />
+                            <span className="text-sm text-gray-700">Active</span>
+                          </label>
+                          <button
+                            onClick={() => handleUserSelection(user)}
+                            className="p-1 text-red-600 hover:bg-red-50 rounded"
+                          >
+                            <FiX className="w-4 h-4" />
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <div className="p-6 border-t border-gray-200">
+              <div className="flex gap-3">
+                <button
+                  onClick={() => {
+                    setShowEnrollModal(false);
+                    setEnrollingProgram(null);
+                    setSelectedUsers([]);
+                  }}
+                  className="flex-1 px-4 py-3 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors duration-200"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={confirmEnrollment}
+                  disabled={selectedUsers.length === 0}
+                  className="flex-1 px-4 py-3 bg-primary text-white rounded-lg hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
+                >
+                  Enroll {selectedUsers.length} User{selectedUsers.length !== 1 ? 's' : ''}
+                </button>
+              </div>
+            </div>
+          </motion.div>
         </div>
       )}
     </AdminLayout>
   );
-}
-
-// Helper functions for badge colors
-function getStatusBadgeColor(status) {
-  switch (status) {
-    case 'active':
-      return 'badge-success';
-    case 'planned':
-      return 'badge-info';
-    case 'completed':
-      return 'badge-secondary';
-    default:
-      return 'badge-ghost';
-  }
-}
-
-function getStatusTextColor(status) {
-  switch (status) {
-    case 'active':
-      return 'text-success';
-    case 'planned':
-      return 'text-info';
-    case 'completed':
-      return 'text-secondary';
-    default:
-      return '';
-  }
-}
-
-function getProgressColor(percentage) {
-  if (percentage >= 100) return 'progress-success';
-  if (percentage >= 75) return 'progress-primary';
-  if (percentage >= 50) return 'progress-accent';
-  if (percentage >= 25) return 'progress-warning';
-  return 'progress-error';
 }

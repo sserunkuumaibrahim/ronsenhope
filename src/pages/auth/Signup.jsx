@@ -5,6 +5,7 @@ import { useForm } from 'react-hook-form';
 import { motion } from 'framer-motion';
 import { FiUser, FiMail, FiLock, FiAlertCircle, FiEye, FiEyeOff } from 'react-icons/fi';
 import { useAuth } from '../../contexts/AuthContext';
+import { FcGoogle } from 'react-icons/fc';
 import MainLayout from '../../components/layout/MainLayout';
 
 export default function Signup() {
@@ -13,7 +14,7 @@ export default function Signup() {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const { signup } = useAuth();
+  const { signup, signInWithGoogle, getUserRole } = useAuth();
   const navigate = useNavigate();
 
   const onSubmit = async (data) => {
@@ -25,15 +26,68 @@ export default function Signup() {
       setError('');
       setLoading(true);
       await signup(data.email, data.password, data.displayName);
-      navigate('/');
+      
+      // Wait a bit for auth state to update, then check role and redirect
+      setTimeout(async () => {
+        try {
+          const role = await getUserRole();
+          if (role === 'admin') {
+            navigate('/admin');
+          } else {
+            navigate('/');
+          }
+        } catch (error) {
+          console.error('Error getting user role:', error);
+          navigate('/'); // Default to home if role check fails
+        }
+      }, 100);
     } catch (err) {
+      console.error('Signup error:', err);
       if (err.code === 'auth/email-already-in-use') {
-        setError('Email is already in use. Please use a different email or login.');
+        setError('An account with this email already exists.');
+      } else if (err.code === 'auth/weak-password') {
+        setError('Password is too weak. Please use at least 6 characters.');
+      } else if (err.code === 'auth/invalid-email') {
+        setError('Invalid email address format.');
       } else {
-        setError('Failed to create an account. Please try again.');
+        setError('Failed to create account. Please try again.');
       }
-      console.error(err);
-    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleGoogleSignIn = async () => {
+    setLoading(true);
+    setError('');
+
+    try {
+      await signInWithGoogle();
+      
+      // Wait a bit for auth state to update, then check role and redirect
+      setTimeout(async () => {
+        try {
+          const role = await getUserRole();
+          if (role === 'admin') {
+            navigate('/admin');
+          } else {
+            navigate('/');
+          }
+        } catch (error) {
+          console.error('Error getting user role:', error);
+          navigate('/'); // Default to home if role check fails
+        }
+      }, 100);
+    } catch (error) {
+      console.error('Google sign-in error:', error);
+      if (error.code === 'auth/popup-closed-by-user') {
+        setError('Sign-in was cancelled. Please try again.');
+      } else if (error.code === 'auth/popup-blocked') {
+        setError('Pop-up was blocked. Please allow pop-ups and try again.');
+      } else if (error.code === 'auth/cancelled-popup-request') {
+        setError('Sign-in was cancelled. Please try again.');
+      } else {
+        setError('Failed to sign in with Google. Please try again.');
+      }
       setLoading(false);
     }
   };
@@ -273,10 +327,50 @@ export default function Signup() {
               </motion.button>
             </motion.form>
 
+            {/* Google Sign In Section */}
             <motion.div 
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.5, delay: 0.4 }}
+              className="mt-6"
+            >
+              <div className="relative">
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full border-t border-gray-200"></div>
+                </div>
+                <div className="relative flex justify-center text-sm">
+                  <span className="px-4 bg-white text-gray-500 font-medium">Or continue with</span>
+                </div>
+              </div>
+              
+              <div className="mt-4">
+                {/* Google Sign In Button */}
+                <motion.button 
+                  onClick={handleGoogleSignIn}
+                  disabled={loading}
+                  whileHover={{ scale: loading ? 1 : 1.02 }}
+                  whileTap={{ scale: loading ? 1 : 0.98 }}
+                  className={`w-full py-3 px-6 bg-white border-2 border-gray-200 text-gray-700 rounded-xl font-medium shadow-lg hover:shadow-xl hover:border-gray-300 transition-all duration-300 ${loading ? 'cursor-not-allowed opacity-70' : 'hover:-translate-y-0.5'}`}
+                >
+                  {loading ? (
+                    <div className="flex items-center justify-center">
+                      <div className="animate-spin rounded-full h-4 w-4 border-2 border-gray-400 border-t-transparent mr-2"></div>
+                      Signing in...
+                    </div>
+                  ) : (
+                    <div className="flex items-center justify-center">
+                      <FcGoogle className="text-xl mr-3" />
+                      <span>Continue with Google</span>
+                    </div>
+                  )}
+                </motion.button>
+              </div>
+            </motion.div>
+
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5, delay: 0.5 }}
               className="mt-8 text-center"
             >
               <p className="text-gray-600">

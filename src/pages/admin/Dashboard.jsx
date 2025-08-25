@@ -2,472 +2,354 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
-import { FiUsers, FiDollarSign, FiActivity, FiCalendar, FiArrowUp, FiArrowDown, FiTrendingUp, FiTrendingDown, FiEye } from 'react-icons/fi';
+import { FiUsers, FiActivity, FiCalendar, FiArrowUp, FiArrowDown, FiTrendingUp, FiTrendingDown, FiEye, FiHeart, FiTarget } from 'react-icons/fi';
 import AdminLayout from '../../components/layout/AdminLayout';
 
 export default function Dashboard() {
-  const [stats, setStats] = useState(null);
-  const [recentDonations, setRecentDonations] = useState([]);
-  const [recentUsers, setRecentUsers] = useState([]);
-  const [loading, setLoading] = useState(true);
   const [timeRange, setTimeRange] = useState('month');
+  const [stats, setStats] = useState({
+    totalVolunteers: 450,
+    volunteersChange: 15.2,
+    totalBeneficiaries: 2800,
+    beneficiariesChange: 8.7,
+    activePrograms: 15,
+    programsChange: 5.2,
+    upcomingEvents: 8,
+    eventsChange: -2.1,
+    monthlyBreakdown: [
+      { month: 'Jan', volunteers: 380 },
+      { month: 'Feb', volunteers: 395 },
+      { month: 'Mar', volunteers: 410 },
+      { month: 'Apr', volunteers: 425 },
+      { month: 'May', volunteers: 440 },
+      { month: 'Jun', volunteers: 450 }
+    ],
+    programBreakdown: [
+      { program: 'Education', percentage: 35 },
+      { program: 'Healthcare', percentage: 28 },
+      { program: 'Food Security', percentage: 22 },
+      { program: 'Emergency Relief', percentage: 15 }
+    ]
+  });
+
+
+
+  const recentUsers = [
+    { id: 1, name: 'Alice Cooper', email: 'alice@example.com', joined: '2024-01-15', role: 'Volunteer' },
+    { id: 2, name: 'Bob Martin', email: 'bob@example.com', joined: '2024-01-14', role: 'Beneficiary' },
+    { id: 3, name: 'Carol White', email: 'carol@example.com', joined: '2024-01-13', role: 'Volunteer' },
+    { id: 4, name: 'David Brown', email: 'david@example.com', joined: '2024-01-12', role: 'Beneficiary' },
+    { id: 5, name: 'Eva Green', email: 'eva@example.com', joined: '2024-01-11', role: 'Admin' }
+  ];
 
   useEffect(() => {
-    // Simulate API fetch
+    // Simulate API call to fetch dashboard data
     const fetchDashboardData = async () => {
-      setLoading(true);
-      // In a real app, this would be an API call
-      await new Promise(resolve => setTimeout(resolve, 800));
-      
-      // Sample dashboard data
-      const statsData = {
-        totalDonations: 45750,
-        donationsChange: 12.5,
-        totalDonors: 1250,
-        donorsChange: 8.3,
-        activePrograms: 12,
-        programsChange: 20,
-        upcomingEvents: 5,
-        eventsChange: -10,
-        monthlyBreakdown: [
-          { month: 'Jan', donations: 3200 },
-          { month: 'Feb', donations: 3800 },
-          { month: 'Mar', donations: 2900 },
-          { month: 'Apr', donations: 3600 },
-          { month: 'May', donations: 4100 },
-          { month: 'Jun', donations: 4500 },
-          { month: 'Jul', donations: 5200 },
-          { month: 'Aug', donations: 4800 },
-          { month: 'Sep', donations: 5500 },
-          { month: 'Oct', donations: 4900 },
-          { month: 'Nov', donations: 5100 },
-          { month: 'Dec', donations: 6200 }
-        ],
-        programBreakdown: [
-          { program: 'Clean Water', percentage: 35 },
-          { program: 'Education', percentage: 25 },
-          { program: 'Healthcare', percentage: 20 },
-          { program: 'Community Development', percentage: 15 },
-          { program: 'Emergency Relief', percentage: 5 }
-        ]
-      };
-      
-      // Sample recent donations
-      const recentDonationsData = [
-        {
-          id: 1,
-          donor: 'John Smith',
-          email: 'john.smith@example.com',
-          amount: 100,
-          program: 'Clean Water Initiative',
-          date: '2023-06-15',
-          status: 'completed'
-        },
-        {
-          id: 2,
-          donor: 'Sarah Johnson',
-          email: 'sarah.j@example.com',
-          amount: 50,
-          program: 'Education for All',
-          date: '2023-06-14',
-          status: 'completed'
-        },
-        {
-          id: 3,
-          donor: 'Michael Brown',
-          email: 'm.brown@example.com',
-          amount: 200,
-          program: 'Healthcare Access',
-          date: '2023-06-13',
-          status: 'completed'
-        },
-        {
-          id: 4,
-          donor: 'Emily Davis',
-          email: 'emily.d@example.com',
-          amount: 75,
-          program: 'Community Development',
-          date: '2023-06-12',
-          status: 'completed'
-        },
-        {
-          id: 5,
-          donor: 'David Wilson',
-          email: 'd.wilson@example.com',
-          amount: 150,
-          program: 'Emergency Relief',
-          date: '2023-06-11',
-          status: 'completed'
-        }
-      ];
-      
-      // Sample recent users
-      const recentUsersData = [
-        {
-          id: 1,
-          name: 'Alice Cooper',
-          email: 'alice.cooper@example.com',
-          joined: '2023-06-15',
-          role: 'user'
-        },
-        {
-          id: 2,
-          name: 'Bob Johnson',
-          email: 'bob.j@example.com',
-          joined: '2023-06-14',
-          role: 'user'
-        },
-        {
-          id: 3,
-          name: 'Carol Smith',
-          email: 'carol.smith@example.com',
-          joined: '2023-06-13',
-          role: 'volunteer'
-        },
-        {
-          id: 4,
-          name: 'Dave Brown',
-          email: 'dave.b@example.com',
-          joined: '2023-06-12',
-          role: 'user'
-        },
-        {
-          id: 5,
-          name: 'Eve Wilson',
-          email: 'eve.w@example.com',
-          joined: '2023-06-11',
-          role: 'donor'
-        }
-      ];
-      
-      setStats(statsData);
-      setRecentDonations(recentDonationsData);
-      setRecentUsers(recentUsersData);
-      setLoading(false);
+      // This would be replaced with actual API calls
+      console.log('Fetching dashboard data for:', timeRange);
     };
 
     fetchDashboardData();
   }, [timeRange]);
 
-  if (loading) {
-    return (
-      <AdminLayout>
-        <div className="flex justify-center items-center h-96">
-          <div className="text-center">
-            <span className="loading loading-spinner loading-lg text-primary"></span>
-            <p className="mt-4">Loading dashboard data...</p>
-          </div>
-        </div>
-      </AdminLayout>
-    );
-  }
-
   return (
     <AdminLayout>
       <Helmet>
         <title>Admin Dashboard - Charity NGO</title>
-        <meta name="description" content="Admin dashboard for Charity NGO" />
       </Helmet>
 
-      <div className="p-4 sm:p-6">
-        <div className="flex justify-between items-center mb-6">
-          <motion.h1 
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5 }}
-            className="text-2xl font-bold"
-          >
-            Dashboard Overview
-          </motion.h1>
-          
-          <select 
-            className="select select-bordered select-sm" 
-            value={timeRange}
-            onChange={(e) => setTimeRange(e.target.value)}
-          >
-            <option value="week">Last Week</option>
-            <option value="month">Last Month</option>
-            <option value="quarter">Last Quarter</option>
-            <option value="year">Last Year</option>
-          </select>
-        </div>
-
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-blue-50">
         <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
           transition={{ duration: 0.5 }}
+          className="p-6 space-y-8"
         >
+          {/* Header Section */}
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="bg-white rounded-2xl p-8 shadow-lg border border-gray-100"
+          >
+            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+              <div>
+                <h1 className="text-3xl font-bold text-gray-800 mb-2">Dashboard Overview</h1>
+                <p className="text-gray-600">Welcome back! Here's what's happening with your organization.</p>
+              </div>
+              
+              <div className="flex items-center gap-4">
+                <div className="relative">
+                  <select 
+                    value={timeRange} 
+                    onChange={(e) => setTimeRange(e.target.value)}
+                    className="appearance-none bg-white border border-gray-200 rounded-xl px-4 py-2 pr-8 text-sm font-medium text-gray-700 hover:border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                  >
+                    <option value="week">This Week</option>
+                    <option value="month">This Month</option>
+                    <option value="quarter">This Quarter</option>
+                    <option value="year">This Year</option>
+                  </select>
+                  <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+                    <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </div>
+                </div>
+                
+                <div className="flex items-center gap-2 text-sm text-gray-500">
+                  <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                  <span>Live data</span>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+
           {/* Stats Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-            <div className="card bg-base-100 shadow-lg relative group">
-              <div className="absolute inset-0 bg-pink-500 rounded-2xl transform rotate-1 group-hover:rotate-2 transition-transform duration-300 opacity-10"></div>
-              <div className="card-body p-4 relative">
-                <div className="flex justify-between items-center">
-                  <div>
-                    <p className="text-sm font-medium text-base-content/70">Total Donations</p>
-                    <h3 className="text-2xl font-bold">${stats.totalDonations.toLocaleString()}</h3>
-                  </div>
-                  <div className="rounded-full p-3 bg-primary/10 text-primary">
-                    <FiDollarSign size={24} />
-                  </div>
-                </div>
-                <div className="mt-2 flex items-center">
-                  {stats.donationsChange >= 0 ? (
-                    <div className="flex items-center text-success">
-                      <FiArrowUp size={16} />
-                      <span className="ml-1">{stats.donationsChange}%</span>
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
+          >
+            {[
+              {
+                title: 'Total Volunteers',
+                value: stats.totalVolunteers.toLocaleString(),
+                growth: stats.volunteersChange,
+                icon: FiUsers,
+                color: 'from-blue-500 to-blue-600',
+                bgColor: 'bg-blue-50',
+                textColor: 'text-blue-600'
+              },
+              {
+                title: 'Beneficiaries',
+                value: stats.totalBeneficiaries.toLocaleString(),
+                growth: stats.beneficiariesChange,
+                icon: FiHeart,
+                color: 'from-green-500 to-green-600',
+                bgColor: 'bg-green-50',
+                textColor: 'text-green-600'
+              },
+              {
+                title: 'Active Programs',
+                value: stats.activePrograms,
+                growth: stats.programsChange,
+                icon: FiActivity,
+                color: 'from-purple-500 to-purple-600',
+                bgColor: 'bg-purple-50',
+                textColor: 'text-purple-600',
+                status: 'Running'
+              },
+              {
+                title: 'Upcoming Events',
+                value: stats.upcomingEvents,
+                growth: stats.eventsChange,
+                icon: FiCalendar,
+                color: 'from-orange-500 to-orange-600',
+                bgColor: 'bg-orange-50',
+                textColor: 'text-orange-600',
+                status: 'Scheduled'
+              }
+            ].map((stat, index) => {
+              const IconComponent = stat.icon;
+              return (
+                <motion.div
+                  key={stat.title}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.3 + index * 0.1 }}
+                  className="group"
+                >
+                  <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 relative overflow-hidden">
+                    <div className={`absolute top-0 right-0 w-32 h-32 bg-gradient-to-br ${stat.color} opacity-5 rounded-full transform translate-x-8 -translate-y-8 group-hover:scale-110 transition-transform duration-500`}></div>
+                    
+                    <div className="relative">
+                      <div className="flex items-center justify-between mb-4">
+                        <div className={`w-12 h-12 ${stat.bgColor} rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
+                          <IconComponent className={`text-xl ${stat.textColor}`} />
+                        </div>
+                        {stat.growth !== null && (
+                          <div className={`flex items-center gap-1 px-3 py-1 rounded-full text-sm font-medium ${
+                            stat.growth >= 0 
+                              ? 'bg-green-50 text-green-600' 
+                              : 'bg-red-50 text-red-600'
+                          }`}>
+                            {stat.growth >= 0 ? (
+                              <FiTrendingUp className="text-xs" />
+                            ) : (
+                              <FiTrendingDown className="text-xs" />
+                            )}
+                            {Math.abs(stat.growth)}%
+                          </div>
+                        )}
+                      </div>
+                      
+                      <div>
+                        <p className="text-gray-600 text-sm font-medium mb-1">{stat.title}</p>
+                        <p className="text-3xl font-bold text-gray-800 mb-2">{stat.value}</p>
+                        {stat.status ? (
+                          <div className="flex items-center gap-2">
+                            <div className={`w-2 h-2 rounded-full ${stat.textColor.replace('text-', 'bg-')}`}></div>
+                            <span className={`text-sm font-medium ${stat.textColor}`}>{stat.status}</span>
+                          </div>
+                        ) : (
+                          <p className="text-xs text-gray-500">vs previous {timeRange}</p>
+                        )}
+                      </div>
                     </div>
-                  ) : (
-                    <div className="flex items-center text-error">
-                      <FiArrowDown size={16} />
-                      <span className="ml-1">{Math.abs(stats.donationsChange)}%</span>
-                    </div>
-                  )}
-                  <span className="text-xs text-base-content/70 ml-2">vs previous {timeRange}</span>
-                </div>
-              </div>
-            </div>
-
-            <div className="card bg-base-100 shadow-lg relative group">
-              <div className="absolute inset-0 bg-pink-500 rounded-2xl transform rotate-1 group-hover:rotate-2 transition-transform duration-300 opacity-10"></div>
-              <div className="card-body p-4 relative">
-                <div className="flex justify-between items-center">
-                  <div>
-                    <p className="text-sm font-medium text-base-content/70">Total Donors</p>
-                    <h3 className="text-2xl font-bold">{stats.totalDonors.toLocaleString()}</h3>
                   </div>
-                  <div className="rounded-full p-3 bg-secondary/10 text-secondary">
-                    <FiUsers size={24} />
-                  </div>
-                </div>
-                <div className="mt-2 flex items-center">
-                  {stats.donorsChange >= 0 ? (
-                    <div className="flex items-center text-success">
-                      <FiArrowUp size={16} />
-                      <span className="ml-1">{stats.donorsChange}%</span>
-                    </div>
-                  ) : (
-                    <div className="flex items-center text-error">
-                      <FiArrowDown size={16} />
-                      <span className="ml-1">{Math.abs(stats.donorsChange)}%</span>
-                    </div>
-                  )}
-                  <span className="text-xs text-base-content/70 ml-2">vs previous {timeRange}</span>
-                </div>
-              </div>
-            </div>
-
-            <div className="card bg-base-100 shadow-lg relative group">
-              <div className="absolute inset-0 bg-pink-500 rounded-2xl transform rotate-1 group-hover:rotate-2 transition-transform duration-300 opacity-10"></div>
-              <div className="card-body p-4 relative">
-                <div className="flex justify-between items-center">
-                  <div>
-                    <p className="text-sm font-medium text-base-content/70">Active Programs</p>
-                    <h3 className="text-2xl font-bold">{stats.activePrograms}</h3>
-                  </div>
-                  <div className="rounded-full p-3 bg-accent/10 text-accent">
-                    <FiActivity size={24} />
-                  </div>
-                </div>
-                <div className="mt-2 flex items-center">
-                  {stats.programsChange >= 0 ? (
-                    <div className="flex items-center text-success">
-                      <FiArrowUp size={16} />
-                      <span className="ml-1">{stats.programsChange}%</span>
-                    </div>
-                  ) : (
-                    <div className="flex items-center text-error">
-                      <FiArrowDown size={16} />
-                      <span className="ml-1">{Math.abs(stats.programsChange)}%</span>
-                    </div>
-                  )}
-                  <span className="text-xs text-base-content/70 ml-2">vs previous {timeRange}</span>
-                </div>
-              </div>
-            </div>
-
-            <div className="card bg-base-100 shadow-lg relative group">
-              <div className="absolute inset-0 bg-pink-500 rounded-2xl transform rotate-1 group-hover:rotate-2 transition-transform duration-300 opacity-10"></div>
-              <div className="card-body p-4 relative">
-                <div className="flex justify-between items-center">
-                  <div>
-                    <p className="text-sm font-medium text-base-content/70">Upcoming Events</p>
-                    <h3 className="text-2xl font-bold">{stats.upcomingEvents}</h3>
-                  </div>
-                  <div className="rounded-full p-3 bg-info/10 text-info">
-                    <FiCalendar size={24} />
-                  </div>
-                </div>
-                <div className="mt-2 flex items-center">
-                  {stats.eventsChange >= 0 ? (
-                    <div className="flex items-center text-success">
-                      <FiArrowUp size={16} />
-                      <span className="ml-1">{stats.eventsChange}%</span>
-                    </div>
-                  ) : (
-                    <div className="flex items-center text-error">
-                      <FiArrowDown size={16} />
-                      <span className="ml-1">{Math.abs(stats.eventsChange)}%</span>
-                    </div>
-                  )}
-                  <span className="text-xs text-base-content/70 ml-2">vs previous {timeRange}</span>
-                </div>
-              </div>
-            </div>
-          </div>
+                </motion.div>
+              );
+            })}
+          </motion.div>
 
           {/* Charts and Tables */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
-            {/* Donations Chart */}
-            <div className="card bg-base-100 shadow-lg lg:col-span-2 relative group">
-              <div className="absolute inset-0 bg-pink-500 rounded-2xl transform rotate-1 group-hover:rotate-2 transition-transform duration-300 opacity-10"></div>
-              <div className="card-body relative">
-                <div className="flex justify-between items-center mb-4">
-                  <h3 className="card-title">Donations Overview</h3>
-                  <div className="badge badge-primary">{timeRange}</div>
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+            className="grid grid-cols-1 lg:grid-cols-3 gap-6"
+          >
+            {/* Volunteer Growth Chart */}
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.5, delay: 0.5 }}
+              className="lg:col-span-2"
+            >
+              <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100 hover:shadow-xl transition-all duration-300">
+                <div className="flex justify-between items-center mb-6">
+                  <div>
+                    <h3 className="text-xl font-bold text-gray-800">Volunteer Growth</h3>
+                    <p className="text-gray-600 text-sm mt-1">Monthly volunteer registration trends</p>
+                  </div>
+                  <div className="bg-blue-50 text-blue-600 px-3 py-1 rounded-full text-sm font-medium">
+                    {timeRange}
+                  </div>
                 </div>
                 
                 <div className="h-64 w-full">
-                  {/* In a real app, this would be a chart component */}
-                  <div className="flex h-full items-end">
+                  <div className="flex h-full items-end gap-2">
                     {stats.monthlyBreakdown.map((item, index) => (
-                      <div key={index} className="flex-1 flex flex-col items-center">
+                      <div key={index} className="flex-1 flex flex-col items-center group">
                         <div 
-                          className="w-full bg-primary/80 rounded-t-sm" 
-                          style={{ height: `${(item.donations / 6500) * 100}%` }}
+                          className="w-full bg-gradient-to-t from-blue-500 to-blue-400 rounded-t-lg hover:from-blue-600 hover:to-blue-500 transition-all duration-300 group-hover:scale-105" 
+                          style={{ height: `${(item.volunteers / 450) * 100}%` }}
                         ></div>
-                        <div className="text-xs mt-2">{item.month}</div>
+                        <div className="text-xs mt-2 text-gray-600 font-medium">{item.month}</div>
+                        <div className="text-xs text-gray-500">{item.volunteers}</div>
                       </div>
                     ))}
                   </div>
                 </div>
                 
-                <div className="flex justify-between items-center mt-4">
-                  <div className="flex items-center">
-                    <FiTrendingUp className="text-success mr-1" />
-                    <span className="text-sm">12.5% increase from last {timeRange}</span>
+                <div className="flex justify-between items-center mt-6">
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                    <span className="text-sm text-gray-600">15.2% increase from last {timeRange}</span>
                   </div>
-                  <Link to="/admin/donations" className="btn btn-sm btn-ghost">View Details</Link>
+                  <Link to="/admin/users" className="text-blue-600 hover:text-blue-700 text-sm font-medium transition-colors">
+                    View Details →
+                  </Link>
                 </div>
               </div>
-            </div>
+            </motion.div>
 
             {/* Program Distribution */}
-            <div className="card bg-base-100 shadow-lg relative group">
-              <div className="absolute inset-0 bg-pink-500 rounded-2xl transform rotate-1 group-hover:rotate-2 transition-transform duration-300 opacity-10"></div>
-              <div className="card-body relative">
-                <h3 className="card-title mb-4">Program Distribution</h3>
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.5, delay: 0.6 }}
+            >
+              <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100 hover:shadow-xl transition-all duration-300">
+                <div className="mb-6">
+                  <h3 className="text-xl font-bold text-gray-800">Program Distribution</h3>
+                  <p className="text-gray-600 text-sm mt-1">Resource allocation by program</p>
+                </div>
                 
                 <div className="space-y-4">
-                  {stats.programBreakdown.map((item, index) => (
-                    <div key={index}>
-                      <div className="flex justify-between mb-1">
-                        <span>{item.program}</span>
-                        <span>{item.percentage}%</span>
+                  {stats.programBreakdown.map((item, index) => {
+                    const colors = ['bg-blue-500', 'bg-green-500', 'bg-purple-500', 'bg-orange-500'];
+                    const bgColors = ['bg-blue-50', 'bg-green-50', 'bg-purple-50', 'bg-orange-50'];
+                    return (
+                      <div key={index} className="p-3 rounded-xl hover:bg-gray-50 transition-colors">
+                        <div className="flex justify-between items-center mb-2">
+                          <span className="font-medium text-gray-700">{item.program}</span>
+                          <span className="text-sm font-bold text-gray-800">{item.percentage}%</span>
+                        </div>
+                        <div className={`w-full ${bgColors[index % bgColors.length]} rounded-full h-2`}>
+                          <div 
+                            className={`${colors[index % colors.length]} h-2 rounded-full transition-all duration-500`}
+                            style={{ width: `${item.percentage}%` }}
+                          ></div>
+                        </div>
                       </div>
-                      <div className="w-full bg-base-300 rounded-full h-2.5">
-                        <div 
-                          className="bg-primary h-2.5 rounded-full" 
-                          style={{ width: `${item.percentage}%` }}
-                        ></div>
+                    );
+                  })}
+                </div>
+                
+                <div className="mt-6">
+                  <Link to="/admin/programs" className="w-full bg-gray-50 hover:bg-gray-100 text-gray-700 font-medium py-2 px-4 rounded-xl transition-colors text-center block">
+                    Manage Programs →
+                  </Link>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+
+          {/* Recent Users */}
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.6 }}
+            className="max-w-2xl"
+          >
+            {/* Recent Users */}
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.5, delay: 0.8 }}
+            >
+              <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100 hover:shadow-xl transition-all duration-300">
+                <div className="flex justify-between items-center mb-6">
+                  <div>
+                    <h3 className="text-xl font-bold text-gray-800">Recent Users</h3>
+                    <p className="text-gray-600 text-sm mt-1">New registrations</p>
+                  </div>
+                  <Link to="/admin/users" className="text-blue-600 hover:text-blue-700 text-sm font-medium transition-colors">
+                    View All →
+                  </Link>
+                </div>
+                
+                <div className="space-y-3">
+                  {recentUsers.map((user) => (
+                    <div key={user.id} className="flex items-center justify-between p-3 rounded-xl hover:bg-gray-50 transition-colors">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 bg-blue-50 rounded-full flex items-center justify-center">
+                          <FiUsers className="text-blue-600" />
+                        </div>
+                        <div>
+                          <p className="font-medium text-gray-800">{user.name}</p>
+                          <p className="text-sm text-gray-600">{user.email}</p>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <span className={`inline-block px-2 py-1 rounded-full text-xs font-medium ${
+                          user.role === 'Admin' ? 'bg-red-50 text-red-600' :
+                          user.role === 'Volunteer' ? 'bg-blue-50 text-blue-600' :
+                          'bg-green-50 text-green-600'
+                        }`}>
+                          {user.role}
+                        </span>
+                        <p className="text-xs text-gray-500 mt-1">{new Date(user.joined).toLocaleDateString()}</p>
                       </div>
                     </div>
                   ))}
                 </div>
-                
-                <div className="mt-4">
-                  <Link to="/admin/programs" className="btn btn-sm btn-ghost w-full">Manage Programs</Link>
-                </div>
               </div>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {/* Recent Donations */}
-            <div className="card bg-base-100 shadow-lg relative group">
-              <div className="absolute inset-0 bg-pink-500 rounded-2xl transform rotate-1 group-hover:rotate-2 transition-transform duration-300 opacity-10"></div>
-              <div className="card-body relative">
-                <div className="flex justify-between items-center mb-4">
-                  <h3 className="card-title">Recent Donations</h3>
-                  <Link to="/admin/donations" className="btn btn-sm btn-ghost">View All</Link>
-                </div>
-                
-                <div className="overflow-x-auto">
-                  <table className="table table-zebra w-full">
-                    <thead>
-                      <tr>
-                        <th>Donor</th>
-                        <th>Amount</th>
-                        <th>Program</th>
-                        <th>Date</th>
-                        <th>Action</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {recentDonations.map((donation) => (
-                        <tr key={donation.id}>
-                          <td>
-                            <div className="font-medium">{donation.donor}</div>
-                            <div className="text-xs text-base-content/70">{donation.email}</div>
-                          </td>
-                          <td>${donation.amount}</td>
-                          <td>{donation.program}</td>
-                          <td>{new Date(donation.date).toLocaleDateString()}</td>
-                          <td>
-                            <Link to={`/admin/donations/${donation.id}`} className="btn btn-xs btn-ghost">
-                              <FiEye size={14} />
-                            </Link>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-
-            {/* Recent Users */}
-            <div className="card bg-base-100 shadow-lg relative group">
-              <div className="absolute inset-0 bg-pink-500 rounded-2xl transform rotate-1 group-hover:rotate-2 transition-transform duration-300 opacity-10"></div>
-              <div className="card-body relative">
-                <div className="flex justify-between items-center mb-4">
-                  <h3 className="card-title">Recent Users</h3>
-                  <Link to="/admin/users" className="btn btn-sm btn-ghost">View All</Link>
-                </div>
-                
-                <div className="overflow-x-auto">
-                  <table className="table table-zebra w-full">
-                    <thead>
-                      <tr>
-                        <th>Name</th>
-                        <th>Email</th>
-                        <th>Joined</th>
-                        <th>Role</th>
-                        <th>Action</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {recentUsers.map((user) => (
-                        <tr key={user.id}>
-                          <td>{user.name}</td>
-                          <td>{user.email}</td>
-                          <td>{new Date(user.joined).toLocaleDateString()}</td>
-                          <td>
-                            <span className="badge badge-outline">{user.role}</span>
-                          </td>
-                          <td>
-                            <Link to={`/admin/users/${user.id}`} className="btn btn-xs btn-ghost">
-                              <FiEye size={14} />
-                            </Link>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
         </motion.div>
       </div>
     </AdminLayout>

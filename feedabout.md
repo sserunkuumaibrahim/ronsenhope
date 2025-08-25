@@ -99,3 +99,16 @@ I sometimes think about how my life would have gone if I had sought help from th
  
 For now, I am grateful. I am alive.  
  
+
+
+
+
+
+
+ under about us page add this :
+ Linda Tusiime
+4:03 PM
+Why support us?
+We started Lumps Away because we knew intimately the gaps that exist when facing cancer in our community. When you support us, you're investing in giving hope to patients by making vital cancer information accessible in our local context, providing community connections when people feel most alone, and delivering tangible support through programs like scholarships that keep children in school despite family health crises, and skills training that helps survivors rebuild their liv
+livelihoods.
+Link to DONATE (or Support us page)

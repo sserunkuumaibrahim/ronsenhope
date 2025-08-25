@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
-import { toast } from 'react-toastify';
-import { collection, doc, getDoc, getDocs, updateDoc, deleteDoc, query, where, orderBy } from 'firebase/firestore';
-import { db } from '../../firebase/config';
+import { toast } from 'react-hot-toast';
+import { ref, get, onValue, off, update, remove } from 'firebase/database';
+import { realtimeDb } from '../../firebase/config';
 import AdminLayout from '../../components/layout/AdminLayout';
 import LoadingSpinner from '../../components/common/LoadingSpinner';
 import { FaArrowLeft, FaTrash, FaEdit, FaEye, FaThumbsUp, FaThumbsDown, FaFlag } from 'react-icons/fa';
@@ -23,48 +23,70 @@ const ForumDetail = () => {
   const [deleteId, setDeleteId] = useState('');
 
   useEffect(() => {
-    const fetchTopic = async () => {
+    const fetchTopicAndSetupMessagesListener = async () => {
       try {
         setLoading(true);
-        const topicRef = doc(db, 'forumTopics', id);
-        const topicSnap = await getDoc(topicRef);
+        const topicRef = ref(realtimeDb, `forumTopics/${id}`);
+        const topicSnap = await get(topicRef);
         
         if (topicSnap.exists()) {
-          setTopic({ id: topicSnap.id, ...topicSnap.data() });
+          setTopic({ id: id, ...topicSnap.val() });
           
-          // Fetch messages for this topic
-          const messagesQuery = query(
-            collection(db, 'forumMessages'),
-            where('topicId', '==', id),
-            orderBy('createdAt', 'asc')
-          );
+          // Set up real-time listener for replies/messages for this topic
+          const repliesRef = ref(realtimeDb, `forumTopics/${id}/replies`);
           
-          const messagesSnap = await getDocs(messagesQuery);
-          const messagesData = messagesSnap.docs.map(doc => ({
-            id: doc.id,
-            ...doc.data()
-          }));
+          const unsubscribe = onValue(repliesRef, (repliesSnap) => {
+            if (repliesSnap.exists()) {
+              const messagesData = Object.entries(repliesSnap.val()).map(([key, value]) => ({
+                id: key,
+                ...value
+              })).sort((a, b) => a.createdAt - b.createdAt);
+              
+              setMessages(messagesData);
+            } else {
+              setMessages([]);
+            }
+            setLoading(false);
+          }, (error) => {
+            console.error('Error listening to messages:', error);
+            toast.error('Failed to load messages');
+            setLoading(false);
+          });
           
-          setMessages(messagesData);
+          return unsubscribe;
         } else {
           toast.error('Topic not found');
           navigate('/admin/forum');
+          return null;
         }
       } catch (error) {
         console.error('Error fetching topic:', error);
         toast.error('Failed to load topic details');
-      } finally {
         setLoading(false);
+        return null;
       }
     };
     
-    fetchTopic();
+    const setupListener = async () => {
+      const unsubscribe = await fetchTopicAndSetupMessagesListener();
+      return unsubscribe;
+    };
+    
+    let unsubscribePromise = setupListener();
+    
+    return () => {
+      unsubscribePromise.then(unsubscribe => {
+        if (unsubscribe && typeof unsubscribe === 'function') {
+          unsubscribe();
+        }
+      });
+    };
   }, [id, navigate]);
 
   const handleToggleSticky = async () => {
     try {
-      const topicRef = doc(db, 'forumTopics', id);
-      await updateDoc(topicRef, {
+      const topicRef = ref(realtimeDb, `forumTopics/${id}`);
+      await update(topicRef, {
         isSticky: !topic.isSticky
       });
       
@@ -78,8 +100,8 @@ const ForumDetail = () => {
 
   const handleToggleLocked = async () => {
     try {
-      const topicRef = doc(db, 'forumTopics', id);
-      await updateDoc(topicRef, {
+      const topicRef = ref(realtimeDb, `forumTopics/${id}`);
+      await update(topicRef, {
         isLocked: !topic.isLocked
       });
       
@@ -100,25 +122,14 @@ const ForumDetail = () => {
   const handleDelete = async () => {
     try {
       if (deleteType === 'topic') {
-        // Delete all messages first
-        const messagesQuery = query(
-          collection(db, 'forumMessages'),
-          where('topicId', '==', id)
-        );
-        
-        const messagesSnap = await getDocs(messagesQuery);
-        const deletePromises = messagesSnap.docs.map(doc => 
-          deleteDoc(doc.ref)
-        );
-        
-        await Promise.all(deletePromises);
-        
-        // Then delete the topic
-        await deleteDoc(doc(db, 'forumTopics', id));
+        // Delete the entire topic (including all replies)
+        const topicRef = ref(realtimeDb, `forumTopics/${id}`);
+        await remove(topicRef);
         toast.success('Topic deleted successfully');
         navigate('/admin/forum');
       } else if (deleteType === 'message') {
-        await deleteDoc(doc(db, 'forumMessages', deleteId));
+        const messageRef = ref(realtimeDb, `forumTopics/${id}/replies/${deleteId}`);
+        await remove(messageRef);
         setMessages(prev => prev.filter(message => message.id !== deleteId));
         toast.success('Message deleted successfully');
       }
