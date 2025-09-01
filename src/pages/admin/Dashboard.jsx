@@ -4,58 +4,158 @@ import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
 import { FiUsers, FiActivity, FiCalendar, FiArrowUp, FiArrowDown, FiTrendingUp, FiTrendingDown, FiEye, FiHeart, FiTarget } from 'react-icons/fi';
 import AdminLayout from '../../components/layout/AdminLayout';
+import { db, realtimeDb } from '../../firebase/config';
+import { collection, getDocs, query, where, orderBy, limit } from 'firebase/firestore';
+import { ref, get } from 'firebase/database';
 
 export default function Dashboard() {
   const [timeRange, setTimeRange] = useState('month');
   const [stats, setStats] = useState({
-    totalVolunteers: 450,
-    volunteersChange: 15.2,
-    totalBeneficiaries: 2800,
-    beneficiariesChange: 8.7,
-    activePrograms: 15,
-    programsChange: 5.2,
-    upcomingEvents: 8,
-    eventsChange: -2.1,
-    monthlyBreakdown: [
-      { month: 'Jan', volunteers: 380 },
-      { month: 'Feb', volunteers: 395 },
-      { month: 'Mar', volunteers: 410 },
-      { month: 'Apr', volunteers: 425 },
-      { month: 'May', volunteers: 440 },
-      { month: 'Jun', volunteers: 450 }
-    ],
-    programBreakdown: [
-      { program: 'Education', percentage: 35 },
-      { program: 'Healthcare', percentage: 28 },
-      { program: 'Food Security', percentage: 22 },
-      { program: 'Emergency Relief', percentage: 15 }
-    ]
+    totalVolunteers: 0,
+    volunteersChange: 0,
+    totalBeneficiaries: 0,
+    beneficiariesChange: 0,
+    activePrograms: 0,
+    programsChange: 0,
+    upcomingEvents: 0,
+    eventsChange: 0,
+    monthlyBreakdown: [],
+    programBreakdown: []
   });
-
-
-
-  const recentUsers = [
-    { id: 1, name: 'Alice Cooper', email: 'alice@example.com', joined: '2024-01-15', role: 'Volunteer' },
-    { id: 2, name: 'Bob Martin', email: 'bob@example.com', joined: '2024-01-14', role: 'Beneficiary' },
-    { id: 3, name: 'Carol White', email: 'carol@example.com', joined: '2024-01-13', role: 'Volunteer' },
-    { id: 4, name: 'David Brown', email: 'david@example.com', joined: '2024-01-12', role: 'Beneficiary' },
-    { id: 5, name: 'Eva Green', email: 'eva@example.com', joined: '2024-01-11', role: 'Admin' }
-  ];
+  const [recentUsers, setRecentUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Simulate API call to fetch dashboard data
     const fetchDashboardData = async () => {
-      // This would be replaced with actual API calls
-      console.log('Fetching dashboard data for:', timeRange);
+      setLoading(true);
+      try {
+        // Fetch users data
+        const usersCollection = collection(db, 'users');
+        const usersSnapshot = await getDocs(usersCollection);
+        const usersData = usersSnapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        }));
+
+        // Calculate user statistics
+        const volunteers = usersData.filter(user => user.role === 'volunteer' || user.role === 'user');
+        const beneficiaries = usersData.filter(user => user.role === 'beneficiary');
+        
+        // Fetch programs data
+        const programsCollection = collection(db, 'programs');
+        const programsSnapshot = await getDocs(programsCollection);
+        const programsData = programsSnapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        }));
+        
+        // Fetch opportunities (events) data from realtime database
+        const opportunitiesRef = ref(realtimeDb, 'opportunities');
+        const opportunitiesSnapshot = await get(opportunitiesRef);
+        const opportunitiesData = opportunitiesSnapshot.exists() ? Object.values(opportunitiesSnapshot.val()) : [];
+        
+        // Calculate monthly breakdown
+        const monthlyData = calculateMonthlyBreakdown(usersData);
+        
+        // Calculate program breakdown
+        const programBreakdown = calculateProgramBreakdown(programsData);
+        
+        // Get recent users (last 5)
+        const recentUsersData = usersData
+          .sort((a, b) => {
+            const aDate = a.createdAt?.seconds || 0;
+            const bDate = b.createdAt?.seconds || 0;
+            return bDate - aDate;
+          })
+          .slice(0, 5)
+          .map(user => ({
+            id: user.id,
+            name: user.displayName || 'Unknown User',
+            email: user.email,
+            joined: user.createdAt ? new Date(user.createdAt.seconds * 1000).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
+            role: user.role === 'user' ? 'Volunteer' : (user.role || 'User').charAt(0).toUpperCase() + (user.role || 'User').slice(1)
+          }));
+
+        setStats({
+          totalVolunteers: volunteers.length,
+          volunteersChange: 0, // Would need historical data to calculate
+          totalBeneficiaries: beneficiaries.length,
+          beneficiariesChange: 0, // Would need historical data to calculate
+          activePrograms: programsData.length,
+          programsChange: 0, // Would need historical data to calculate
+          upcomingEvents: opportunitiesData.length,
+          eventsChange: 0, // Would need historical data to calculate
+          monthlyBreakdown: monthlyData,
+          programBreakdown: programBreakdown
+        });
+        
+        setRecentUsers(recentUsersData);
+        
+      } catch (error) {
+        console.error('Error fetching dashboard data:', error);
+      } finally {
+        setLoading(false);
+      }
     };
 
     fetchDashboardData();
   }, [timeRange]);
 
+  // Helper function to calculate monthly breakdown
+  const calculateMonthlyBreakdown = (users) => {
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const currentYear = new Date().getFullYear();
+    const monthlyData = [];
+    
+    for (let i = 0; i < 6; i++) {
+      const date = new Date();
+      date.setMonth(date.getMonth() - (5 - i));
+      const month = months[date.getMonth()];
+      const year = date.getFullYear();
+      
+      const usersInMonth = users.filter(user => {
+        if (!user.createdAt) return false;
+        const userDate = new Date(user.createdAt.seconds * 1000);
+        return userDate.getMonth() === date.getMonth() && userDate.getFullYear() === year;
+      }).length;
+      
+      monthlyData.push({ month, volunteers: usersInMonth });
+    }
+    
+    return monthlyData;
+  };
+
+  // Helper function to calculate program breakdown
+  const calculateProgramBreakdown = (programs) => {
+    if (programs.length === 0) return [];
+    
+    const categories = {};
+    programs.forEach(program => {
+      const category = program.category || 'Other';
+      categories[category] = (categories[category] || 0) + 1;
+    });
+    
+    const total = programs.length;
+    return Object.entries(categories).map(([program, count]) => ({
+      program,
+      percentage: Math.round((count / total) * 100)
+    }));
+  };
+
+  if (loading) {
+    return (
+      <AdminLayout>
+        <div className="flex items-center justify-center min-h-screen">
+          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary"></div>
+        </div>
+      </AdminLayout>
+    );
+  }
+
   return (
     <AdminLayout>
       <Helmet>
-        <title>Admin Dashboard - Charity NGO</title>
+        <title>Admin Dashboard - Lumps Away Foundation</title>
       </Helmet>
 
       <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-blue-50">
@@ -169,7 +269,7 @@ export default function Dashboard() {
                         <div className={`w-12 h-12 ${stat.bgColor} rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
                           <IconComponent className={`text-xl ${stat.textColor}`} />
                         </div>
-                        {stat.growth !== null && (
+                        {stat.growth !== null && stat.growth !== 0 && (
                           <div className={`flex items-center gap-1 px-3 py-1 rounded-full text-sm font-medium ${
                             stat.growth >= 0 
                               ? 'bg-green-50 text-green-600' 
@@ -230,18 +330,30 @@ export default function Dashboard() {
                 </div>
                 
                 <div className="h-64 w-full">
-                  <div className="flex h-full items-end gap-2">
-                    {stats.monthlyBreakdown.map((item, index) => (
-                      <div key={index} className="flex-1 flex flex-col items-center group">
-                        <div 
-                          className="w-full bg-gradient-to-t from-blue-500 to-blue-400 rounded-t-lg hover:from-blue-600 hover:to-blue-500 transition-all duration-300 group-hover:scale-105" 
-                          style={{ height: `${(item.volunteers / 450) * 100}%` }}
-                        ></div>
-                        <div className="text-xs mt-2 text-gray-600 font-medium">{item.month}</div>
-                        <div className="text-xs text-gray-500">{item.volunteers}</div>
+                  {stats.monthlyBreakdown.length > 0 ? (
+                    <div className="flex h-full items-end gap-2">
+                      {stats.monthlyBreakdown.map((item, index) => {
+                        const maxVolunteers = Math.max(...stats.monthlyBreakdown.map(d => d.volunteers), 1);
+                        return (
+                          <div key={index} className="flex-1 flex flex-col items-center group">
+                            <div 
+                              className="w-full bg-gradient-to-t from-blue-500 to-blue-400 rounded-t-lg hover:from-blue-600 hover:to-blue-500 transition-all duration-300 group-hover:scale-105" 
+                              style={{ height: `${Math.max((item.volunteers / maxVolunteers) * 100, 5)}%` }}
+                            ></div>
+                            <div className="text-xs mt-2 text-gray-600 font-medium">{item.month}</div>
+                            <div className="text-xs text-gray-500">{item.volunteers}</div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  ) : (
+                    <div className="flex items-center justify-center h-full text-gray-500">
+                      <div className="text-center">
+                        <FiUsers className="mx-auto text-4xl mb-2 opacity-50" />
+                        <p>No user data available</p>
                       </div>
-                    ))}
-                  </div>
+                    </div>
+                  )}
                 </div>
                 
                 <div className="flex justify-between items-center mt-6">
@@ -269,24 +381,33 @@ export default function Dashboard() {
                 </div>
                 
                 <div className="space-y-4">
-                  {stats.programBreakdown.map((item, index) => {
-                    const colors = ['bg-blue-500', 'bg-green-500', 'bg-purple-500', 'bg-orange-500'];
-                    const bgColors = ['bg-blue-50', 'bg-green-50', 'bg-purple-50', 'bg-orange-50'];
-                    return (
-                      <div key={index} className="p-3 rounded-xl hover:bg-gray-50 transition-colors">
-                        <div className="flex justify-between items-center mb-2">
-                          <span className="font-medium text-gray-700">{item.program}</span>
-                          <span className="text-sm font-bold text-gray-800">{item.percentage}%</span>
+                  {stats.programBreakdown.length > 0 ? (
+                    stats.programBreakdown.map((item, index) => {
+                      const colors = ['bg-blue-500', 'bg-green-500', 'bg-purple-500', 'bg-orange-500'];
+                      const bgColors = ['bg-blue-50', 'bg-green-50', 'bg-purple-50', 'bg-orange-50'];
+                      return (
+                        <div key={index} className="p-3 rounded-xl hover:bg-gray-50 transition-colors">
+                          <div className="flex justify-between items-center mb-2">
+                            <span className="font-medium text-gray-700">{item.program}</span>
+                            <span className="text-sm font-bold text-gray-800">{item.percentage}%</span>
+                          </div>
+                          <div className={`w-full ${bgColors[index % bgColors.length]} rounded-full h-2`}>
+                            <div 
+                              className={`${colors[index % colors.length]} h-2 rounded-full transition-all duration-500`}
+                              style={{ width: `${item.percentage}%` }}
+                            ></div>
+                          </div>
                         </div>
-                        <div className={`w-full ${bgColors[index % bgColors.length]} rounded-full h-2`}>
-                          <div 
-                            className={`${colors[index % colors.length]} h-2 rounded-full transition-all duration-500`}
-                            style={{ width: `${item.percentage}%` }}
-                          ></div>
-                        </div>
+                      );
+                    })
+                  ) : (
+                    <div className="flex items-center justify-center py-8 text-gray-500">
+                      <div className="text-center">
+                        <FiActivity className="mx-auto text-4xl mb-2 opacity-50" />
+                        <p>No programs available</p>
                       </div>
-                    );
-                  })}
+                    </div>
+                  )}
                 </div>
                 
                 <div className="mt-6">
@@ -323,29 +444,38 @@ export default function Dashboard() {
                 </div>
                 
                 <div className="space-y-3">
-                  {recentUsers.map((user) => (
-                    <div key={user.id} className="flex items-center justify-between p-3 rounded-xl hover:bg-gray-50 transition-colors">
-                      <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 bg-blue-50 rounded-full flex items-center justify-center">
-                          <FiUsers className="text-blue-600" />
+                  {recentUsers.length > 0 ? (
+                    recentUsers.map((user) => (
+                      <div key={user.id} className="flex items-center justify-between p-3 rounded-xl hover:bg-gray-50 transition-colors">
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 bg-blue-50 rounded-full flex items-center justify-center">
+                            <FiUsers className="text-blue-600" />
+                          </div>
+                          <div>
+                            <p className="font-medium text-gray-800">{user.name}</p>
+                            <p className="text-sm text-gray-600">{user.email}</p>
+                          </div>
                         </div>
-                        <div>
-                          <p className="font-medium text-gray-800">{user.name}</p>
-                          <p className="text-sm text-gray-600">{user.email}</p>
+                        <div className="text-right">
+                          <span className={`inline-block px-2 py-1 rounded-full text-xs font-medium ${
+                            user.role === 'Admin' ? 'bg-red-50 text-red-600' :
+                            user.role === 'Volunteer' ? 'bg-blue-50 text-blue-600' :
+                            'bg-green-50 text-green-600'
+                          }`}>
+                            {user.role}
+                          </span>
+                          <p className="text-xs text-gray-500 mt-1">{new Date(user.joined).toLocaleDateString()}</p>
                         </div>
                       </div>
-                      <div className="text-right">
-                        <span className={`inline-block px-2 py-1 rounded-full text-xs font-medium ${
-                          user.role === 'Admin' ? 'bg-red-50 text-red-600' :
-                          user.role === 'Volunteer' ? 'bg-blue-50 text-blue-600' :
-                          'bg-green-50 text-green-600'
-                        }`}>
-                          {user.role}
-                        </span>
-                        <p className="text-xs text-gray-500 mt-1">{new Date(user.joined).toLocaleDateString()}</p>
+                    ))
+                  ) : (
+                    <div className="flex items-center justify-center py-8 text-gray-500">
+                      <div className="text-center">
+                        <FiUsers className="mx-auto text-4xl mb-2 opacity-50" />
+                        <p>No recent users</p>
                       </div>
                     </div>
-                  ))}
+                  )}
                 </div>
               </div>
             </motion.div>

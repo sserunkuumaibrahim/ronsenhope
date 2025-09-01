@@ -95,8 +95,8 @@ export default function Signup() {
   return (
     <MainLayout>
       <Helmet>
-        <title>Sign Up - Charity NGO</title>
-        <meta name="description" content="Create a new account with Charity NGO to join our community, participate in forums, and stay updated with our initiatives." />
+        <title>Sign Up - Lumps Away Foundation</title>
+        <meta name="description" content="Create a new account with Lumps Away Foundation to join our community, participate in forums, and stay updated with our initiatives." />
       </Helmet>
       
       <div className="min-h-screen bg-gradient-to-br from-white via-gray-50 to-gray-100 relative overflow-hidden">

@@ -48,43 +48,43 @@ export default function Settings() {
       
       // Sample settings data
       const generalSettings = {
-        organizationName: 'Charity NGO',
-        tagline: 'Making a difference, one life at a time',
-        contactEmail: 'contact@charity-ngo.org',
-        contactPhone: '+1 (555) 123-4567',
-        address: '123 Charity Lane, Helpville, CA 90210',
-        websiteUrl: 'https://charity-ngo.org',
-        socialFacebook: 'https://facebook.com/charityngo',
-        socialTwitter: 'https://twitter.com/charityngo',
-        socialInstagram: 'https://instagram.com/charityngo',
-        socialLinkedIn: 'https://linkedin.com/company/charityngo'
+        organizationName: 'Lumps Away Foundation',
+        tagline: 'Empowering lives through breast cancer support',
+        contactEmail: 'contact@lumpsaway.org',
+        contactPhone: '+256 (700) 123-456',
+        address: 'Kampala, Uganda',
+        websiteUrl: 'https://lumpsaway.org',
+        socialFacebook: 'https://facebook.com/lumpsaway',
+        socialTwitter: 'https://twitter.com/lumpsaway',
+        socialInstagram: 'https://instagram.com/lumpsaway',
+        socialLinkedIn: 'https://linkedin.com/company/lumpsaway'
       };
       
       const emailSettings = {
-        smtpServer: 'smtp.charity-ngo.org',
+        smtpServer: 'smtp.lumpsaway.org',
         smtpPort: '587',
-        smtpUsername: 'notifications@charity-ngo.org',
+        smtpUsername: 'notifications@lumpsaway.org',
         smtpPassword: '********',
-        senderName: 'Charity NGO',
-        senderEmail: 'no-reply@charity-ngo.org',
+        senderName: 'Lumps Away Foundation',
+        senderEmail: 'no-reply@lumpsaway.org',
         enableEmailNotifications: true,
         notifyOnDonations: true,
         notifyOnNewUsers: true,
         notifyOnContactForm: true,
-        emailFooter: 'Charity NGO - Making a difference, one life at a time.'
+        emailFooter: 'Lumps Away Foundation - Empowering lives through breast cancer support.'
       };
       
       const appearanceSettings = {
         primaryColor: '#3b82f6',
         secondaryColor: '#10b981',
         accentColor: '#f97316',
-        logoUrl: 'https://placehold.co/200x80/3b82f6/ffffff?text=Charity+NGO',
-        faviconUrl: 'https://placehold.co/32x32/3b82f6/ffffff?text=C',
+        logoUrl: 'https://placehold.co/200x80/3b82f6/ffffff?text=Lumps+Away',
+        faviconUrl: 'https://placehold.co/32x32/3b82f6/ffffff?text=LA',
         defaultTheme: 'light',
         enableDarkMode: true,
         customCss: '',
-        homepageBannerUrl: 'https://placehold.co/1200x400/3b82f6/ffffff?text=Charity+NGO+Banner',
-        footerText: '© 2023 Charity NGO. All rights reserved.'
+        homepageBannerUrl: 'https://placehold.co/1200x400/3b82f6/ffffff?text=Lumps+Away+Banner',
+        footerText: '© 2023 Lumps Away Foundation. All rights reserved.'
       };
       
       const securitySettings = {
@@ -171,7 +171,7 @@ export default function Settings() {
   return (
     <AdminLayout>
       <Helmet>
-        <title>Settings - Charity NGO Admin</title>
+        <title>Settings - Lumps Away Foundation Admin</title>
         <meta name="description" content="Admin panel for managing application settings" />
       </Helmet>
 

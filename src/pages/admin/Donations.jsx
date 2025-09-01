@@ -405,7 +405,7 @@ export default function Donations() {
   return (
     <AdminLayout>
       <Helmet>
-        <title>Manage Donations - Charity NGO Admin</title>
+        <title>Manage Donations - Lumps Away Foundation Admin</title>
         <meta name="description" content="Admin panel for managing donations" />
       </Helmet>
 

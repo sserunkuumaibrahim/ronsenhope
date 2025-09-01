@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
-import { FiSearch, FiEdit, FiTrash2, FiUserPlus, FiFilter, FiDownload, FiMail, FiCheck, FiX, FiUsers, FiShield, FiClock, FiEye } from 'react-icons/fi';
+import { FiSearch, FiEdit, FiTrash2, FiUserPlus, FiFilter, FiDownload, FiMail, FiCheck, FiX, FiUsers, FiShield, FiClock, FiEye, FiUpload, FiPlus } from 'react-icons/fi';
 import AdminLayout from '../../components/layout/AdminLayout';
 import { db } from '../../firebase/config';
 import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc, serverTimestamp } from 'firebase/firestore';
@@ -27,6 +27,10 @@ export default function Users() {
     location: '',
     phone: ''
   });
+  const [showBulkModal, setShowBulkModal] = useState(false);
+  const [bulkUsers, setBulkUsers] = useState([]);
+  const [csvFile, setCsvFile] = useState(null);
+  const [bulkCreating, setBulkCreating] = useState(false);
 
   // Function to get user initials
   const getUserInitials = (name) => {
@@ -203,6 +207,131 @@ export default function Users() {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
+  // Handle CSV file upload
+  const handleCsvUpload = (e) => {
+    const file = e.target.files[0];
+    if (file && file.type === 'text/csv') {
+      setCsvFile(file);
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const csv = event.target.result;
+        const lines = csv.split('\n');
+        const headers = lines[0].split(',').map(h => h.trim());
+        
+        const users = [];
+        for (let i = 1; i < lines.length; i++) {
+          if (lines[i].trim()) {
+            const values = lines[i].split(',').map(v => v.trim());
+            const user = {};
+            headers.forEach((header, index) => {
+              user[header.toLowerCase()] = values[index] || '';
+            });
+            if (user.name && user.email) {
+              users.push({
+                name: user.name,
+                email: user.email,
+                role: user.role || 'volunteer',
+                location: user.location || '',
+                phone: user.phone || ''
+              });
+            }
+          }
+        }
+        setBulkUsers(users);
+      };
+      reader.readAsText(file);
+    } else {
+      alert('Please select a valid CSV file');
+    }
+  };
+
+  // Add manual user to bulk list
+  const addManualUser = () => {
+    setBulkUsers([...bulkUsers, {
+      name: '',
+      email: '',
+      role: 'volunteer',
+      location: '',
+      phone: ''
+    }]);
+  };
+
+  // Update bulk user data
+  const updateBulkUser = (index, field, value) => {
+    const updatedUsers = [...bulkUsers];
+    updatedUsers[index][field] = value;
+    setBulkUsers(updatedUsers);
+  };
+
+  // Remove user from bulk list
+  const removeBulkUser = (index) => {
+    setBulkUsers(bulkUsers.filter((_, i) => i !== index));
+  };
+
+  // Create bulk users
+  const handleBulkCreate = async () => {
+    if (bulkUsers.length === 0) {
+      alert('Please add users to create');
+      return;
+    }
+
+    setBulkCreating(true);
+    const createdUsers = [];
+    const errors = [];
+
+    for (let i = 0; i < bulkUsers.length; i++) {
+      const userData = bulkUsers[i];
+      if (!userData.name || !userData.email) {
+        errors.push(`User ${i + 1}: Name and email are required`);
+        continue;
+      }
+
+      try {
+        const newUserData = {
+          displayName: userData.name,
+          email: userData.email,
+          role: userData.role || 'volunteer',
+          location: userData.location || '',
+          phone: userData.phone || '',
+          status: 'active',
+          createdAt: serverTimestamp(),
+          lastLogin: null
+        };
+
+        const docRef = await addDoc(collection(db, 'users'), newUserData);
+        
+        const newUser = {
+          id: docRef.id,
+          ...newUserData,
+          status: 'active',
+          joined: new Date().toISOString().split('T')[0],
+          lastLogin: 'Never'
+        };
+        
+        createdUsers.push(newUser);
+      } catch (error) {
+        console.error(`Error creating user ${userData.name}:`, error);
+        errors.push(`User ${userData.name}: ${error.message}`);
+      }
+    }
+
+    // Update local state with created users
+    setUsers([...users, ...createdUsers]);
+    
+    setBulkCreating(false);
+    setShowBulkModal(false);
+    setBulkUsers([]);
+    setCsvFile(null);
+
+    // Show results
+    if (createdUsers.length > 0) {
+      alert(`Successfully created ${createdUsers.length} users${errors.length > 0 ? ` with ${errors.length} errors` : ''}`);
+    }
+    if (errors.length > 0) {
+      console.error('Bulk creation errors:', errors);
+    }
+  };
+
   const getRoleColor = (role) => {
     const colors = {
       admin: 'bg-red-100 text-red-800',
@@ -281,14 +410,23 @@ export default function Users() {
               Oversee and manage all users, their roles, and permissions. Monitor user activity and maintain community standards.
             </p>
 
-            {/* Action Button */}
-            <button
-              onClick={handleCreateUser}
-              className="inline-flex items-center gap-2 bg-primary text-white px-6 py-3 rounded-xl font-medium hover:bg-primary/90 transition-all duration-300 shadow-lg hover:shadow-xl"
-            >
-              <FiUserPlus className="w-5 h-5" />
-              Add New User
-            </button>
+            {/* Action Buttons */}
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <button
+                onClick={handleCreateUser}
+                className="inline-flex items-center gap-2 bg-primary text-white px-6 py-3 rounded-xl font-medium hover:bg-primary/90 transition-all duration-300 shadow-lg hover:shadow-xl"
+              >
+                <FiUserPlus className="w-5 h-5" />
+                Add New User
+              </button>
+              <button
+                onClick={() => setShowBulkModal(true)}
+                className="inline-flex items-center gap-2 bg-secondary text-white px-6 py-3 rounded-xl font-medium hover:bg-secondary/90 transition-all duration-300 shadow-lg hover:shadow-xl"
+              >
+                <FiUpload className="w-5 h-5" />
+                Bulk Add Users
+              </button>
+            </div>
           </motion.div>
 
           {/* Stats */}
@@ -816,6 +954,142 @@ export default function Users() {
                   </button>
                 </div>
               </form>
+            </div>
+          </motion.div>
+        </div>
+      )}
+
+      {/* Bulk Create Users Modal */}
+      {showBulkModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+            className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto"
+          >
+            <div className="p-6">
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-xl font-bold text-gray-900">Bulk Create Users</h3>
+                <button
+                  onClick={() => {
+                    setShowBulkModal(false);
+                    setBulkUsers([]);
+                    setCsvFile(null);
+                  }}
+                  className="p-2 hover:bg-gray-100 rounded-lg transition-colors duration-200"
+                >
+                  <FiX className="w-5 h-5" />
+                </button>
+              </div>
+
+              {/* CSV Upload Section */}
+              <div className="mb-6 p-4 bg-gray-50 rounded-lg">
+                <h4 className="text-lg font-semibold mb-3">Option 1: Upload CSV File</h4>
+                <p className="text-sm text-gray-600 mb-3">
+                  Upload a CSV file with columns: name, email, role, location, phone
+                </p>
+                <input
+                  type="file"
+                  accept=".csv"
+                  onChange={handleCsvUpload}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                />
+                {csvFile && (
+                  <p className="text-sm text-green-600 mt-2">
+                    ✓ File uploaded: {csvFile.name} ({bulkUsers.length} users found)
+                  </p>
+                )}
+              </div>
+
+              {/* Manual Entry Section */}
+              <div className="mb-6">
+                <div className="flex items-center justify-between mb-3">
+                  <h4 className="text-lg font-semibold">Option 2: Manual Entry</h4>
+                  <button
+                    onClick={addManualUser}
+                    className="inline-flex items-center gap-2 bg-secondary text-white px-4 py-2 rounded-lg hover:bg-secondary/90 transition-colors duration-200"
+                  >
+                    <FiPlus className="w-4 h-4" />
+                    Add User
+                  </button>
+                </div>
+
+                {/* Users List */}
+                {bulkUsers.length > 0 && (
+                  <div className="space-y-4 max-h-60 overflow-y-auto">
+                    {bulkUsers.map((user, index) => (
+                      <div key={index} className="grid grid-cols-1 md:grid-cols-6 gap-3 p-4 bg-gray-50 rounded-lg">
+                        <input
+                          type="text"
+                          placeholder="Name"
+                          value={user.name}
+                          onChange={(e) => updateBulkUser(index, 'name', e.target.value)}
+                          className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                        />
+                        <input
+                          type="email"
+                          placeholder="Email"
+                          value={user.email}
+                          onChange={(e) => updateBulkUser(index, 'email', e.target.value)}
+                          className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                        />
+                        <select
+                          value={user.role}
+                          onChange={(e) => updateBulkUser(index, 'role', e.target.value)}
+                          className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                        >
+                          <option value="volunteer">Volunteer</option>
+                          <option value="admin">Admin</option>
+                          <option value="moderator">Moderator</option>
+                        </select>
+                        <input
+                          type="text"
+                          placeholder="Location"
+                          value={user.location}
+                          onChange={(e) => updateBulkUser(index, 'location', e.target.value)}
+                          className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                        />
+                        <input
+                          type="tel"
+                          placeholder="Phone"
+                          value={user.phone}
+                          onChange={(e) => updateBulkUser(index, 'phone', e.target.value)}
+                          className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                        />
+                        <button
+                          onClick={() => removeBulkUser(index)}
+                          className="px-3 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors duration-200"
+                        >
+                          <FiX className="w-4 h-4" />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex gap-3 pt-4">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowBulkModal(false);
+                    setBulkUsers([]);
+                    setCsvFile(null);
+                  }}
+                  className="flex-1 px-4 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors duration-200"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleBulkCreate}
+                  disabled={bulkUsers.length === 0 || bulkCreating}
+                  className="flex-1 px-4 py-3 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {bulkCreating ? 'Creating...' : `Create ${bulkUsers.length} Users`}
+                </button>
+              </div>
             </div>
           </motion.div>
         </div>

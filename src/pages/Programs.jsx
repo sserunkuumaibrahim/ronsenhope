@@ -55,7 +55,7 @@ export default function Programs() {
   return (
     <MainLayout>
       <Helmet>
-        <title>Our Programs - Charity NGO</title>
+        <title>Our Programs - Lumps Away Foundation</title>
         <meta name="description" content="Explore our various programs and initiatives aimed at creating positive change in communities around the world." />
       </Helmet>
 
@@ -299,7 +299,7 @@ export default function Programs() {
                    </div>
                    <div className="flex items-center gap-3">
                      <FiUsers className="w-5 h-5 text-primary" />
-                     <span className="text-gray-600">{program.participants.toLocaleString()} participants</span>
+                     <span className="text-gray-600">{Array.isArray(program.participants) ? program.participants.length.toLocaleString() : (program.participants || 0).toLocaleString()} participants</span>
                    </div>
                  </div>
 

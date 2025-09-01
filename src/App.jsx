@@ -27,6 +27,9 @@ import ForumManagement from './pages/admin/Forum';
 import AdminForumDetail from './pages/admin/ForumDetail';
 import Opportunities from './pages/admin/Opportunities';
 import Teams from './pages/admin/Teams';
+import Testimonials from './pages/admin/Testimonials';
+import Carousel from './pages/admin/Carousel';
+import Messages from './pages/admin/Messages';
 
 // User Pages
 import Programs from './pages/Programs';
@@ -148,6 +151,14 @@ function App() {
                 </ProtectedRoute>
               } 
             />
+            <Route 
+              path="/admin/messages" 
+              element={
+                <ProtectedRoute requiredRole="admin">
+                  <Messages />
+                </ProtectedRoute>
+              } 
+            />
             {/* <Route 
               path="/admin/reports" 
               element={
@@ -161,6 +172,14 @@ function App() {
               element={
                 <ProtectedRoute requiredRole="admin">
                   <AdminGallery />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/admin/carousel" 
+              element={
+                <ProtectedRoute requiredRole="admin">
+                  <Carousel />
                 </ProtectedRoute>
               } 
             />
@@ -185,6 +204,14 @@ function App() {
               element={
                 <ProtectedRoute requiredRole="admin">
                   <AdminStories />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/admin/testimonials" 
+              element={
+                <ProtectedRoute requiredRole="admin">
+                  <Testimonials />
                 </ProtectedRoute>
               } 
             />

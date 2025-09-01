@@ -16,7 +16,7 @@ export default function Unauthorized() {
   return (
     <MainLayout>
       <Helmet>
-        <title>Access Denied - Charity NGO</title>
+        <title>Access Denied - Lumps Away Foundation</title>
         <meta name="description" content="You do not have permission to access this page." />
       </Helmet>
 

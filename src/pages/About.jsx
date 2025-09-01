@@ -171,7 +171,260 @@ export default function About() {
         </div>
       </section>
 
+      {/* Founding Story Section */}
+      <section id="our-story" className="py-20 bg-white">
+        <div className="container-custom">
+          <motion.div
+            variants={fadeInUp}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <h2 className="text-4xl md:text-5xl font-bold mb-6 text-secondary">Our Founding Story</h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Born from personal experience and a passion to help others navigate their cancer journey.
+            </p>
+          </motion.div>
 
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            <motion.div
+              initial={{ opacity: 0, x: -30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6 }}
+              viewport={{ once: true }}
+              className="space-y-6"
+            >
+              <div className="bg-gradient-to-r from-pink-50 to-pink-100 p-8 rounded-2xl border border-pink-200">
+                <h3 className="text-2xl font-bold text-pink-800 mb-4">Linda's Journey (2017)</h3>
+                <p className="text-gray-700 leading-relaxed mb-4">
+                  During Linda Tusiime's journey with breast cancer in 2017, she was faced with the dilemma that many people who've been diagnosed are faced with – where can I get information? She frantically searched online for young women like her who had faced a similar experience but only found voices from outside Uganda. Voices she could not relate to.
+                </p>
+                <p className="text-gray-700 leading-relaxed">
+                  So, she started a blog – Lumps Away. It was her way of sharing her ordeal while also connecting with others out there to help each other through their shared journeys.
+                </p>
+              </div>
+              
+              <div className="bg-gradient-to-r from-blue-50 to-blue-100 p-8 rounded-2xl border border-blue-200">
+                <h3 className="text-2xl font-bold text-blue-800 mb-4">The Foundation (2019)</h3>
+                <p className="text-gray-700 leading-relaxed">
+                  In 2019, with her friend, Fiona Toliva, Lumps Away shifted from being a blog to a Cancer Survivorship and Advocacy Organization. The Lumps Away Foundation is an organization built on hope and a passion for helping those going through pain we've known intimately.
+                </p>
+              </div>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, x: 30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              viewport={{ once: true }}
+              className="bg-gradient-to-br from-pink-500 to-pink-600 p-8 rounded-3xl text-white shadow-2xl"
+            >
+              <div className="text-center mb-8">
+                <FiHeart className="text-6xl text-pink-200 mx-auto mb-4" />
+                <h3 className="text-3xl font-bold mb-4">Our Mission</h3>
+              </div>
+              <p className="text-lg leading-relaxed mb-6">
+                Our mission is to create a safe space for women, men, caregivers, friends, and more who are affected by the nightmare that is cancer. We do what we can to help, bring awareness, and be an emotional support while making the lives of those affected by it a little easier.
+              </p>
+              <div className="bg-white/20 backdrop-blur-sm rounded-xl p-6">
+                <p className="text-pink-100 font-medium text-center">
+                  "We can't fix it all, but we can do our best. If you care about our cause or are just curious, join us; we're always looking for the extra hand."
+                </p>
+              </div>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* Our Services Section */}
+      <section className="py-20 bg-gray-50">
+        <div className="container-custom">
+          <motion.div
+            variants={fadeInUp}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <h2 className="text-4xl md:text-5xl font-bold mb-6 text-secondary">Our Services</h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Comprehensive support services designed to help cancer patients and survivors at every stage of their journey.
+            </p>
+          </motion.div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              viewport={{ once: true }}
+              className="bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300"
+            >
+              <div className="w-16 h-16 bg-gradient-to-r from-green-500 to-green-600 rounded-xl flex items-center justify-center mb-6">
+                <FiActivity className="text-2xl text-white" />
+              </div>
+              <h3 className="text-2xl font-bold text-secondary mb-4">Survivorship Programs</h3>
+              <p className="text-gray-600 leading-relaxed">
+                Support services designed to help cancer survivors navigate life after treatment, including personalized survivorship care plans and access to counseling and therapy sessions that address the unique challenges of post-cancer life.
+              </p>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+              viewport={{ once: true }}
+              className="bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300"
+            >
+              <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl flex items-center justify-center mb-6">
+                <FiUsers className="text-2xl text-white" />
+              </div>
+              <h3 className="text-2xl font-bold text-secondary mb-4">Patient Support</h3>
+              <p className="text-gray-600 leading-relaxed">
+                Direct assistance for those currently facing cancer, featuring peer counseling services that connect patients with survivors who understand their journey, and assisted transportation services to ensure treatment accessibility regardless of location or financial constraints.
+              </p>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              viewport={{ once: true }}
+              className="bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300"
+            >
+              <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-purple-600 rounded-xl flex items-center justify-center mb-6">
+                <FiGlobe className="text-2xl text-white" />
+              </div>
+              <h3 className="text-2xl font-bold text-secondary mb-4">Advocacy & Education</h3>
+              <p className="text-gray-600 leading-relaxed">
+                Community-wide initiatives focused on raising cancer awareness, providing educational programs that empower individuals with knowledge about prevention and early detection, and collaborative advocacy efforts that work to improve cancer care policies and resources across Uganda.
+              </p>
+            </motion.div>
+          </div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+            viewport={{ once: true }}
+            className="text-center mt-12"
+          >
+            <a 
+              href="/programs" 
+              className="inline-flex items-center gap-2 bg-gradient-to-r from-primary to-secondary text-white px-8 py-4 rounded-full font-semibold text-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300"
+            >
+              <span>Learn More About Our Programs</span>
+              <FiArrowRight className="text-xl" />
+            </a>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Why Support Us Section */}
+      <section className="py-20 bg-white">
+        <div className="container-custom">
+          <motion.div
+            variants={fadeInUp}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <h2 className="text-4xl md:text-5xl font-bold mb-6 text-secondary">Why Support Us?</h2>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            className="bg-gradient-to-r from-pink-50 to-pink-100 p-8 lg:p-12 rounded-3xl border border-pink-200 mb-12"
+          >
+            <p className="text-lg lg:text-xl text-gray-700 leading-relaxed mb-6">
+              We started Lumps Away because we knew intimately the gaps that exist when facing cancer in our community. When you support us, you're investing in giving hope to patients by making vital cancer information accessible in our local context, providing community connections when people feel most alone, and delivering tangible support through programs like scholarships that keep children in school despite family health crises, and skills training that helps survivors rebuild their livelihoods.
+            </p>
+            <p className="text-lg lg:text-xl text-gray-700 leading-relaxed">
+              You're not just supporting an organization - you're helping build the community of care that transforms how cancer is experienced in Uganda. Support us because together, we're proving that from the pain of cancer can come the most beautiful growth.
+            </p>
+          </motion.div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              viewport={{ once: true }}
+              className="text-center"
+            >
+              <div className="w-20 h-20 bg-gradient-to-r from-pink-500 to-pink-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                <FiDollarSign className="text-3xl text-white" />
+              </div>
+              <h3 className="text-2xl font-bold text-secondary mb-4">Donate</h3>
+              <p className="text-gray-600 leading-relaxed mb-6">
+                Your support means we can ensure services continue to reach those who need it most.
+              </p>
+              <div dangerouslySetInnerHTML={{
+                __html: `
+                  <a class="dbox-donation-button" style="background: rgb(223, 24, 167); color: rgb(255, 255, 255); text-decoration: none; font-family: Verdana, sans-serif; display: inline-flex; gap: 8px; font-size: 16px; border-radius: 25px; line-height: 24px; padding: 12px 24px; font-weight: 600;" href="https://donorbox.org/survive-and-thrive-804282?">Donate Now</a>
+                `
+              }} />
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+              viewport={{ once: true }}
+              className="text-center"
+            >
+              <div className="w-20 h-20 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                <FiUsers className="text-3xl text-white" />
+              </div>
+              <h3 className="text-2xl font-bold text-secondary mb-4">Volunteer</h3>
+              <p className="text-gray-600 leading-relaxed mb-6">
+                Whether it's your time, ideas, or services, reach out. We'd love to hear from you.
+              </p>
+              <a 
+                href="/volunteer" 
+                className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white px-6 py-3 rounded-full font-semibold hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300"
+              >
+                Get Involved
+              </a>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              viewport={{ once: true }}
+              className="text-center"
+            >
+              <div className="w-20 h-20 bg-gradient-to-r from-purple-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                <FiGlobe className="text-3xl text-white" />
+              </div>
+              <h3 className="text-2xl font-bold text-secondary mb-4">Follow Us</h3>
+              <p className="text-gray-600 leading-relaxed mb-6">
+                Get the latest updates of our activities, events, stories and more.
+              </p>
+              <div className="flex justify-center gap-3">
+                <a href="https://www.facebook.com/profile.php?id=100067651137058" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white hover:scale-110 transition-transform duration-300">
+                  <FiMessageCircle className="text-lg" />
+                </a>
+                <a href="https://www.instagram.com/lumpsawayfoundation/" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-pink-600 rounded-full flex items-center justify-center text-white hover:scale-110 transition-transform duration-300">
+                  <FiStar className="text-lg" />
+                </a>
+                <a href="https://www.linkedin.com/company/lumps-away-foundatin/?viewAsMember=true" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-blue-800 rounded-full flex items-center justify-center text-white hover:scale-110 transition-transform duration-300">
+                  <FiUsers className="text-lg" />
+                </a>
+                <a href="https://x.com/AwayLumps" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-black rounded-full flex items-center justify-center text-white hover:scale-110 transition-transform duration-300">
+                  <FiGlobe className="text-lg" />
+                </a>
+              </div>
+            </motion.div>
+          </div>
+        </div>
+      </section>
 
       {/* Our Team Section */}
       <section className="py-20 bg-accent">

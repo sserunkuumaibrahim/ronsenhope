@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation, Navigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
-import { FiMenu, FiX, FiHome, FiFileText, FiMessageSquare, FiUsers, FiSettings, FiLogOut, FiCalendar, FiTrendingUp, FiGlobe, FiBarChart, FiClipboard, FiTarget, FiUserCheck } from 'react-icons/fi';
+import { FiMenu, FiX, FiHome, FiFileText, FiMessageSquare, FiUsers, FiSettings, FiLogOut, FiCalendar, FiTrendingUp, FiGlobe, FiBarChart, FiClipboard, FiTarget, FiUserCheck, FiStar, FiImage, FiMail } from 'react-icons/fi';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function AdminLayout({ children }) {
@@ -62,8 +62,11 @@ export default function AdminLayout({ children }) {
     { path: '/admin/teams', icon: <FiUserCheck />, label: 'Teams', description: 'Manage Teams & Members' },
     { path: '/admin/opportunities', icon: <FiTarget />, label: 'Opportunities', description: 'Volunteer Opportunities' },
     { path: '/admin/applications', icon: <FiClipboard />, label: 'Applications', description: 'Volunteer Applications' },
+    { path: '/admin/messages', icon: <FiMail />, label: 'Messages', description: 'Contact & Newsletter Messages' },
     { path: '/admin/gallery', icon: <FiCalendar />, label: 'Gallery', description: 'Photo Management' },
+    { path: '/admin/carousel', icon: <FiImage />, label: 'Carousel', description: 'Homepage Carousel Management' },
     { path: '/admin/stories', icon: <FiFileText />, label: 'Stories', description: 'Story Management' },
+    { path: '/admin/testimonials', icon: <FiStar />, label: 'Testimonials', description: 'Manage Testimonials & Quotes' },
     { path: '/admin/forum', icon: <FiMessageSquare />, label: 'Forum', description: 'Community Discussions' },
     // { path: '/admin/reports', icon: <FiBarChart />, label: 'Reports', description: 'Analytics & Insights' },
 

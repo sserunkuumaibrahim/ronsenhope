@@ -18,7 +18,18 @@ export default function Stories() {
 
 
 
-  const categories = ['all', 'water', 'education', 'healthcare', 'emergency', 'agriculture', 'empowerment', 'relief', 'volunteers', 'environment'];
+  const categories = ['all', 'lindas-blog', 'stories-of-hope', 'news'];
+
+  // Helper function to format category names
+  const formatCategoryName = (category) => {
+    switch(category) {
+      case 'lindas-blog': return "Linda's Blog";
+      case 'stories-of-hope': return 'Stories of Hope';
+      case 'news': return 'News';
+      case 'all': return 'All Categories';
+      default: return category.charAt(0).toUpperCase() + category.slice(1);
+    }
+  };
 
   useEffect(() => {
     const fetchStories = async () => {
@@ -62,10 +73,10 @@ export default function Stories() {
   return (
     <MainLayout>
       <Helmet>
-        <title>Stories - Charity NGO</title>
-        <meta name="description" content="Read inspiring stories of impact, transformation, and hope from our charity work around the world." />
-        <meta property="og:title" content="Stories - Charity NGO" />
-        <meta property="og:description" content="Read inspiring stories of impact, transformation, and hope from our charity work around the world." />
+        <title>Stories - Lumps Away Foundation</title>
+        <meta name="description" content="Read inspiring stories of impact, transformation, and hope from our breast cancer support work in Uganda." />
+        <meta property="og:title" content="Stories - Lumps Away Foundation" />
+        <meta property="og:description" content="Read inspiring stories of impact, transformation, and hope from our breast cancer support work in Uganda." />
         <meta property="og:type" content="website" />
         <link rel="canonical" href="/stories" />
       </Helmet>
@@ -93,7 +104,7 @@ export default function Stories() {
               transition={{ duration: 0.8, delay: 0.4 }}
               className="text-xl md:text-2xl mb-8 text-secondary/80 leading-relaxed"
             >
-              Read inspiring stories of impact, transformation, and hope from our charity work around the world.
+              Read inspiring stories of impact, transformation, and hope from our breast cancer support work in Uganda.
             </motion.p>
             
             <motion.div
@@ -146,7 +157,7 @@ export default function Stories() {
               >
                 {categories.map((category, index) => (
                   <option key={index} value={category} className="bg-white text-gray-800">
-                    {category === 'all' ? 'All Categories' : category.charAt(0).toUpperCase() + category.slice(1)}
+                    {formatCategoryName(category)}
                   </option>
                 ))}
               </motion.select>
@@ -177,7 +188,7 @@ export default function Stories() {
                       : 'bg-white/10 backdrop-blur-md text-secondary/70 hover:bg-white/20 border border-white/20'
                   }`}
                 >
-                  {category === 'all' ? 'All' : category.charAt(0).toUpperCase() + category.slice(1)}
+                  {formatCategoryName(category)}
                 </motion.button>
               ))}
             </motion.div>
@@ -233,7 +244,7 @@ export default function Stories() {
                         {/* Category Badge */}
                         <div className="absolute top-4 left-4">
                           <span className="px-3 py-1 bg-primary/90 backdrop-blur-sm text-white text-xs font-semibold rounded-full">
-                            {story.category.charAt(0).toUpperCase() + story.category.slice(1)}
+                            {formatCategoryName(story.category)}
                           </span>
                         </div>
                       </div>
@@ -261,6 +272,22 @@ export default function Stories() {
                         <p className="text-secondary/70 mb-6 line-clamp-3 flex-grow leading-relaxed">
                           {story.excerpt}
                         </p>
+                        
+                        {/* News Source Link */}
+                        {story.category === 'news' && story.newsSourceLink && (
+                          <div className="mb-4">
+                            <a 
+                              href={story.newsSourceLink} 
+                              target="_blank" 
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center gap-2 text-sm text-primary hover:text-primary/80 transition-colors duration-300 font-medium"
+                              onClick={(e) => e.stopPropagation()}
+                            >
+                              <FiArrowRight size={14} />
+                              Read original source
+                            </a>
+                          </div>
+                        )}
                         
                         {/* Author & Read More */}
                         <div className="flex items-center justify-between mt-auto">

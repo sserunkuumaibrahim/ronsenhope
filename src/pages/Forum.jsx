@@ -2,13 +2,15 @@ import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
-import { FiSearch, FiMessageSquare, FiUser, FiCalendar, FiTag, FiHeart, FiMessageCircle, FiFilter, FiPlus, FiAlertCircle, FiX } from 'react-icons/fi';
+import { FiSearch, FiMessageSquare, FiUser, FiCalendar, FiTag, FiHeart, FiMessageCircle, FiFilter, FiPlus, FiAlertCircle, FiX, FiFlag } from 'react-icons/fi';
 import MainLayout from '../components/layout/MainLayout';
 import { useAuth } from '../contexts/AuthContext';
 import { toast } from 'react-hot-toast';
 import LoadingSpinner from '../components/common/LoadingSpinner';
-import { realtimeDb } from '../firebase/config';
-import { ref, push, set, onValue, off, serverTimestamp, update, query, orderByChild, limitToLast } from 'firebase/database';
+import ForumGuidelinesModal from '../components/forum/ForumGuidelinesModal';
+import { realtimeDb, db } from '../firebase/config';
+import { ref, push, set, onValue, off, serverTimestamp, update, query, orderByChild, limitToLast, get } from 'firebase/database';
+import { doc, getDoc } from 'firebase/firestore';
 
 export default function Forum() {
   const { currentUser } = useAuth();
@@ -30,6 +32,10 @@ export default function Forum() {
   const [hasMore, setHasMore] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [likedTopics, setLikedTopics] = useState([]);
+  const [reportedTopics, setReportedTopics] = useState([]);
+  const [showGuidelinesModal, setShowGuidelinesModal] = useState(false);
+  const [checkingGuidelines, setCheckingGuidelines] = useState(true);
   
   const topicsPerPage = 10;
   
@@ -86,6 +92,39 @@ export default function Forum() {
     
     return unsubscribe;
   }, []);
+  
+  // Check if user has read forum guidelines
+  useEffect(() => {
+    const checkGuidelinesStatus = async () => {
+      if (!currentUser) {
+        setCheckingGuidelines(false);
+        return;
+      }
+      
+      try {
+        const userDoc = await getDoc(doc(db, 'users', currentUser.uid));
+        if (userDoc.exists()) {
+          const userData = userDoc.data();
+          const hasReadGuidelines = userData.hasReadForumGuidelines;
+          
+          if (!hasReadGuidelines) {
+            setShowGuidelinesModal(true);
+          }
+        } else {
+          // If user document doesn't exist, show guidelines
+          setShowGuidelinesModal(true);
+        }
+      } catch (error) {
+        console.error('Error checking guidelines status:', error);
+        // On error, show guidelines to be safe
+        setShowGuidelinesModal(true);
+      } finally {
+        setCheckingGuidelines(false);
+      }
+    };
+    
+    checkGuidelinesStatus();
+  }, [currentUser]);
   
   // Add new topic function
   const handleNewTopicSubmit = async (e) => {
@@ -170,6 +209,90 @@ export default function Forum() {
     }));
   };
 
+  // Handle like functionality
+  const handleLikeTopic = async (topicId) => {
+    if (!currentUser) {
+      toast.error('Please log in to like topics');
+      return;
+    }
+
+    try {
+      const topicRef = ref(realtimeDb, `forumTopics/${topicId}`);
+      const topicSnap = await get(topicRef);
+      const topicData = topicSnap.val();
+      
+      const isLiked = likedTopics.includes(topicId);
+      const currentLikes = topicData.likes || 0;
+      const increment = isLiked ? -1 : 1;
+      
+      await update(topicRef, {
+        likes: currentLikes + increment
+      });
+      
+      if (isLiked) {
+        setLikedTopics(prev => prev.filter(id => id !== topicId));
+        toast.success('Removed like');
+      } else {
+        setLikedTopics(prev => [...prev, topicId]);
+        toast.success('Liked topic');
+      }
+    } catch (error) {
+      console.error('Error liking topic:', error);
+      toast.error('Failed to like topic');
+    }
+  };
+
+  // Handle report functionality
+  const handleReportTopic = async (topicId) => {
+    console.log('handleReportTopic called with topicId:', topicId);
+    console.log('currentUser:', currentUser);
+    
+    if (!currentUser) {
+      console.log('No current user, showing login prompt');
+      toast.error('Please log in to report topics');
+      return;
+    }
+
+    if (reportedTopics.includes(topicId)) {
+      console.log('Topic already reported');
+      toast.info('You have already reported this topic');
+      return;
+    }
+
+    try {
+      console.log('Creating report data...');
+      const reportData = {
+        reporterId: currentUser.uid,
+        reporterName: currentUser.displayName || currentUser.email,
+        topicId: topicId,
+        reason: 'Inappropriate content',
+        timestamp: Date.now(),
+        status: 'pending'
+      };
+      
+      console.log('Report data:', reportData);
+      console.log('Firebase realtimeDb:', realtimeDb);
+      
+      // Test Firebase connection first
+      const testRef = ref(realtimeDb, 'test');
+      console.log('Testing Firebase write access...');
+      await set(testRef, { test: 'value', timestamp: Date.now() });
+      console.log('Test write successful');
+      
+      const reportsRef = ref(realtimeDb, 'reports/topics');
+      console.log('Pushing to Firebase...');
+      await push(reportsRef, reportData);
+      
+      console.log('Report saved successfully, updating state...');
+      setReportedTopics(prev => [...prev, topicId]);
+      toast.success('Topic reported successfully');
+    } catch (error) {
+      console.error('Error reporting topic:', error);
+      console.error('Error details:', error.code, error.message);
+      toast.error(`Failed to report topic: ${error.message}`);
+    }
+  };
+
   const loadMoreTopics = async () => {
     if (!hasMore || loadingMore) return;
     
@@ -243,7 +366,7 @@ export default function Forum() {
   return (
     <MainLayout>
       <Helmet>
-        <title>Community Forum - Charity NGO</title>
+        <title>Community Forum - Lumps Away Foundation</title>
         <meta name="description" content="Join our community forum to connect with like-minded individuals, share ideas, and participate in meaningful discussions about causes that matter." />
       </Helmet>
 
@@ -333,7 +456,7 @@ export default function Forum() {
           </div>
         </motion.div>
 
-        {loading ? (
+        {(loading || checkingGuidelines) ? (
           <div className="flex justify-center py-12">
             <LoadingSpinner size="lg" />
           </div>
@@ -399,13 +522,42 @@ export default function Forum() {
                               <FiMessageCircle className="text-sm" />
                               <span>{`${topic.replies ? (typeof topic.replies === 'object' ? Object.keys(topic.replies).length : topic.replies) : 0}`} replies</span>
                             </div>
-                            <div className="flex items-center gap-1">
-                              <FiHeart className="text-sm" />
+                            <motion.button
+                              whileHover={{ scale: 1.05 }}
+                              whileTap={{ scale: 0.95 }}
+                              onClick={(e) => {
+                                e.preventDefault();
+                                handleLikeTopic(topic.id);
+                              }}
+                              className={`flex items-center gap-1 px-2 py-1 rounded-lg transition-all duration-200 ${
+                                likedTopics.includes(topic.id)
+                                  ? 'bg-red-50 text-red-600 border border-red-200'
+                                  : 'hover:bg-gray-100 text-gray-500 hover:text-red-600'
+                              }`}
+                            >
+                              <FiHeart className={`text-sm ${likedTopics.includes(topic.id) ? 'fill-current' : ''}`} />
                               <span>{`${topic.likes ? (typeof topic.likes === 'object' ? Object.keys(topic.likes).length : topic.likes) : 0}`} likes</span>
-                            </div>
+                            </motion.button>
                             <div className="flex items-center gap-1">
                               <span>{topic.views || 0} views</span>
                             </div>
+                            <motion.button
+                              whileHover={{ scale: 1.05 }}
+                              whileTap={{ scale: 0.95 }}
+                              onClick={(e) => {
+                                e.preventDefault();
+                                console.log('Report button clicked for topic:', topic.id);
+                                handleReportTopic(topic.id);
+                              }}
+                              className={`flex items-center gap-1 px-2 py-1 rounded-lg transition-all duration-200 ${
+                                reportedTopics.includes(topic.id)
+                                  ? 'bg-orange-50 text-orange-600 border border-orange-200'
+                                  : 'hover:bg-gray-100 text-gray-500 hover:text-orange-600'
+                              }`}
+                            >
+                              <FiFlag className="text-sm" />
+                              <span className="text-xs">{reportedTopics.includes(topic.id) ? 'Reported' : 'Report'}</span>
+                            </motion.button>
                           </div>
                           
                           <Link 
@@ -611,6 +763,13 @@ export default function Forum() {
           </motion.div>
         </div>
       )}
+      
+      {/* Forum Guidelines Modal */}
+      <ForumGuidelinesModal
+        isOpen={showGuidelinesModal}
+        onClose={() => setShowGuidelinesModal(false)}
+        onAccept={() => setShowGuidelinesModal(false)}
+      />
     </MainLayout>
   );
 }

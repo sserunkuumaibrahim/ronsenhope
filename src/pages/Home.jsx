@@ -6,18 +6,12 @@ import { createPortal } from 'react-dom';
 import MainLayout from '../components/layout/MainLayout';
 import { FiHeart, FiUsers, FiGlobe, FiMail, FiFacebook, FiTwitter, FiInstagram, FiLinkedin, FiYoutube } from 'react-icons/fi';
 import { db } from '../firebase/config';
-import { collection, getDocs } from 'firebase/firestore';
+import { collection, getDocs, addDoc, serverTimestamp } from 'firebase/firestore';
 
 
 export default function Home() {
-  // Carousel images
-  const carouselImages = [
-    'https://images.unsplash.com/photo-1559027615-cd4628902d4a?w=800&h=600&fit=crop&crop=center',
-    'https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=800&h=600&fit=crop&crop=center',
-    'https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?w=800&h=600&fit=crop&crop=center',
-    'https://images.unsplash.com/photo-1593113598332-cd288d649433?w=800&h=600&fit=crop&crop=center',
-    'https://images.unsplash.com/photo-1582213782179-e0d53f98f2ca?w=800&h=600&fit=crop&crop=center'
-  ];
+  // Dynamic carousel images from database
+  const [carouselImages, setCarouselImages] = useState([]);
 
   // Carousel state
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -40,6 +34,120 @@ export default function Home() {
   // Stories state
   const [stories, setStories] = useState([]);
   const [storiesLoading, setStoriesLoading] = useState(true);
+  
+  // Quotes state
+  const [quotes, setQuotes] = useState([]);
+  const [currentQuote, setCurrentQuote] = useState(null);
+  
+  // Newsletter state
+  const [newsletterEmail, setNewsletterEmail] = useState('');
+  const [newsletterSubmitting, setNewsletterSubmitting] = useState(false);
+  const [newsletterSubmitted, setNewsletterSubmitted] = useState(false);
+
+  // Fetch quotes from Firebase
+  const fetchQuotes = async () => {
+    try {
+      const quotesSnapshot = await getDocs(collection(db, 'quotes'));
+      const quotesData = quotesSnapshot.docs
+        .map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        }))
+        .filter(quote => quote.status === 'active' && (quote.location === 'homepage' || quote.location === 'general'));
+      
+      setQuotes(quotesData);
+      
+      // Set a random quote or the first one
+      if (quotesData.length > 0) {
+        const randomQuote = quotesData[Math.floor(Math.random() * quotesData.length)];
+        setCurrentQuote(randomQuote);
+      } else {
+        // Fallback quote if no quotes in database
+        setCurrentQuote({
+          content: 'The best way to find yourself is to lose yourself in the service of others.',
+          author: 'Mahatma Gandhi'
+        });
+      }
+    } catch (error) {
+      console.error('Error fetching quotes:', error);
+      // Fallback quote on error
+      setCurrentQuote({
+        content: 'The best way to find yourself is to lose yourself in the service of others.',
+        author: 'Mahatma Gandhi'
+      });
+    }
+  };
+
+  // Fetch carousel images from Firebase
+  const fetchCarouselImages = async () => {
+    try {
+      const carouselSnapshot = await getDocs(collection(db, 'carousel'));
+      const carouselData = carouselSnapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      }));
+      
+      // Filter active carousel items and sort by order
+      const activeCarousel = carouselData
+        .filter(item => item.status === 'active')
+        .sort((a, b) => (a.order || 0) - (b.order || 0))
+        .map(item => item.imageUrl)
+        .filter(url => url); // Remove empty URLs
+      
+      if (activeCarousel.length > 0) {
+        setCarouselImages(activeCarousel);
+      } else {
+        // Fallback images if no active carousel items
+        setCarouselImages([
+          'https://images.unsplash.com/photo-1559027615-cd4628902d4a?w=800&h=600&fit=crop&crop=center',
+          'https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=800&h=600&fit=crop&crop=center',
+          'https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?w=800&h=600&fit=crop&crop=center',
+          'https://images.unsplash.com/photo-1593113598332-cd288d649433?w=800&h=600&fit=crop&crop=center',
+          'https://images.unsplash.com/photo-1582213782179-e0d53f98f2ca?w=800&h=600&fit=crop&crop=center'
+        ]);
+      }
+    } catch (error) {
+      console.error('Error fetching carousel images:', error);
+      // Set fallback images on error
+      setCarouselImages([
+        'https://images.unsplash.com/photo-1559027615-cd4628902d4a?w=800&h=600&fit=crop&crop=center',
+        'https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=800&h=600&fit=crop&crop=center',
+        'https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?w=800&h=600&fit=crop&crop=center',
+        'https://images.unsplash.com/photo-1593113598332-cd288d649433?w=800&h=600&fit=crop&crop=center',
+        'https://images.unsplash.com/photo-1582213782179-e0d53f98f2ca?w=800&h=600&fit=crop&crop=center'
+      ]);
+    }
+  };
+
+  // Handle newsletter subscription
+  const handleNewsletterSubmit = async (e) => {
+    e.preventDefault();
+    if (!newsletterEmail.trim()) return;
+    
+    setNewsletterSubmitting(true);
+    try {
+      // Save newsletter subscription to Firebase
+      await addDoc(collection(db, 'newsletterSubscriptions'), {
+        email: newsletterEmail.trim(),
+        status: 'active',
+        createdAt: serverTimestamp(),
+        subscribedAt: new Date()
+      });
+      
+      console.log('Newsletter subscription successful');
+      setNewsletterSubmitted(true);
+      setNewsletterEmail('');
+      
+      setTimeout(() => {
+        setNewsletterSubmitted(false);
+      }, 5000);
+    } catch (error) {
+      console.error('Error subscribing to newsletter:', error);
+      // You might want to show an error message to the user here
+    } finally {
+      setNewsletterSubmitting(false);
+    }
+  };
 
   // Fetch programs and stories from Firebase
   useEffect(() => {
@@ -85,6 +193,8 @@ export default function Home() {
 
     fetchPrograms();
     fetchStories();
+    fetchQuotes();
+    fetchCarouselImages();
   }, []);
 
   // Autoplay functionality
@@ -307,8 +417,8 @@ export default function Home() {
   return (
     <MainLayout>
       <Helmet>
-        <title>Charity NGO - Making a Difference</title>
-        <meta name="description" content="We are a charity NGO dedicated to making a positive impact through community engagement, education, and sustainable development." />
+        <title>Lumps Away Foundation - Empowering Lives Through Breast Cancer Support</title>
+        <meta name="description" content="We are the Lumps Away Foundation dedicated to supporting breast cancer patients through education, awareness, and community engagement in Uganda." />
         <meta name="keywords" content="charity, NGO, nonprofit, community, education, sustainability" />
       </Helmet>
 
@@ -683,7 +793,7 @@ export default function Home() {
                                    <p className="text-xs text-gray-600 truncate">{program.location}</p>
                                  </div>
                                  <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full whitespace-nowrap flex-shrink-0">
-                                   {program.participants?.toLocaleString() || '0'} participants
+                                   {Array.isArray(program.participants) ? program.participants.length.toLocaleString() : (program.participants || 0).toLocaleString()} participants
                                  </span>
                                </div>
                           
@@ -843,7 +953,7 @@ export default function Home() {
                           <p className="text-xs text-gray-500 truncate">{program.location}</p>
                         </div>
                         <div className="text-xs text-gray-400 whitespace-nowrap">
-                          {program.participants?.toLocaleString() || '0'} participants
+                          {Array.isArray(program.participants) ? program.participants.length.toLocaleString() : (program.participants || 0).toLocaleString()} participants
                         </div>
                       </div>
                     </div>
@@ -1020,7 +1130,7 @@ export default function Home() {
                  <div className="relative h-64 md:h-80 lg:h-[500px]">
                    <iframe 
                      className="w-full h-full" 
-                     src="https://www.youtube.com/embed/668nUCeBHyY" 
+                     src="https://www.youtube.com/embed/RHOoFn1K2Hw" 
                      title="Community Impact Video"
                      frameBorder="0" 
                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
@@ -1147,14 +1257,25 @@ export default function Home() {
             transition={{ duration: 0.8 }}
             className="text-center max-w-4xl mx-auto"
           >
-            <div className="relative">
-              <div className="absolute -top-8 -left-8 text-8xl text-pink-200 font-serif opacity-50">"</div>
-              <blockquote className="text-3xl md:text-4xl font-light text-gray-800 leading-relaxed mb-8 italic">
-                The best way to find yourself is to lose yourself in the service of others.
-              </blockquote>
-              <div className="absolute -bottom-8 -right-8 text-8xl text-pink-200 font-serif opacity-50">"</div>
-            </div>
-            <cite className="text-xl text-pink-600 font-semibold not-italic">- Mahatma Gandhi</cite>
+            {currentQuote ? (
+              <div className="relative">
+                <div className="absolute -top-8 -left-8 text-8xl text-pink-200 font-serif opacity-50">"</div>
+                <blockquote className="text-3xl md:text-4xl font-light text-gray-800 leading-relaxed mb-8 italic">
+                  {currentQuote.content}
+                </blockquote>
+                <div className="absolute -bottom-8 -right-8 text-8xl text-pink-200 font-serif opacity-50">"</div>
+                <cite className="text-xl text-pink-600 font-semibold not-italic">
+                  {currentQuote.author ? `- ${currentQuote.author}` : ''}
+                </cite>
+                {currentQuote.context && (
+                  <p className="text-sm text-gray-500 mt-2 italic">{currentQuote.context}</p>
+                )}
+              </div>
+            ) : (
+              <div className="flex justify-center items-center py-12">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+              </div>
+            )}
           </motion.div>
         </div>
       </section>
@@ -1285,19 +1406,47 @@ export default function Home() {
               transition={{ duration: 0.6, delay: 0.2 }}
               className="max-w-md mx-auto"
             >
-              <div className="flex flex-col sm:flex-row gap-4">
-                <input
-                  type="email"
-                  placeholder="Enter your email address"
-                  className="flex-1 px-6 py-4 rounded-full text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-4 focus:ring-white/30 transition-all duration-300"
-                />
-                <button className="px-8 py-4 bg-white text-pink-600 rounded-full font-semibold hover:bg-gray-100 transition-all duration-300 transform hover:-translate-y-1 shadow-lg hover:shadow-xl">
-                  Subscribe
-                </button>
-              </div>
-              <p className="text-sm text-white/70 mt-4">
-                We respect your privacy. Unsubscribe at any time.
-              </p>
+              {newsletterSubmitted ? (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  className="bg-white/20 backdrop-blur-sm rounded-2xl p-6 border border-white/30"
+                >
+                  <div className="text-center">
+                    <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <FiMail className="text-2xl text-white" />
+                    </div>
+                    <h3 className="text-xl font-semibold mb-2">Thank You!</h3>
+                    <p className="text-white/90">
+                      You've successfully subscribed to our newsletter. We'll keep you updated with our latest news and stories.
+                    </p>
+                  </div>
+                </motion.div>
+              ) : (
+                <form onSubmit={handleNewsletterSubmit}>
+                  <div className="flex flex-col sm:flex-row gap-4">
+                    <input
+                      type="email"
+                      placeholder="Enter your email address"
+                      value={newsletterEmail}
+                      onChange={(e) => setNewsletterEmail(e.target.value)}
+                      required
+                      disabled={newsletterSubmitting}
+                      className="flex-1 px-6 py-4 rounded-full text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-4 focus:ring-white/30 transition-all duration-300 disabled:opacity-50"
+                    />
+                    <button 
+                      type="submit"
+                      disabled={newsletterSubmitting || !newsletterEmail.trim()}
+                      className="px-8 py-4 bg-white text-pink-600 rounded-full font-semibold hover:bg-gray-100 transition-all duration-300 transform hover:-translate-y-1 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:transform-none disabled:hover:bg-white"
+                    >
+                      {newsletterSubmitting ? 'Subscribing...' : 'Subscribe'}
+                    </button>
+                  </div>
+                  <p className="text-sm text-white/70 mt-4">
+                    We respect your privacy. Unsubscribe at any time.
+                  </p>
+                </form>
+              )}
             </motion.div>
           </motion.div>
         </div>

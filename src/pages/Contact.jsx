@@ -4,6 +4,8 @@ import { useForm } from 'react-hook-form';
 import { motion } from 'framer-motion';
 import { FiMail, FiUser, FiMessageSquare, FiPhone, FiMapPin, FiCheckCircle, FiFacebook, FiTwitter, FiInstagram, FiLinkedin, FiSend, FiClock, FiGlobe } from 'react-icons/fi';
 import MainLayout from '../components/layout/MainLayout';
+import { db } from '../firebase/config';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 
 export default function Contact() {
   const { register, handleSubmit, reset, formState: { errors } } = useForm();
@@ -34,21 +36,35 @@ export default function Contact() {
 
   const onSubmit = async (data) => {
     setIsSubmitting(true);
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    console.log('Form submitted:', data);
-    setIsSubmitting(false);
-    setIsSubmitted(true);
-    reset();
-    setTimeout(() => {
-      setIsSubmitted(false);
-    }, 5000);
+    try {
+      // Save contact message to Firebase
+      await addDoc(collection(db, 'contactMessages'), {
+        ...data,
+        status: 'unread',
+        createdAt: serverTimestamp(),
+        submittedAt: new Date()
+      });
+      
+      console.log('Contact message submitted successfully');
+      setIsSubmitted(true);
+      reset();
+      
+      setTimeout(() => {
+        setIsSubmitted(false);
+      }, 5000);
+    } catch (error) {
+      console.error('Error submitting contact message:', error);
+      // You might want to show an error message to the user here
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
     <MainLayout>
       <Helmet>
-        <title>Contact Us - Charity NGO</title>
-        <meta name="description" content="Get in touch with our team at Charity NGO. We're here to answer your questions and provide support for our programs and initiatives." />
+        <title>Contact Us - Lumps Away</title>
+        <meta name="description" content="Get in touch with our team at Lumps Away. We're here to help, listen, and connect with patients, survivors, caregivers, and supporters in our cancer support community." />
       </Helmet>
 
       {/* Hero Section */}
@@ -116,7 +132,7 @@ export default function Contact() {
               transition={{ duration: 0.6, delay: 0.4 }}
               className="text-xl md:text-2xl text-white/90 mb-12 leading-relaxed"
             >
-              Ready to make a difference together? We'd love to hear from you and explore how we can work together.
+              We're here to help, listen, and connect. Whether you're a patient, survivor, caregiver, or supporter, we welcome you to reach out.
             </motion.p>
             
             <motion.div
@@ -357,6 +373,28 @@ export default function Contact() {
                   <h2 className="text-3xl font-bold text-gray-800">Get in Touch</h2>
                 </div>
                 
+                {/* How We Can Help Section */}
+                <div className="mb-10">
+                  <h3 className="text-2xl font-bold text-gray-800 mb-6">How We Can Help You</h3>
+                  <div className="space-y-4 text-gray-600 leading-relaxed">
+                    <div className="p-4 bg-gradient-to-r from-pink-50 to-pink-100 rounded-xl">
+                      <strong className="text-pink-700">Patients & Survivors:</strong> Access our support services, find peer support, join our community, or learn more about available resources
+                    </div>
+                    <div className="p-4 bg-gradient-to-r from-blue-50 to-blue-100 rounded-xl">
+                      <strong className="text-blue-700">Healthcare Providers:</strong> Partner with us to better serve cancer patients in your community
+                    </div>
+                    <div className="p-4 bg-gradient-to-r from-green-50 to-green-100 rounded-xl">
+                      <strong className="text-green-700">Volunteers:</strong> Discover meaningful ways to contribute your time and skills
+                    </div>
+                    <div className="p-4 bg-gradient-to-r from-purple-50 to-purple-100 rounded-xl">
+                      <strong className="text-purple-700">Donors & Partners:</strong> Explore opportunities to support our mission and create lasting impact
+                    </div>
+                    <div className="p-4 bg-gradient-to-r from-orange-50 to-orange-100 rounded-xl">
+                      <strong className="text-orange-700">Media & Organizations:</strong> Connect with us for collaboration, interviews, or educational initiatives
+                    </div>
+                  </div>
+                </div>
+                
                 <div className="space-y-8">
                   <motion.div 
                     whileHover={{ x: 5 }}
@@ -367,7 +405,7 @@ export default function Contact() {
                     </div>
                     <div>
                       <h3 className="font-bold text-lg text-gray-800 mb-2">Visit Our Office</h3>
-                      <p className="text-gray-600 leading-relaxed">123 Charity Way, Nonprofit District<br />New York, NY 10001</p>
+                      <p className="text-gray-600 leading-relaxed">Uganda Office<br />Kampala, Uganda</p>
                     </div>
                   </motion.div>
 
@@ -381,8 +419,7 @@ export default function Contact() {
                     <div>
                       <h3 className="font-bold text-lg text-gray-800 mb-2">Email Us</h3>
                       <p className="text-gray-600 leading-relaxed">
-                        <a href="mailto:info@charityngo.org" className="hover:text-primary transition-colors">info@charityngo.org</a><br />
-                        <a href="mailto:support@charityngo.org" className="hover:text-primary transition-colors">support@charityngo.org</a>
+                        <a href="mailto:info@lumpsaway.ug" className="hover:text-primary transition-colors">info@lumpsaway.ug</a>
                       </p>
                     </div>
                   </motion.div>
@@ -397,8 +434,8 @@ export default function Contact() {
                     <div>
                       <h3 className="font-bold text-lg text-gray-800 mb-2">Call Us</h3>
                       <p className="text-gray-600 leading-relaxed">
-                        <a href="tel:+15551234567" className="hover:text-primary transition-colors">+1 (555) 123-4567</a><br />
-                        <a href="tel:+15557654321" className="hover:text-primary transition-colors">+1 (555) 765-4321</a>
+                        <a href="tel:+256752993950" className="hover:text-primary transition-colors">+256 752 993 950 (UG)</a><br />
+                        <a href="tel:+12023783398" className="hover:text-primary transition-colors">+1 202 378 3398 (US)</a>
                       </p>
                     </div>
                   </motion.div>
@@ -415,8 +452,15 @@ export default function Contact() {
                  </div>
                  
                  <p className="text-gray-600 mb-8 leading-relaxed">
-                   Stay connected with our latest updates, success stories, and community impact.
+                   Stay connected with our latest updates, stories of courage, and community events on our social media platforms.
                  </p>
+                 
+                 <div className="mb-8 p-6 bg-gradient-to-r from-pink-50 to-pink-100 rounded-2xl border border-pink-200">
+                   <h4 className="text-lg font-bold text-pink-800 mb-3">We Strongly Believe in the Power of Connection</h4>
+                   <p className="text-pink-700 leading-relaxed">
+                     Every conversation matters. Every story has value. Every person deserves support. We look forward to hearing from you.
+                   </p>
+                 </div>
                  
                  <div className="grid grid-cols-2 gap-4">
                    <motion.a 

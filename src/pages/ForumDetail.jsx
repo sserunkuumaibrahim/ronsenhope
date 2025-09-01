@@ -24,6 +24,8 @@ export default function ForumDetail() {
   const [hasLikedTopic, setHasLikedTopic] = useState(false);
   const [taggedReplies, setTaggedReplies] = useState({});
   const [isTagging, setIsTagging] = useState(false);
+  const [reportedReplies, setReportedReplies] = useState([]);
+  const [hasReportedTopic, setHasReportedTopic] = useState(false);
   
   useEffect(() => {
     const fetchTopicAndSetupRepliesListener = async () => {
@@ -231,6 +233,73 @@ export default function ForumDetail() {
     }
   };
 
+  const handleReport = async (type, itemId = null) => {
+    console.log('handleReport called with type:', type, 'itemId:', itemId);
+    console.log('currentUser:', currentUser);
+    
+    if (!currentUser) {
+      console.log('No current user, redirecting to login');
+      toast.error('Please log in to report content');
+      navigate('/login', { state: { from: `/forum/${id}` } });
+      return;
+    }
+
+    try {
+      if (type === 'topic') {
+        console.log('Reporting topic, hasReportedTopic:', hasReportedTopic);
+        if (hasReportedTopic) {
+          console.log('Topic already reported');
+          toast.info('You have already reported this topic');
+          return;
+        }
+
+        console.log('Creating topic report data...');
+        const reportData = {
+          reporterId: currentUser.uid,
+          reporterName: currentUser.displayName || currentUser.email,
+          topicId: id,
+          reason: 'Inappropriate content',
+          timestamp: Date.now(),
+          status: 'pending'
+        };
+        
+        console.log('Topic report data:', reportData);
+        const reportsRef = ref(realtimeDb, 'reports/topics');
+        console.log('Pushing topic report to Firebase...');
+        await push(reportsRef, reportData);
+        
+        console.log('Topic report saved successfully');
+        setHasReportedTopic(true);
+        toast.success('Topic reported successfully');
+        
+      } else if (type === 'reply') {
+        if (reportedReplies.includes(itemId)) {
+          toast.info('You have already reported this reply');
+          return;
+        }
+
+        const reportData = {
+          reporterId: currentUser.uid,
+          reporterName: currentUser.displayName || currentUser.email,
+          topicId: id,
+          replyId: itemId,
+          reason: 'Inappropriate content',
+          timestamp: Date.now(),
+          status: 'pending'
+        };
+        
+        const reportsRef = ref(realtimeDb, 'reports/replies');
+        await push(reportsRef, reportData);
+        
+        setReportedReplies(prev => [...prev, itemId]);
+        toast.success('Reply reported successfully');
+      }
+    } catch (error) {
+      console.error('Error reporting content:', error);
+      toast.error('Failed to report content');
+    }
+  };
+
   const handleTag = (replyId) => {
     if (!currentUser) {
       toast.info('Please log in to tag replies');
@@ -314,7 +383,7 @@ export default function ForumDetail() {
   return (
     <MainLayout>
       <Helmet>
-        <title>{topic?.title} - Forum - Charity NGO</title>
+        <title>{topic?.title} - Forum - Lumps Away Foundation</title>
         <meta name="description" content={`Join the discussion: ${topic?.title}`} />
       </Helmet>
       
@@ -407,6 +476,20 @@ export default function ForumDetail() {
                     <span className="font-medium">{Array.isArray(topic?.likes) ? topic?.likes.length : 0} Likes</span>
                   </motion.button>
                   
+                  <motion.button 
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    className={`flex items-center gap-2 px-4 py-2 rounded-xl transition-all duration-300 ${
+                      hasReportedTopic 
+                        ? 'bg-orange-50 text-orange-600 border border-orange-200' 
+                        : 'bg-gray-50 text-gray-600 border border-gray-200 hover:bg-orange-50 hover:text-orange-600 hover:border-orange-200'
+                    }`}
+                    onClick={() => handleReport('topic', topic?.id)}
+                  >
+                    <FiFlag size={18} /> 
+                    <span className="font-medium">{hasReportedTopic ? 'Reported' : 'Report'}</span>
+                  </motion.button>
+                  
                   <div className="flex items-center gap-2 text-gray-600">
                     <FiMessageCircle size={18} />
                     <span className="font-medium">{replies.length} Replies</span>
@@ -483,10 +566,19 @@ export default function ForumDetail() {
                                 <span className="font-medium">{Array.isArray(reply.likes) ? reply.likes.length : 0}</span>
                               </motion.button>
                               
-                              <button className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm bg-white text-gray-600 border border-gray-200 hover:bg-gray-50 transition-all duration-300">
+                              <motion.button 
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
+                                className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm transition-all duration-300 ${
+                                  reportedReplies.includes(reply.id)
+                                    ? 'bg-orange-50 text-orange-600 border border-orange-200'
+                                    : 'bg-white text-gray-600 border border-gray-200 hover:bg-orange-50 hover:text-orange-600 hover:border-orange-200'
+                                }`}
+                                onClick={() => handleReport('reply', reply.id)}
+                              >
                                 <FiFlag size={14} /> 
-                                <span>Report</span>
-                              </button>
+                                <span className="text-xs">{reportedReplies.includes(reply.id) ? 'Reported' : 'Report'}</span>
+                              </motion.button>
                               
                               <button 
                                 className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm transition-all duration-300 ${

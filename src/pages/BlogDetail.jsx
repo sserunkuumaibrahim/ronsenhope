@@ -26,14 +26,37 @@ export default function BlogDetail() {
         const docSnap = await getDoc(docRef);
         
         if (docSnap.exists()) {
+          const data = docSnap.data();
+          
+          // Helper function to safely convert date
+          const formatDate = (dateField) => {
+            if (!dateField) return null;
+            
+            // If it's a Firestore Timestamp
+            if (dateField.toDate && typeof dateField.toDate === 'function') {
+              return dateField.toDate().toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+              });
+            }
+            
+            // If it's a string date
+            if (typeof dateField === 'string') {
+              return new Date(dateField).toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+              });
+            }
+            
+            return null;
+          };
+          
           const postData = {
             id: docSnap.id,
-            ...docSnap.data(),
-            date: docSnap.data().createdAt?.toDate().toLocaleDateString('en-US', {
-              year: 'numeric',
-              month: 'long',
-              day: 'numeric'
-            }) || 'Unknown date'
+            ...data,
+            date: formatDate(data.createdAt) || 'Unknown date'
           };
           
           setPost(postData);
@@ -100,17 +123,41 @@ export default function BlogDetail() {
         limit(3)
       );
       
-      const querySnapshot = await getDocs(relatedPostsQuery);
-      const relatedPostsData = querySnapshot.docs
-        .map(doc => ({
-          id: doc.id,
-          ...doc.data(),
-          date: doc.data().createdAt?.toDate().toLocaleDateString('en-US', {
+      // Helper function to safely convert date
+      const formatDate = (dateField) => {
+        if (!dateField) return null;
+        
+        // If it's a Firestore Timestamp
+        if (dateField.toDate && typeof dateField.toDate === 'function') {
+          return dateField.toDate().toLocaleDateString('en-US', {
             year: 'numeric',
             month: 'long',
             day: 'numeric'
-          }) || 'Unknown date'
-        }))
+          });
+        }
+        
+        // If it's a string date
+        if (typeof dateField === 'string') {
+          return new Date(dateField).toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+          });
+        }
+        
+        return null;
+      };
+      
+      const querySnapshot = await getDocs(relatedPostsQuery);
+      const relatedPostsData = querySnapshot.docs
+        .map(doc => {
+          const data = doc.data();
+          return {
+            id: doc.id,
+            ...data,
+            date: formatDate(data.createdAt) || 'Unknown date'
+          };
+        })
         .filter(post => post.id !== currentPostId);
       
       setRelatedPosts(relatedPostsData);
@@ -182,9 +229,9 @@ export default function BlogDetail() {
   return (
     <MainLayout>
       <Helmet>
-        <title>{post.title} - Charity NGO</title>
-        <meta name="description" content={post.excerpt} />
-        <meta property="og:title" content={`${post.title} - Charity NGO`} />
+        <title>{post.title} - Lumps Away Foundation</title>
+          <meta name="description" content={post.excerpt} />
+          <meta property="og:title" content={`${post.title} - Lumps Away Foundation`} />
         <meta property="og:description" content={post.excerpt} />
         <meta property="og:type" content="article" />
         <meta property="og:image" content={post.image} />

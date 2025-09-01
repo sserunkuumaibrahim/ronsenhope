@@ -1,6 +1,6 @@
-# Charity NGO Web Application
+# Lumps Away Foundation Web Application
 
-A comprehensive web application for charity and NGO organizations, built with React, Vite, Tailwind CSS, DaisyUI, and Firebase.
+A comprehensive web application for the Lumps Away Foundation, supporting breast cancer patients and their families in Uganda. Built with React, Vite, Tailwind CSS, DaisyUI, and Firebase.
 
 ## Features
 
@@ -32,8 +32,8 @@ A comprehensive web application for charity and NGO organizations, built with Re
 
 1. Clone the repository
    ```bash
-   git clone https://github.com/yourusername/charity-ngo.git
-   cd charity-ngo
+   git clone https://github.com/yourusername/lumpsaway.git
+   cd lumpsaway
    ```
 
 2. Install dependencies

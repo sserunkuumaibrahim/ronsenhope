@@ -36,8 +36,8 @@ export default function ForgotPassword() {
   return (
     <MainLayout>
       <Helmet>
-        <title>Reset Password - Charity NGO</title>
-        <meta name="description" content="Reset your password for your Charity NGO account." />
+        <title>Reset Password - Lumps Away Foundation</title>
+        <meta name="description" content="Reset your password for your Lumps Away Foundation account." />
       </Helmet>
 
       <div className="container-custom py-16 md:py-24">

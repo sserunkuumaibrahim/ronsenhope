@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { FiPlus, FiEdit2, FiTrash2, FiSave, FiX, FiUsers, FiUser } from 'react-icons/fi';
+import { FiPlus, FiEdit2, FiTrash2, FiSave, FiX, FiUsers, FiUser, FiUpload } from 'react-icons/fi';
 import { ref, push, onValue, off, update, remove } from 'firebase/database';
-import { realtimeDb } from '../../firebase/config';
+import { ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { realtimeDb, storage } from '../../firebase/config';
 import AdminLayout from '../../components/layout/AdminLayout';
 
 export default function Teams() {
@@ -20,11 +21,9 @@ export default function Teams() {
     icon: ''
   });
 
-  const [memberForm, setMemberForm] = useState({
-    name: '',
-    role: '',
-    avatar: ''
-  });
+  const [memberForm, setMemberForm] = useState({ name: '', role: '', avatar: '' });
+  const [uploadingImage, setUploadingImage] = useState(false);
+  const [imagePreview, setImagePreview] = useState(null);
 
   // Fetch teams from Firebase
   useEffect(() => {
@@ -92,6 +91,40 @@ export default function Teams() {
     }
   };
 
+  // Handle image upload
+  const handleImageUpload = async (file) => {
+    if (!file) return null;
+    
+    setUploadingImage(true);
+    try {
+      const imageRef = storageRef(storage, `team-members/${Date.now()}_${file.name}`);
+      const snapshot = await uploadBytes(imageRef, file);
+      const downloadURL = await getDownloadURL(snapshot.ref);
+      return downloadURL;
+    } catch (error) {
+      console.error('Error uploading image:', error);
+      return null;
+    } finally {
+      setUploadingImage(false);
+    }
+  };
+
+  const handleFileChange = async (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      // Create preview
+      const reader = new FileReader();
+      reader.onload = (e) => setImagePreview(e.target.result);
+      reader.readAsDataURL(file);
+      
+      // Upload image
+      const imageUrl = await handleImageUpload(file);
+      if (imageUrl) {
+        setMemberForm({ ...memberForm, avatar: imageUrl });
+      }
+    }
+  };
+
   // Handle member operations
   const handleAddMember = async (e) => {
     e.preventDefault();
@@ -109,6 +142,7 @@ export default function Teams() {
       });
       
       setMemberForm({ name: '', role: '', avatar: '' });
+      setImagePreview(null);
       setShowAddMemberForm(null);
     } catch (error) {
       console.error('Error adding member:', error);
@@ -131,6 +165,7 @@ export default function Teams() {
       
       setEditingMember(null);
       setMemberForm({ name: '', role: '', avatar: '' });
+      setImagePreview(null);
     } catch (error) {
       console.error('Error updating member:', error);
     }
@@ -169,6 +204,7 @@ export default function Teams() {
       role: member.role,
       avatar: member.avatar
     });
+    setImagePreview(member.avatar);
   };
 
   if (loading) {
@@ -398,15 +434,31 @@ export default function Teams() {
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Avatar URL</label>
-                        <input
-                          type="url"
-                          value={memberForm.avatar}
-                          onChange={(e) => setMemberForm({ ...memberForm, avatar: e.target.value })}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500"
-                          placeholder="https://images.unsplash.com/..."
-                          required
-                        />
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Avatar Image</label>
+                        <div className="space-y-3">
+                          <input
+                            type="file"
+                            accept="image/*"
+                            onChange={handleFileChange}
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500"
+                            disabled={uploadingImage}
+                          />
+                          {uploadingImage && (
+                            <div className="flex items-center gap-2 text-sm text-gray-600">
+                              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-pink-600"></div>
+                              Uploading image...
+                            </div>
+                          )}
+                          {imagePreview && (
+                            <div className="mt-2">
+                              <img
+                                src={imagePreview}
+                                alt="Preview"
+                                className="w-20 h-20 object-cover rounded-full border-2 border-gray-200"
+                              />
+                            </div>
+                          )}
+                        </div>
                       </div>
                     </div>
                     <div className="flex gap-2">
@@ -422,6 +474,7 @@ export default function Teams() {
                         onClick={() => {
                           setShowAddMemberForm(null);
                           setMemberForm({ name: '', role: '', avatar: '' });
+                          setImagePreview(null);
                         }}
                         className="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600 transition-colors flex items-center gap-2"
                       >
@@ -463,14 +516,31 @@ export default function Teams() {
                               />
                             </div>
                             <div>
-                              <label className="block text-sm font-medium text-gray-700 mb-1">Avatar URL</label>
-                              <input
-                                type="url"
-                                value={memberForm.avatar}
-                                onChange={(e) => setMemberForm({ ...memberForm, avatar: e.target.value })}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500"
-                                required
-                              />
+                              <label className="block text-sm font-medium text-gray-700 mb-1">Avatar Image</label>
+                              <div className="space-y-3">
+                                <input
+                                  type="file"
+                                  accept="image/*"
+                                  onChange={handleFileChange}
+                                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500"
+                                  disabled={uploadingImage}
+                                />
+                                {uploadingImage && (
+                                  <div className="flex items-center gap-2 text-sm text-gray-600">
+                                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-pink-600"></div>
+                                    Uploading image...
+                                  </div>
+                                )}
+                                {imagePreview && (
+                                  <div className="mt-2">
+                                    <img
+                                      src={imagePreview}
+                                      alt="Preview"
+                                      className="w-20 h-20 object-cover rounded-full border-2 border-gray-200"
+                                    />
+                                  </div>
+                                )}
+                              </div>
                             </div>
                             <div className="flex gap-2">
                               <button
@@ -485,6 +555,7 @@ export default function Teams() {
                                 onClick={() => {
                                   setEditingMember(null);
                                   setMemberForm({ name: '', role: '', avatar: '' });
+                                  setImagePreview(null);
                                 }}
                                 className="bg-gray-500 text-white px-3 py-1 rounded-md hover:bg-gray-600 transition-colors flex items-center gap-1 text-sm"
                               >

@@ -658,7 +658,7 @@ export default function Profile() {
   return (
     <MainLayout>
       <Helmet>
-        <title>Your Profile - Charity NGO</title>
+        <title>Your Profile - Lumps Away Foundation</title>
         <meta name="description" content="Manage your profile, donations, and volunteer activities." />
       </Helmet>
 

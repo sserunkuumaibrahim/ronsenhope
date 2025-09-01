@@ -164,6 +164,72 @@ export default function Reports() {
             { title: 'Volunteer Opportunities Discussion', type: 'Forum', views: 567, shares: 23 }
           ]
         };
+      } else if (reportType === 'moderation') {
+        data = {
+          summary: {
+            totalReports: 23,
+            pendingReports: 8,
+            resolvedReports: 15,
+            topicReports: 12,
+            replyReports: 11,
+            averageResolutionTime: 2.4
+          },
+          reportsByStatus: [
+            { status: 'Pending', count: 8, percentage: 34.8 },
+            { status: 'Resolved', count: 15, percentage: 65.2 }
+          ],
+          reportsByType: [
+            { type: 'Topic Reports', count: 12, percentage: 52.2 },
+            { type: 'Reply Reports', count: 11, percentage: 47.8 }
+          ],
+          recentReports: [
+            {
+              id: 'RPT001',
+              type: 'Topic',
+              title: 'Inappropriate language in discussion',
+              reporter: 'John Doe',
+              reported: '2 hours ago',
+              status: 'pending',
+              reason: 'Inappropriate content'
+            },
+            {
+              id: 'RPT002',
+              type: 'Reply',
+              title: 'Spam content in reply',
+              reporter: 'Jane Smith',
+              reported: '4 hours ago',
+              status: 'pending',
+              reason: 'Spam'
+            },
+            {
+              id: 'RPT003',
+              type: 'Topic',
+              title: 'Off-topic discussion',
+              reporter: 'Mike Johnson',
+              reported: '1 day ago',
+              status: 'resolved',
+              reason: 'Off-topic'
+            },
+            {
+              id: 'RPT004',
+              type: 'Reply',
+              title: 'Harassment in comments',
+              reporter: 'Sarah Wilson',
+              reported: '2 days ago',
+              status: 'resolved',
+              reason: 'Harassment'
+            },
+            {
+              id: 'RPT005',
+              type: 'Topic',
+              title: 'Misleading information',
+              reporter: 'David Brown',
+              reported: '3 days ago',
+              status: 'pending',
+              reason: 'Misinformation'
+            }
+          ]
+        };
       }
       
       setReportData(data);
@@ -275,6 +341,7 @@ export default function Reports() {
                 <option value="users">User Analytics</option>
                 <option value="programs">Program Performance</option>
                 <option value="engagement">Content Engagement</option>
+                <option value="moderation">Content Moderation</option>
               </select>
             </div>
             
@@ -497,6 +564,54 @@ export default function Reports() {
                 </div>
               </>
             )}
+            
+            {reportType === 'moderation' && (
+              <>
+                <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="w-12 h-12 bg-red-500 rounded-full flex items-center justify-center">
+                      <FiActivity className="w-6 h-6 text-white" />
+                    </div>
+                    <span className="text-blue-600 text-sm font-medium">{reportData.summary.pendingReports} Pending</span>
+                  </div>
+                  <h3 className="text-2xl font-bold text-gray-900 mb-1">{reportData.summary.totalReports}</h3>
+                  <p className="text-gray-600 text-sm">Total Reports</p>
+                </div>
+                
+                <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="w-12 h-12 bg-yellow-500 rounded-full flex items-center justify-center">
+                      <FiCalendar className="w-6 h-6 text-white" />
+                    </div>
+                    <span className="text-orange-600 text-sm font-medium">Pending</span>
+                  </div>
+                  <h3 className="text-2xl font-bold text-gray-900 mb-1">{reportData.summary.pendingReports}</h3>
+                  <p className="text-gray-600 text-sm">Pending Review</p>
+                </div>
+                
+                <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center">
+                      <FiTrendingUp className="w-6 h-6 text-white" />
+                    </div>
+                    <span className="text-green-600 text-sm font-medium">Resolved</span>
+                  </div>
+                  <h3 className="text-2xl font-bold text-gray-900 mb-1">{reportData.summary.resolvedReports}</h3>
+                  <p className="text-gray-600 text-sm">Resolved Reports</p>
+                </div>
+                
+                <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center">
+                      <FiBarChart2 className="w-6 h-6 text-white" />
+                    </div>
+                    <span className="text-blue-600 text-sm font-medium">{reportData.summary.averageResolutionTime}h avg</span>
+                  </div>
+                  <h3 className="text-2xl font-bold text-gray-900 mb-1">{reportData.summary.averageResolutionTime}h</h3>
+                  <p className="text-gray-600 text-sm">Avg Resolution Time</p>
+                </div>
+              </>
+            )}
           </div>
 
           {/* Charts and Detailed Data */}
@@ -636,6 +751,22 @@ export default function Reports() {
                     </div>
                   </div>
                 ))}
+                
+                {reportType === 'moderation' && reportData.recentReports.slice(0, 5).map((item, index) => (
+                  <div key={index} className="flex items-center justify-between py-2 border-b border-gray-100 last:border-b-0">
+                    <div className="flex-1">
+                      <div className="text-sm font-medium text-gray-900 truncate">{item.title}</div>
+                      <div className="text-xs text-gray-500">{item.type} • {item.reason}</div>
+                    </div>
+                    <div className="flex items-center gap-2 text-right">
+                      <span className={`px-2 py-1 text-xs rounded-full ${
+                        item.status === 'pending' ? 'bg-yellow-100 text-yellow-800' : 'bg-green-100 text-green-800'
+                      }`}>
+                        {item.status}
+                      </span>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
@@ -685,6 +816,47 @@ export default function Reports() {
                         <td className="py-3 px-4 text-gray-900">{item.location}</td>
                         <td className="py-3 px-4 text-right font-medium">{item.programs}</td>
                         <td className="py-3 px-4 text-right text-gray-600">{formatNumber(item.beneficiaries)}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+
+          {reportType === 'moderation' && (
+            <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
+              <h3 className="text-xl font-semibold text-gray-900 mb-6">Recent Reports</h3>
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead>
+                    <tr className="border-b border-gray-200">
+                      <th className="text-left py-3 px-4 font-medium text-gray-700">Report ID</th>
+                      <th className="text-left py-3 px-4 font-medium text-gray-700">Content</th>
+                      <th className="text-left py-3 px-4 font-medium text-gray-700">Reporter</th>
+                      <th className="text-left py-3 px-4 font-medium text-gray-700">Reason</th>
+                      <th className="text-left py-3 px-4 font-medium text-gray-700">Status</th>
+                      <th className="text-left py-3 px-4 font-medium text-gray-700">Date</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {reportData.recentReports.map((item, index) => (
+                      <tr key={index} className="border-b border-gray-100">
+                        <td className="py-3 px-4 text-gray-900 font-mono text-sm">{item.id}</td>
+                        <td className="py-3 px-4">
+                          <div className="text-gray-900 font-medium">{item.title}</div>
+                          <div className="text-xs text-gray-500">{item.type}</div>
+                        </td>
+                        <td className="py-3 px-4 text-gray-600">{item.reporter}</td>
+                        <td className="py-3 px-4 text-gray-600">{item.reason}</td>
+                        <td className="py-3 px-4">
+                          <span className={`px-2 py-1 text-xs rounded-full ${
+                            item.status === 'pending' ? 'bg-yellow-100 text-yellow-800' : 'bg-green-100 text-green-800'
+                          }`}>
+                            {item.status}
+                          </span>
+                        </td>
+                        <td className="py-3 px-4 text-gray-600 text-sm">{item.reported}</td>
                       </tr>
                     ))}
                   </tbody>

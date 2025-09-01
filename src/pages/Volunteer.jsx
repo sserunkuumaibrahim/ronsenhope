@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import { FiCalendar, FiMapPin, FiClock, FiUsers, FiHeart, FiStar, FiUser, FiMail, FiPhone, FiMessageSquare, FiDollarSign } from 'react-icons/fi';
 import MainLayout from '../components/layout/MainLayout';
 import { db } from '../firebase/config';
-import { collection, addDoc } from 'firebase/firestore';
+import { collection, addDoc, getDocs } from 'firebase/firestore';
 import { realtimeDb } from '../firebase/config';
 import { ref, onValue, off } from 'firebase/database';
 
@@ -58,6 +58,8 @@ export default function Volunteer() {
   };
 
   // Volunteer opportunities data
+  const [testimonials, setTestimonials] = useState([]);
+  const [loadingTestimonials, setLoadingTestimonials] = useState(true);
   const [opportunities, setOpportunities] = useState([
     {
       id: 1,
@@ -121,6 +123,55 @@ export default function Volunteer() {
     }
   ]);
 
+  // Fetch testimonials from Firebase
+  useEffect(() => {
+    const fetchTestimonials = async () => {
+      try {
+        const testimonialsSnapshot = await getDocs(collection(db, 'testimonials'));
+        const testimonialsData = testimonialsSnapshot.docs
+          .map(doc => ({
+            id: doc.id,
+            ...doc.data()
+          }))
+          .filter(testimonial => testimonial.status === 'active'); // Only show active testimonials
+        setTestimonials(testimonialsData);
+      } catch (error) {
+        console.error('Error fetching testimonials:', error);
+        // Fallback to hardcoded data if Firebase fails
+        setTestimonials([
+          {
+            id: 1,
+            name: 'James Wilson',
+            role: 'Clean Water Project Volunteer',
+            image: 'https://randomuser.me/api/portraits/men/41.jpg',
+            content: 'Volunteering with Lumps Away Foundation has been one of the most rewarding experiences of my life. Seeing the direct impact of our work on breast cancer patients and their families is incredibly fulfilling.',
+            rating: 5
+          },
+          {
+            id: 2,
+            name: 'Maria Rodriguez',
+            role: 'Youth Mentor',
+            image: 'https://randomuser.me/api/portraits/women/63.jpg',
+            content: 'The relationships I\'ve built with the youth I mentor have changed my perspective on life. It\'s amazing to see their growth and know that I played a small part in helping them realize their potential.',
+            rating: 5
+          },
+          {
+            id: 3,
+            name: 'David Chen',
+            role: 'Digital Skills Trainer',
+            image: 'https://randomuser.me/api/portraits/men/67.jpg',
+            content: 'Teaching digital skills to seniors has been so rewarding. The moment when someone sends their first email to a grandchild or successfully applies for a job online is priceless.',
+            rating: 5
+          }
+        ]);
+      } finally {
+        setLoadingTestimonials(false);
+      }
+    };
+
+    fetchTestimonials();
+  }, []);
+
   // Fetch opportunities from Firebase Realtime Database
   useEffect(() => {
     const opportunitiesRef = ref(realtimeDb, 'opportunities');
@@ -144,30 +195,7 @@ export default function Volunteer() {
     return () => off(opportunitiesRef, 'value', unsubscribe);
   }, []);
 
-  // Testimonials data
-  const testimonials = [
-    {
-      id: 1,
-      name: 'James Wilson',
-      role: 'Clean Water Project Volunteer',
-      image: 'https://randomuser.me/api/portraits/men/41.jpg',
-      quote: 'Volunteering with Charity NGO has been one of the most rewarding experiences of my life. Seeing the direct impact of our work on communities that now have access to clean water is incredibly fulfilling.'
-    },
-    {
-      id: 2,
-      name: 'Maria Rodriguez',
-      role: 'Youth Mentor',
-      image: 'https://randomuser.me/api/portraits/women/63.jpg',
-      quote: 'The relationships I\'ve built with the youth I mentor have changed my perspective on life. It\'s amazing to see their growth and know that I played a small part in helping them realize their potential.'
-    },
-    {
-      id: 3,
-      name: 'David Chen',
-      role: 'Digital Skills Trainer',
-      image: 'https://randomuser.me/api/portraits/men/67.jpg',
-      quote: 'Teaching digital skills to seniors has been so rewarding. The moment when someone sends their first email to a grandchild or successfully applies for a job online is priceless.'
-    }
-  ];
+
 
   // Handle form input changes
   const handleInputChange = (e) => {
@@ -232,7 +260,7 @@ export default function Volunteer() {
   return (
     <MainLayout>
       <Helmet>
-        <title>Volunteer - Charity NGO</title>
+        <title>Volunteer - Lumps Away Foundation</title>
         <meta name="description" content="Join our volunteer program and make a direct impact in communities around the world. Find opportunities that match your skills and interests." />
       </Helmet>
       
@@ -330,7 +358,7 @@ export default function Volunteer() {
               Why Volunteer With Us?
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-              Volunteering with Charity NGO offers unique opportunities to make a real difference while developing new skills and connections.
+              Volunteering with Lumps Away Foundation offers unique opportunities to make a real difference while developing new skills and connections.
             </p>
           </motion.div>
           
@@ -493,7 +521,7 @@ export default function Volunteer() {
                         <div className="mb-6">
                           <div className="text-sm font-semibold mb-2 text-gray-800">Skills Needed:</div>
                           <div className="flex flex-wrap gap-2">
-                            {opportunity.skills.map((skill, skillIndex) => (
+                            {(opportunity.skills || []).map((skill, skillIndex) => (
                               <span key={skillIndex} className="px-3 py-1 bg-gray-100 text-gray-700 text-sm rounded-full border border-gray-200 hover:bg-gray-200 transition-colors duration-200">
                                 {skill}
                               </span>
@@ -543,54 +571,66 @@ export default function Volunteer() {
                   </p>
                 </div>
                 
-                <motion.div 
-                  variants={containerVariants}
-                  initial="hidden"
-                  whileInView="visible"
-                  viewport={{ once: true }}
-                  className="grid grid-cols-1 md:grid-cols-3 gap-8"
-                >
-                  {testimonials.map((testimonial, index) => {
-                    
-                    return (
-                      <motion.div key={testimonial.id} variants={itemVariants} className="group relative">
-                        <div className="absolute inset-0 bg-pink-500 rounded-2xl transform rotate-1 group-hover:rotate-2 transition-transform duration-300 opacity-10"></div>
-                        <div className="relative bg-white rounded-2xl p-8 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 border border-gray-100">
-                          <div className="flex items-center mb-6">
-                            <div className="relative">
-                              <img 
-                                src={testimonial.image} 
-                                alt={testimonial.name} 
-                                className="w-16 h-16 rounded-full object-cover border-4 border-white shadow-lg"
-                              />
-                              <div className="absolute -bottom-2 -right-2 w-6 h-6 bg-pink-500 rounded-full flex items-center justify-center">
-                                <FiHeart className="text-white text-xs" />
+                {loadingTestimonials ? (
+                  <div className="flex justify-center items-center py-12">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+                  </div>
+                ) : testimonials.length === 0 ? (
+                  <div className="text-center py-12">
+                    <p className="text-gray-500">No testimonials available at the moment.</p>
+                  </div>
+                ) : (
+                  <motion.div 
+                    variants={containerVariants}
+                    initial="hidden"
+                    whileInView="visible"
+                    viewport={{ once: true }}
+                    className="grid grid-cols-1 md:grid-cols-3 gap-8"
+                  >
+                    {testimonials.slice(0, 3).map((testimonial, index) => {
+                      return (
+                        <motion.div key={testimonial.id} variants={itemVariants} className="group relative">
+                          <div className="absolute inset-0 bg-pink-500 rounded-2xl transform rotate-1 group-hover:rotate-2 transition-transform duration-300 opacity-10"></div>
+                          <div className="relative bg-white rounded-2xl p-8 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 border border-gray-100">
+                            <div className="flex items-center mb-6">
+                              <div className="relative">
+                                <img 
+                                  src={testimonial.image || testimonial.imageUrl || 'https://randomuser.me/api/portraits/lego/1.jpg'} 
+                                  alt={testimonial.name} 
+                                  className="w-16 h-16 rounded-full object-cover border-4 border-white shadow-lg"
+                                />
+                                <div className="absolute -bottom-2 -right-2 w-6 h-6 bg-pink-500 rounded-full flex items-center justify-center">
+                                  <FiHeart className="text-white text-xs" />
+                                </div>
+                              </div>
+                              <div className="ml-4">
+                                <h3 className="font-bold text-gray-800 text-lg">{testimonial.name}</h3>
+                                <div className="text-sm text-gray-500 font-medium">{testimonial.role}</div>
+                                {testimonial.organization && (
+                                  <div className="text-xs text-gray-400">{testimonial.organization}</div>
+                                )}
                               </div>
                             </div>
-                            <div className="ml-4">
-                              <h3 className="font-bold text-gray-800 text-lg">{testimonial.name}</h3>
-                              <div className="text-sm text-gray-500 font-medium">{testimonial.role}</div>
+                            <div className="relative">
+                              <div className="text-4xl text-pink-500 absolute -top-4 -left-2 opacity-50">
+                                &ldquo;
+                              </div>
+                              <p className="italic text-gray-600 leading-relaxed pl-6 pr-6">{testimonial.content || testimonial.quote}</p>
+                              <div className="text-4xl text-pink-500 absolute -bottom-8 -right-2 opacity-50">
+                                &rdquo;
+                              </div>
+                            </div>
+                            <div className="flex justify-center mt-6">
+                              {[...Array(5)].map((_, i) => (
+                                <FiStar key={i} className={`text-lg ${i < (testimonial.rating || 5) ? 'text-yellow-400 fill-current' : 'text-gray-300'}`} />
+                              ))}
                             </div>
                           </div>
-                          <div className="relative">
-                            <div className="text-4xl text-pink-500 absolute -top-4 -left-2 opacity-50">
-                              &ldquo;
-                            </div>
-                            <p className="italic text-gray-600 leading-relaxed pl-6 pr-6">{testimonial.quote}</p>
-                            <div className="text-4xl text-pink-500 absolute -bottom-8 -right-2 opacity-50">
-                              &rdquo;
-                            </div>
-                          </div>
-                          <div className="flex justify-center mt-6">
-                            {[...Array(5)].map((_, i) => (
-                              <FiStar key={i} className={`text-lg ${i < 5 ? 'text-yellow-400 fill-current' : 'text-gray-300'}`} />
-                            ))}
-                          </div>
-                        </div>
-                      </motion.div>
-                    );
-                  })}
-                </motion.div>
+                        </motion.div>
+                      );
+                    })}
+                  </motion.div>
+                )}
               </motion.div>
             )}
             

@@ -28,7 +28,8 @@ export default function Stories() {
     author: '',
     category: '',
     status: 'draft',
-    tags: []
+    tags: [],
+    newsSourceLink: ''
   });
   const [imageFile, setImageFile] = useState(null);
   const [uploading, setUploading] = useState(false);
@@ -131,8 +132,19 @@ export default function Stories() {
     }
   };
 
-  const categories = ['all', 'water', 'education', 'healthcare', 'relief', 'volunteers', 'environment'];
+  const categories = ['all', 'lindas-blog', 'stories-of-hope', 'news'];
   const statuses = ['all', 'published', 'draft', 'archived'];
+
+  // Helper function to format category names
+  const formatCategoryName = (category) => {
+    switch(category) {
+      case 'lindas-blog': return "Linda's Blog";
+      case 'stories-of-hope': return 'Stories of Hope';
+      case 'news': return 'News';
+      case 'all': return 'All Categories';
+      default: return category.charAt(0).toUpperCase() + category.slice(1);
+    }
+  };
 
   const filteredStories = stories.filter(story => {
     const matchesSearch = story.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -377,7 +389,7 @@ export default function Stories() {
               >
                 {categories.map(category => (
                   <option key={category} value={category}>
-                    {category === 'all' ? 'All Categories' : category.charAt(0).toUpperCase() + category.slice(1)}
+                    {formatCategoryName(category)}
                   </option>
                 ))}
               </select>
@@ -448,7 +460,7 @@ export default function Stories() {
               {/* Badges */}
               <div className="absolute top-3 left-3 flex gap-2">
                 <span className={`px-2 py-1 rounded-lg text-xs font-medium ${getCategoryColor(story.category)}`}>
-                  {story.category.charAt(0).toUpperCase() + story.category.slice(1)}
+                  {formatCategoryName(story.category)}
                 </span>
                 <span className={`px-2 py-1 rounded-lg text-xs font-medium ${getStatusColor(story.status)}`}>
                   {story.status.charAt(0).toUpperCase() + story.status.slice(1)}
@@ -574,7 +586,7 @@ export default function Stories() {
                   <select className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50">
                     {categories.slice(1).map(category => (
                       <option key={category} value={category}>
-                        {category.charAt(0).toUpperCase() + category.slice(1)}
+                        {formatCategoryName(category)}
                       </option>
                     ))}
                   </select>
@@ -727,7 +739,7 @@ export default function Stories() {
                 <div className="flex-1">
                   <div className="flex items-center gap-3 mb-4">
                     <span className={`px-3 py-1 rounded-lg text-sm font-medium ${getCategoryColor(selectedStory.category)}`}>
-                      {selectedStory.category.charAt(0).toUpperCase() + selectedStory.category.slice(1)}
+                      {formatCategoryName(selectedStory.category)}
                     </span>
                     <span className={`px-3 py-1 rounded-lg text-sm font-medium ${getStatusColor(selectedStory.status)}`}>
                       {selectedStory.status.charAt(0).toUpperCase() + selectedStory.status.slice(1)}
@@ -889,7 +901,7 @@ export default function Stories() {
                       <option value="">Select category</option>
                       {categories.filter(cat => cat !== 'all').map(category => (
                         <option key={category} value={category}>
-                          {category.charAt(0).toUpperCase() + category.slice(1)}
+                          {formatCategoryName(category)}
                         </option>
                       ))}
                     </select>
@@ -931,6 +943,32 @@ export default function Stories() {
                     placeholder="tag1, tag2, tag3"
                   />
                 </div>
+                
+                {formData.category === 'news' && (
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">News Source Link</label>
+                    <input
+                      type="url"
+                      value={formData.newsSourceLink}
+                      onChange={(e) => setFormData({...formData, newsSourceLink: e.target.value})}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                      placeholder="https://example.com/news-article"
+                    />
+                  </div>
+                )}
+                
+                {formData.category === 'news' && (
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">News Source Link</label>
+                    <input
+                      type="url"
+                      value={formData.newsSourceLink}
+                      onChange={(e) => setFormData({...formData, newsSourceLink: e.target.value})}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                      placeholder="https://example.com/news-article"
+                    />
+                  </div>
+                )}
               </div>
               
               <div className="flex gap-3 mt-6">
@@ -1039,7 +1077,7 @@ export default function Stories() {
                       <option value="">Select category</option>
                       {categories.filter(cat => cat !== 'all').map(category => (
                         <option key={category} value={category}>
-                          {category.charAt(0).toUpperCase() + category.slice(1)}
+                          {formatCategoryName(category)}
                         </option>
                       ))}
                     </select>

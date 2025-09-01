@@ -142,10 +142,10 @@ export default function Blog() {
   return (
     <MainLayout>
       <Helmet>
-        <title>Blog - Charity NGO</title>
-        <meta name="description" content="Stay updated with the latest news, stories, and insights from our charity work around the world." />
-        <meta property="og:title" content="Blog - Charity NGO" />
-        <meta property="og:description" content="Stay updated with the latest news, stories, and insights from our charity work around the world." />
+        <title>Blog - Lumps Away Foundation</title>
+        <meta name="description" content="Stay updated with the latest news, stories, and insights from our breast cancer support work in Uganda." />
+        <meta property="og:title" content="Blog - Lumps Away Foundation" />
+        <meta property="og:description" content="Stay updated with the latest news, stories, and insights from our breast cancer support work in Uganda." />
         <meta property="og:type" content="website" />
         <link rel="canonical" href="/blog" />
       </Helmet>
@@ -173,7 +173,7 @@ export default function Blog() {
               transition={{ duration: 0.8, delay: 0.4 }}
               className="text-xl md:text-2xl mb-8 text-secondary/80 leading-relaxed"
             >
-              Stay updated with the latest news, stories, and insights from our charity work around the world.
+              Stay updated with the latest news, stories, and insights from our breast cancer support work in Uganda.
             </motion.p>
             
             <motion.div

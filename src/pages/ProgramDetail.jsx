@@ -4,6 +4,8 @@ import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
 import { FiMapPin, FiCalendar, FiUsers, FiDollarSign, FiClock, FiArrowLeft, FiShare2, FiHeart } from 'react-icons/fi';
 import MainLayout from '../components/layout/MainLayout';
+import { db } from '../firebase/config';
+import { doc, getDoc } from 'firebase/firestore';
 
 export default function ProgramDetail() {
   const { id } = useParams();
@@ -12,109 +14,34 @@ export default function ProgramDetail() {
   const [activeTab, setActiveTab] = useState('overview');
 
   useEffect(() => {
-    // Simulate API fetch
     const fetchProgram = async () => {
       setLoading(true);
-      // In a real app, this would be an API call
-      await new Promise(resolve => setTimeout(resolve, 800));
-      
-      // Sample program data
-      const programData = {
-        id: parseInt(id),
-        title: 'Clean Water Initiative',
-        category: 'environment',
-        location: 'East Africa',
-        participants: 5000,
-        startDate: 'January 2023',
-        endDate: 'December 2025',
-        description: 'Providing clean and safe drinking water to communities in need through sustainable water solutions.',
-        longDescription: `Access to clean water is a fundamental human right, yet millions of people around the world still lack this basic necessity. Our Clean Water Initiative aims to address this critical issue by implementing sustainable water solutions in communities across East Africa.
-
-Through a combination of well-drilling, rainwater harvesting systems, and water purification technologies, we're working to ensure that families have reliable access to safe drinking water. This not only improves health outcomes but also reduces the time spent collecting water, allowing children to attend school and adults to engage in productive activities.
-
-Our approach involves close collaboration with local communities to ensure that solutions are appropriate for their specific needs and can be maintained long-term. We also provide education on water conservation, hygiene practices, and system maintenance to maximize the impact of our interventions.`,
-        image: 'https://images.unsplash.com/photo-1541252260730-0412e8e2108e?ixlib=rb-1.2.1&auto=format&fit=crop&w=1200&q=80',
-        gallery: [
-          'https://images.unsplash.com/photo-1541252260730-0412e8e2108e?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80',
-          'https://images.unsplash.com/photo-1520116468816-95b69f847357?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80',
-          'https://images.unsplash.com/photo-1594398901394-4e34939a4fd0?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80',
-          'https://images.unsplash.com/photo-1616544030366-f320c7e1be46?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80'
-        ],
-        progress: 75,
-        budget: 500000,
-        raised: 375000,
-        goals: [
-          'Provide clean water access to 100,000 people',
-          'Install 500 water wells across the region',
-          'Reduce waterborne diseases by 80% in target communities',
-          'Train 1,000 local technicians in system maintenance'
-        ],
-        impact: [
-          '5,000 people now have access to clean water',
-          '50 wells installed in 25 communities',
-          '60% reduction in waterborne diseases reported',
-          '120 local technicians trained'
-        ],
-        team: [
-          { 
-            name: 'Dr. Sarah Johnson', 
-            role: 'Program Director', 
-            image: 'https://randomuser.me/api/portraits/women/44.jpg',
-            experience: 12,
-            email: 'sarah.johnson@cleanwater.org',
-            specialties: ['Water Systems Management', 'Public Health', 'Project Leadership'],
-            education: 'PhD in Environmental Engineering, MIT',
-            bio: 'Leading water access initiatives across Africa for over a decade with expertise in sustainable development.'
-          },
-          { 
-            name: 'Michael Ochieng', 
-            role: 'Regional Coordinator', 
-            image: 'https://randomuser.me/api/portraits/men/32.jpg',
-            experience: 8,
-            email: 'michael.ochieng@cleanwater.org',
-            specialties: ['Community Engagement', 'Local Partnerships', 'Cultural Integration'],
-            education: 'MSc in Development Studies, University of Nairobi',
-            bio: 'Native to the region with deep understanding of local communities and sustainable development practices.'
-          },
-          { 
-            name: 'Emma Williams', 
-            role: 'Water Engineer', 
-            image: 'https://randomuser.me/api/portraits/women/68.jpg',
-            experience: 6,
-            email: 'emma.williams@cleanwater.org',
-            specialties: ['Well Drilling', 'Pump Systems', 'Water Quality Testing'],
-            education: 'BEng in Civil Engineering, Imperial College London',
-            bio: 'Specialized in designing and implementing water infrastructure solutions for rural communities.'
-          },
-          { 
-            name: 'David Mutua', 
-            role: 'Community Liaison', 
-            image: 'https://randomuser.me/api/portraits/men/75.jpg',
-            experience: 10,
-            email: 'david.mutua@cleanwater.org',
-            specialties: ['Community Mobilization', 'Training Programs', 'Stakeholder Relations'],
-            education: 'BA in Social Work, Kenyatta University',
-            bio: 'Experienced in building trust and facilitating collaboration between international organizations and local communities.'
-          }
-        ],
-        updates: [
-          { date: 'June 15, 2023', title: 'New Region Added', content: 'We\'re expanding our program to include the northern districts, reaching an additional 15 communities.' },
-          { date: 'April 3, 2023', title: 'Training Complete', content: '50 new technicians have completed their training and are now supporting their local water systems.' },
-          { date: 'February 20, 2023', title: 'Milestone Reached', content: 'We\'ve completed our 50th well installation, providing clean water to over 5,000 people.' }
-        ],
-        faqs: [
-          { question: 'How are communities selected for this program?', answer: 'Communities are selected based on a needs assessment that considers current water access, population density, and vulnerability factors. We work closely with local governments and community leaders to identify priority areas.' },
-          { question: 'What technologies are being used?', answer: 'We implement a range of solutions including deep wells with hand pumps, solar-powered pumping systems, rainwater harvesting structures, and point-of-use water purification methods. The specific technology is chosen based on local conditions and needs.' },
-          { question: 'How is sustainability ensured?', answer: 'We train local technicians to maintain the systems and establish water committees that collect small user fees to fund ongoing maintenance. We also partner with local governments to ensure long-term support.' },
-          { question: 'Can I volunteer for this program?', answer: 'Yes! We welcome volunteers with relevant skills, particularly in engineering, public health, and community development. Visit our volunteer page to learn more.' }
-        ]
-      };
-      
-      setProgram(programData);
-      setLoading(false);
+      try {
+        const programDoc = doc(db, 'programs', id);
+        const programSnapshot = await getDoc(programDoc);
+        
+        if (programSnapshot.exists()) {
+          const programData = {
+            id: programSnapshot.id,
+            ...programSnapshot.data(),
+            createdAt: programSnapshot.data().createdAt?.toDate?.() || new Date(),
+            updatedAt: programSnapshot.data().updatedAt?.toDate?.() || new Date()
+          };
+          setProgram(programData);
+        } else {
+          setProgram(null);
+        }
+      } catch (error) {
+        console.error('Error fetching program:', error);
+        setProgram(null);
+      } finally {
+        setLoading(false);
+      }
     };
 
-    fetchProgram();
+    if (id) {
+      fetchProgram();
+    }
   }, [id]);
 
   if (loading) {
@@ -157,7 +84,7 @@ Our approach involves close collaboration with local communities to ensure that 
         <div>
           <h3 className="text-2xl font-semibold mb-4">Program Goals</h3>
           <ul className="space-y-2">
-            {program.goals.map((goal, index) => (
+            {(program?.goals || []).map((goal, index) => (
               <li key={index} className="flex items-start">
                 <svg className="h-6 w-6 text-primary mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -171,7 +98,7 @@ Our approach involves close collaboration with local communities to ensure that 
         <div>
           <h3 className="text-2xl font-semibold mb-4">Current Impact</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {program.impact.map((impact, index) => (
+            {(program?.impact || []).map((impact, index) => (
               <div key={index} className="bg-base-300/50 p-4 rounded-lg">
                 <svg className="h-6 w-6 text-primary mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
@@ -186,7 +113,7 @@ Our approach involves close collaboration with local communities to ensure that 
           <div>
             <h3 className="text-2xl font-semibold mb-6">Photo Gallery</h3>
             <div className="grid grid-cols-2 gap-4">
-              {program.gallery.map((image, index) => (
+              {(program?.gallery || []).map((image, index) => (
                 <div key={index} className="group relative overflow-hidden rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300">
                   <img 
                     src={image} 
@@ -220,7 +147,7 @@ Our approach involves close collaboration with local communities to ensure that 
           <div>
             <h3 className="text-2xl font-semibold mb-4">Program Team</h3>
             <div className="grid grid-cols-2 gap-4">
-              {program.team.map((member, index) => (
+              {(program?.team || []).map((member, index) => (
                 <div key={index} className="flex items-center space-x-3 group relative">
                   <div className="avatar">
                     <div className="mask mask-squircle w-12 h-12">
@@ -300,7 +227,7 @@ Our approach involves close collaboration with local communities to ensure that 
       <div className="space-y-6">
         <h3 className="text-2xl font-semibold mb-6">Program Updates</h3>
         <div className="grid gap-6">
-          {program.updates.map((update, index) => (
+          {(program?.updates || []).map((update, index) => (
             <div key={index} className="group">
               <div className="bg-gradient-to-br from-white via-blue-50/30 to-indigo-50/50 border border-blue-200/60 shadow-lg hover:shadow-xl transition-all duration-300 rounded-xl overflow-hidden hover:scale-[1.02]">
                 <div className="bg-gradient-to-r from-blue-500/10 to-indigo-500/10 border-b border-blue-200/40 p-6">
@@ -341,7 +268,7 @@ Our approach involves close collaboration with local communities to ensure that 
       <div className="space-y-6">
         <h3 className="text-2xl font-semibold mb-6">Frequently Asked Questions</h3>
         <div className="grid gap-6">
-          {program.faqs.map((faq, index) => (
+          {(program?.faqs || []).map((faq, index) => (
             <div key={index} className="group">
               <div className="collapse collapse-plus bg-gradient-to-br from-white to-gray-50 border border-gray-200 shadow-lg hover:shadow-xl transition-all duration-300 rounded-xl overflow-hidden">
                 <input type="radio" name="faq-accordion" className="peer" /> 
@@ -376,7 +303,7 @@ Our approach involves close collaboration with local communities to ensure that 
   return (
     <MainLayout>
       <Helmet>
-        <title>{program.title} - Charity NGO</title>
+        <title>{program.title} - Lumps Away Foundation</title>
         <meta name="description" content={program.description} />
       </Helmet>
 
@@ -411,7 +338,7 @@ Our approach involves close collaboration with local communities to ensure that 
                 </div>
                 <div className="flex items-center">
                   <FiUsers className="mr-1" />
-                  <span>{program.participants.toLocaleString()} participants</span>
+                  <span>{Array.isArray(program.participants) ? program.participants.length.toLocaleString() : (program.participants || 0).toLocaleString()} participants</span>
                 </div>
               </div>
             </motion.div>

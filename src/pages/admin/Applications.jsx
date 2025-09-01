@@ -125,7 +125,7 @@ export default function Applications() {
   return (
     <AdminLayout>
       <Helmet>
-        <title>Volunteer Applications - Admin - Charity NGO</title>
+        <title>Volunteer Applications - Admin - Lumps Away Foundation</title>
       </Helmet>
       
       <div className="space-y-6">
