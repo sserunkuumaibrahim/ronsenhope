@@ -29,7 +29,7 @@ export default function Donate() {
             __html: `
               <script type="text/javascript" defer src="https://donorbox.org/install-popup-button.js"></script>
               <div class="flex justify-center">
-                <iframe src="https://donorbox.org/embed/survive-and-thrive-804282?" name="donorbox" scrolling="no" seamless="seamless" frameborder="0" style="max-width: 500px; min-width: 250px; max-height:none!important; margin: 0 auto;"></iframe>
+                <iframe src="https://donorbox.org/embed/survive-and-thrive-804282?" name="donorbox" scrolling="no" seamless="seamless" frameborder="0" style="max-width: 500px; min-width: 250px; max-height:none!important; margin: 0 auto; border: 3px solid rgb(223, 24, 167); border-radius: 10px;"></iframe>
               </div>
             `
           }} />

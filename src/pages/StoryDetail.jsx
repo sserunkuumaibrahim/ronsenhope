@@ -116,10 +116,10 @@ export default function StoryDetail() {
   if (loading) {
     return (
       <MainLayout>
-        <div className="min-h-screen flex justify-center items-center bg-gradient-to-br from-base-100 to-base-200">
+        <div className="min-h-screen flex justify-center items-center bg-gradient-to-br from-white to-gray-100">
           <div className="text-center">
             <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-primary mx-auto mb-4"></div>
-            <p className="text-base-content/70 font-medium">Loading story...</p>
+            <p className="text-gray-700 font-medium">Loading story...</p>
           </div>
         </div>
       </MainLayout>
@@ -129,13 +129,13 @@ export default function StoryDetail() {
   if (!story) {
     return (
       <MainLayout>
-        <div className="min-h-screen flex justify-center items-center bg-gradient-to-br from-base-100 to-base-200 bg-white">
+        <div className="min-h-screen flex justify-center items-center bg-gradient-to-br from-white to-gray-100">
           <div className="text-center max-w-md mx-auto px-6">
-            <div className="w-24 h-24 mx-auto mb-6 bg-base-300 rounded-full flex items-center justify-center">
-              <FiMessageSquare className="w-10 h-10 text-base-content/50" />
+            <div className="w-24 h-24 mx-auto mb-6 bg-gray-200 rounded-full flex items-center justify-center">
+              <FiMessageSquare className="w-10 h-10 text-gray-500" />
             </div>
-            <h1 className="text-3xl font-bold mb-4 text-base-content">Story Not Found</h1>
-            <p className="text-base-content/70 mb-8 leading-relaxed">The story you're looking for doesn't exist or has been removed. Let's get you back to our inspiring stories.</p>
+            <h1 className="text-3xl font-bold mb-4 text-gray-900">Story Not Found</h1>
+            <p className="text-gray-700 mb-8 leading-relaxed">The story you're looking for doesn't exist or has been removed. Let's get you back to our inspiring stories.</p>
             <Link to="/stories" className="btn btn-primary btn-lg gap-2">
               <FiArrowLeft className="w-4 h-4" />
               Back to Stories
@@ -166,8 +166,8 @@ export default function StoryDetail() {
       {/* Hero Section with Breadcrumb */}
       <div className={`relative py-12 ${
         story.category === 'news' 
-          ? 'bg-gradient-to-br from-blue-50 via-base-100 to-blue-100 border-b-2 border-blue-200' 
-          : 'bg-gradient-to-br from-primary/5 via-base-100 to-secondary/5'
+          ? 'bg-gradient-to-br from-blue-50 via-white to-blue-100 border-b-2 border-blue-200' 
+          : 'bg-gradient-to-br from-primary/5 via-white to-secondary/5'
       }`}>
         <div className="absolute inset-0 opacity-50">
           <div className="w-full h-full" style={{
@@ -203,7 +203,7 @@ export default function StoryDetail() {
                    story.category === 'news' ? 'News' : story.category}
                 </span>
                 
-                <div className="flex items-center gap-4 text-sm text-base-content/60">
+                <div className="flex items-center gap-4 text-sm text-gray-600">
                   <div className="flex items-center gap-1">
                     <FiCalendar className="w-4 h-4" />
                     <span>{story.publishDate}</span>
@@ -215,12 +215,12 @@ export default function StoryDetail() {
                 </div>
               </div>
               
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6 bg-gradient-to-r from-base-content to-base-content/80 bg-clip-text text-transparent">
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6 bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
                 {story.title}
               </h1>
               
               {story.excerpt && (
-                <p className="text-xl text-base-content/70 leading-relaxed max-w-3xl">
+                <p className="text-xl text-gray-700 leading-relaxed max-w-3xl">
                   {story.excerpt}
                 </p>
               )}
@@ -230,7 +230,7 @@ export default function StoryDetail() {
       </div>
       
       {/* Main Content */}
-      <article className="py-12 md:py-16 bg-base-100">
+      <article className="py-12 md:py-16 bg-white">
         <div className="container-custom">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -262,7 +262,7 @@ export default function StoryDetail() {
               <div className={`flex items-center gap-4 mb-12 ${
                 story.category === 'news' 
                   ? 'p-4 bg-gray-50 rounded-lg border-l-4 border-blue-500 mb-8' 
-                  : 'p-6 bg-base-200/50 rounded-2xl border border-base-300/50'
+                  : 'p-6 bg-gray-50 rounded-2xl border border-gray-200'
               }`}>
                 <div className="avatar">
                   <div className={`rounded-full ${
@@ -274,16 +274,16 @@ export default function StoryDetail() {
                   </div>
                 </div>
                 <div className="flex-1">
-                  <h3 className={`font-bold text-base-content ${
+                  <h3 className={`font-bold text-gray-900 ${
                     story.category === 'news' ? 'text-base' : 'text-lg'
                   }`}>{story.author}</h3>
-                  <p className={`text-base-content/60 ${
+                  <p className={`text-gray-600 ${
                     story.category === 'news' ? 'text-sm' : ''
                   }`}>
                     {story.category === 'news' ? 'News Reporter' : 'Story Author'}
                   </p>
                   {story.category === 'news' && (
-                    <p className="text-xs text-base-content/50 mt-1">
+                    <p className="text-xs text-gray-500 mt-1">
                       Published {story.publishDate}
                     </p>
                   )}
@@ -302,7 +302,7 @@ export default function StoryDetail() {
                   : 'prose-lg prose-base'
               }`}>
                 <div 
-                  className={`text-base-content/90 ${
+                  className={`text-gray-800 ${
                     story.category === 'news' 
                       ? 'leading-relaxed text-sm md:text-base font-normal' 
                       : 'leading-relaxed'
@@ -314,12 +314,12 @@ export default function StoryDetail() {
               {/* Tags */}
               {story.tags && story.tags.length > 0 && (
                 <div className="mb-12">
-                  <h4 className="text-sm font-semibold text-base-content/60 mb-4 uppercase tracking-wider">Tags</h4>
+                  <h4 className="text-sm font-semibold text-gray-600 mb-4 uppercase tracking-wider">Tags</h4>
                   <div className="flex flex-wrap gap-2">
                     {story.tags.map((tag, index) => (
                       <span 
                         key={index} 
-                        className="inline-flex items-center gap-1 px-3 py-1 bg-base-200 hover:bg-primary/10 text-base-content/70 hover:text-primary rounded-full text-sm transition-all duration-300 cursor-pointer"
+                        className="inline-flex items-center gap-1 px-3 py-1 bg-gray-100 hover:bg-primary/10 text-gray-700 hover:text-primary rounded-full text-sm transition-all duration-300 cursor-pointer"
                       >
                         <FiTag className="w-3 h-3" />
                         {tag}
@@ -334,7 +334,7 @@ export default function StoryDetail() {
       </article>
       
       {/* Comments Section */}
-      <div className="bg-base-200 py-12">
+      <div className="bg-gray-50 py-12">
         <div className="container-custom">
           <div className="max-w-4xl mx-auto">
             <h2 className="text-2xl font-bold mb-6 flex items-center">
@@ -390,15 +390,15 @@ export default function StoryDetail() {
                     </div>
                   </div>
                   <div className="flex-grow">
-                    <div className="bg-base-100 rounded-lg p-4">
+                    <div className="bg-white rounded-lg p-4 shadow-sm">
                       <div className="flex items-center justify-between mb-2">
                         <h4 className="font-semibold">{comment.authorName}</h4>
-                        <span className="text-sm text-base-content/60">
+                        <span className="text-sm text-gray-600">
                           {comment.createdAt?.toDate?.()?.toLocaleDateString() || 
                            new Date(comment.createdAt).toLocaleDateString()}
                         </span>
                       </div>
-                      <p className="text-base-content/80">{comment.content}</p>
+                      <p className="text-gray-800">{comment.content}</p>
                     </div>
                   </div>
                 </div>
@@ -410,7 +410,7 @@ export default function StoryDetail() {
       
       {/* Related Stories */}
       {relatedStories.length > 0 && (
-        <div className={`py-12 bg-base-100 ${
+        <div className={`py-12 bg-white ${
           story.category === 'news' ? 'border-t border-gray-200' : ''
         }`}>
           <div className="container-custom">
@@ -444,10 +444,10 @@ export default function StoryDetail() {
                       <h3 className={`card-title ${
                         story.category === 'news' ? 'text-base' : 'text-lg'
                       }`}>{relatedStory.title}</h3>
-                      <p className={`text-base-content/70 line-clamp-3 ${
+                      <p className={`text-gray-700 line-clamp-3 ${
                         story.category === 'news' ? 'text-xs' : 'text-sm'
                       }`}>{relatedStory.excerpt}</p>
-                      <div className={`flex items-center gap-2 text-base-content/60 mt-2 ${
+                      <div className={`flex items-center gap-2 text-gray-600 mt-2 ${
                         story.category === 'news' ? 'text-xs' : 'text-xs'
                       }`}>
                         <FiCalendar size={12} />

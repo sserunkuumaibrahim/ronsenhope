@@ -94,28 +94,12 @@ export default function Home() {
         .map(item => item.imageUrl)
         .filter(url => url); // Remove empty URLs
       
-      if (activeCarousel.length > 0) {
-        setCarouselImages(activeCarousel);
-      } else {
-        // Fallback images if no active carousel items
-        setCarouselImages([
-          'https://images.unsplash.com/photo-1559027615-cd4628902d4a?w=800&h=600&fit=crop&crop=center',
-          'https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=800&h=600&fit=crop&crop=center',
-          'https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?w=800&h=600&fit=crop&crop=center',
-          'https://images.unsplash.com/photo-1593113598332-cd288d649433?w=800&h=600&fit=crop&crop=center',
-          'https://images.unsplash.com/photo-1582213782179-e0d53f98f2ca?w=800&h=600&fit=crop&crop=center'
-        ]);
-      }
+      // Only use network-fetched images from Firebase
+      setCarouselImages(activeCarousel);
     } catch (error) {
       console.error('Error fetching carousel images:', error);
-      // Set fallback images on error
-      setCarouselImages([
-        'https://images.unsplash.com/photo-1559027615-cd4628902d4a?w=800&h=600&fit=crop&crop=center',
-        'https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=800&h=600&fit=crop&crop=center',
-        'https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?w=800&h=600&fit=crop&crop=center',
-        'https://images.unsplash.com/photo-1593113598332-cd288d649433?w=800&h=600&fit=crop&crop=center',
-        'https://images.unsplash.com/photo-1582213782179-e0d53f98f2ca?w=800&h=600&fit=crop&crop=center'
-      ]);
+      // No fallback images - only use network-fetched images
+      setCarouselImages([]);
     }
   };
 
@@ -509,7 +493,7 @@ export default function Home() {
                   <div dangerouslySetInnerHTML={{
                     __html: `
                       <script type="text/javascript" defer src="https://donorbox.org/install-popup-button.js"></script>
-                      <a class="dbox-donation-button" style="background: rgb(223, 24, 167); color: rgb(255, 255, 255); text-decoration: none; font-family: Verdana, sans-serif; display: flex; gap: 8px; width: fit-content; font-size: 16px; border-radius: 5px; line-height: 24px; padding: 8px 24px;" href="https://donorbox.org/survive-and-thrive-804282?"><img src="https://donorbox.org/images/white_logo.svg" alt="Donate with DonorBox" />Donate Now</a>
+                      <a class="dbox-donation-button" style="background: rgb(223, 24, 167); color: rgb(255, 255, 255); text-decoration: none; font-family: Verdana, sans-serif; display: flex; gap: 8px; width: fit-content; font-size: 16px; border-radius: 5px; line-height: 24px; padding: 8px 24px; border: 2px solid white;" href="https://donorbox.org/survive-and-thrive-804282?"><img src="https://donorbox.org/images/white_logo.svg" alt="Donate with DonorBox" />Donate Now</a>
                     `
                   }} />
                 </motion.div>
@@ -527,83 +511,86 @@ export default function Home() {
               </motion.div>
             </div>
             
-            <motion.div 
-              initial={{ opacity: 0, x: 30, scale: 0.95 }}
-              animate={{ opacity: 1, x: 0, scale: 1 }}
-              transition={{ 
-                duration: 0.7, 
-                ease: "easeOut"
-              }}
-              className="relative h-[60vh] sm:h-[70vh] lg:h-[500px] min-h-[400px] w-full overflow-hidden rounded-2xl shadow-2xl border border-white/20 backdrop-blur-sm"
-            >
-              {/* Simple Image Carousel */}
-              <div className="relative w-full h-full">
-                {carouselImages.map((image, index) => (
-                  <motion.div
-                    key={index}
-                    className="absolute inset-0 w-full h-full"
-                    initial={{ opacity: 0 }}
-                    animate={{ 
-                      opacity: index === currentImageIndex ? 1 : 0,
-                      scale: index === currentImageIndex ? 1 : 1.1
-                    }}
-                    transition={{ 
-                      duration: 1,
-                      ease: "easeInOut"
-                    }}
-                  >
-                    <img
-                      src={image}
-                      alt={`Carousel image ${index + 1}`}
-                      className="w-full h-full object-cover"
-                      loading={index === 0 ? "eager" : "lazy"}
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />
-                  </motion.div>
-                ))}
-                
-                {/* Carousel Indicators */}
-                <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
-                  {carouselImages.map((_, index) => (
-                    <button
+            {/* Only show carousel if there are network-fetched images */}
+            {carouselImages.length > 0 && (
+              <motion.div 
+                initial={{ opacity: 0, x: 30, scale: 0.95 }}
+                animate={{ opacity: 1, x: 0, scale: 1 }}
+                transition={{ 
+                  duration: 0.7, 
+                  ease: "easeOut"
+                }}
+                className="relative h-[60vh] sm:h-[70vh] lg:h-[500px] min-h-[400px] w-full overflow-hidden rounded-2xl shadow-2xl border border-white/20 backdrop-blur-sm"
+              >
+                {/* Simple Image Carousel */}
+                <div className="relative w-full h-full">
+                  {carouselImages.map((image, index) => (
+                    <motion.div
                       key={index}
-                      onClick={() => setCurrentImageIndex(index)}
-                      className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                        index === currentImageIndex 
-                          ? 'bg-white shadow-lg scale-110' 
-                          : 'bg-white/50 hover:bg-white/70'
-                      }`}
-                      aria-label={`Go to slide ${index + 1}`}
-                    />
+                      className="absolute inset-0 w-full h-full"
+                      initial={{ opacity: 0 }}
+                      animate={{ 
+                        opacity: index === currentImageIndex ? 1 : 0,
+                        scale: index === currentImageIndex ? 1 : 1.1
+                      }}
+                      transition={{ 
+                        duration: 1,
+                        ease: "easeInOut"
+                      }}
+                    >
+                      <img
+                        src={image}
+                        alt={`Carousel image ${index + 1}`}
+                        className="w-full h-full object-cover"
+                        loading={index === 0 ? "eager" : "lazy"}
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />
+                    </motion.div>
                   ))}
+                  
+                  {/* Carousel Indicators */}
+                  <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
+                    {carouselImages.map((_, index) => (
+                      <button
+                        key={index}
+                        onClick={() => setCurrentImageIndex(index)}
+                        className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                          index === currentImageIndex 
+                            ? 'bg-white shadow-lg scale-110' 
+                            : 'bg-white/50 hover:bg-white/70'
+                        }`}
+                        aria-label={`Go to slide ${index + 1}`}
+                      />
+                    ))}
+                  </div>
+                  
+                  {/* Navigation Arrows */}
+                  <button
+                    onClick={() => setCurrentImageIndex((prev) => 
+                      prev === 0 ? carouselImages.length - 1 : prev - 1
+                    )}
+                    className="absolute left-4 top-1/2 transform -translate-y-1/2 w-10 h-10 bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-full flex items-center justify-center transition-all duration-300 group"
+                    aria-label="Previous image"
+                  >
+                    <svg className="w-5 h-5 text-white group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                    </svg>
+                  </button>
+                  
+                  <button
+                    onClick={() => setCurrentImageIndex((prev) => 
+                      (prev + 1) % carouselImages.length
+                    )}
+                    className="absolute right-4 top-1/2 transform -translate-y-1/2 w-10 h-10 bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-full flex items-center justify-center transition-all duration-300 group"
+                    aria-label="Next image"
+                  >
+                    <svg className="w-5 h-5 text-white group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                  </button>
                 </div>
-                
-                {/* Navigation Arrows */}
-                <button
-                  onClick={() => setCurrentImageIndex((prev) => 
-                    prev === 0 ? carouselImages.length - 1 : prev - 1
-                  )}
-                  className="absolute left-4 top-1/2 transform -translate-y-1/2 w-10 h-10 bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-full flex items-center justify-center transition-all duration-300 group"
-                  aria-label="Previous image"
-                >
-                  <svg className="w-5 h-5 text-white group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                  </svg>
-                </button>
-                
-                <button
-                  onClick={() => setCurrentImageIndex((prev) => 
-                    (prev + 1) % carouselImages.length
-                  )}
-                  className="absolute right-4 top-1/2 transform -translate-y-1/2 w-10 h-10 bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-full flex items-center justify-center transition-all duration-300 group"
-                  aria-label="Next image"
-                >
-                  <svg className="w-5 h-5 text-white group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                  </svg>
-                </button>
-              </div>
-            </motion.div>
+              </motion.div>
+            )}
           </div>
         </div>
       </section>

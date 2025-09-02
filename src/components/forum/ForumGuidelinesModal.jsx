@@ -1,6 +1,6 @@
-import { useState, useEffect, useRef } from 'react';
+import { useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FiX, FiArrowDown } from 'react-icons/fi';
+import { FiX } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { doc, updateDoc } from 'firebase/firestore';
@@ -8,8 +8,7 @@ import { db } from '../../firebase/config';
 import { toast } from 'react-hot-toast';
 
 const ForumGuidelinesModal = ({ isOpen, onClose, onAccept }) => {
-  const [hasScrolledToBottom, setHasScrolledToBottom] = useState(false);
-  const [isScrolling, setIsScrolling] = useState(false);
+
   const scrollContainerRef = useRef(null);
   const navigate = useNavigate();
   const { currentUser } = useAuth();
@@ -59,19 +58,7 @@ Lumps Away Community reserves the right to terminate or limit your access to the
 
 Please private message or email us at info@lumpsaway.ug with any concerns you have. Read Lumps Away Community's Terms of Use.`;
 
-  const handleScroll = () => {
-    if (!scrollContainerRef.current) return;
-    
-    const { scrollTop, scrollHeight, clientHeight } = scrollContainerRef.current;
-    const scrollPercentage = (scrollTop + clientHeight) / scrollHeight;
-    
-    // Consider "bottom" when user has scrolled to 95% or more
-    if (scrollPercentage >= 0.95 && !hasScrolledToBottom) {
-      setHasScrolledToBottom(true);
-    }
-    
-    setIsScrolling(scrollTop > 0);
-  };
+
 
   const handleCancel = () => {
     navigate('/');
@@ -79,34 +66,28 @@ Please private message or email us at info@lumpsaway.ug with any concerns you ha
   };
 
   const handleAccept = async () => {
-    if (!currentUser) {
-      toast.error('Please log in to continue');
-      return;
-    }
-
     try {
-      // Update user document to mark guidelines as read
-      await updateDoc(doc(db, 'users', currentUser.uid), {
-        hasReadForumGuidelines: true,
-        guidelinesReadAt: new Date().toISOString()
-      });
+      // If user is logged in, update their document
+      if (currentUser) {
+        await updateDoc(doc(db, 'users', currentUser.uid), {
+          hasReadForumGuidelines: true,
+          guidelinesReadAt: new Date().toISOString()
+        });
+      }
       
       toast.success('Guidelines accepted! Welcome to the forum.');
       onAccept();
       onClose();
     } catch (error) {
       console.error('Error updating user guidelines status:', error);
-      toast.error('Failed to save guidelines acceptance');
+      // Still allow non-logged users to proceed even if database update fails
+      toast.success('Guidelines accepted! Welcome to the forum.');
+      onAccept();
+      onClose();
     }
   };
 
-  useEffect(() => {
-    const scrollContainer = scrollContainerRef.current;
-    if (scrollContainer) {
-      scrollContainer.addEventListener('scroll', handleScroll);
-      return () => scrollContainer.removeEventListener('scroll', handleScroll);
-    }
-  }, [hasScrolledToBottom]);
+
 
   if (!isOpen) return null;
 
@@ -153,33 +134,16 @@ Please private message or email us at info@lumpsaway.ug with any concerns you ha
               </div>
             </div>
             
-            {/* Scroll indicator */}
-            {!hasScrolledToBottom && (
-              <div className="absolute bottom-4 right-4 bg-pink-500 text-white p-3 rounded-full shadow-lg animate-bounce">
-                <FiArrowDown className="w-5 h-5" />
-              </div>
-            )}
-            
-            {/* Gradient overlay when not scrolled to bottom */}
-            {!hasScrolledToBottom && (
-              <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-white to-transparent pointer-events-none" />
-            )}
+
           </div>
 
           {/* Footer */}
           <div className="p-6 border-t border-gray-200 flex justify-between items-center">
             <div className="flex items-center space-x-2">
-              {hasScrolledToBottom ? (
-                <div className="flex items-center text-green-600">
-                  <div className="w-2 h-2 bg-green-500 rounded-full mr-2"></div>
-                  <span className="text-sm font-medium">Guidelines read</span>
-                </div>
-              ) : (
-                <div className="flex items-center text-gray-500">
-                  <div className="w-2 h-2 bg-gray-300 rounded-full mr-2"></div>
-                  <span className="text-sm">Please scroll to the bottom to continue</span>
-                </div>
-              )}
+              <div className="flex items-center text-green-600">
+                <div className="w-2 h-2 bg-green-500 rounded-full mr-2"></div>
+                <span className="text-sm font-medium">Ready to accept</span>
+              </div>
             </div>
             
             <div className="flex space-x-3">
@@ -191,12 +155,7 @@ Please private message or email us at info@lumpsaway.ug with any concerns you ha
               </button>
               <button
                 onClick={handleAccept}
-                disabled={!hasScrolledToBottom}
-                className={`px-6 py-2 rounded-lg font-medium transition-all ${
-                  hasScrolledToBottom
-                    ? 'bg-pink-500 hover:bg-pink-600 text-white shadow-md hover:shadow-lg'
-                    : 'bg-gray-200 text-gray-400 cursor-not-allowed'
-                }`}
+                className="px-6 py-2 rounded-lg font-medium transition-all bg-pink-500 hover:bg-pink-600 text-white shadow-md hover:shadow-lg"
               >
                 I Accept
               </button>

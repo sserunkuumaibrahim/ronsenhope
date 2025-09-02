@@ -11,13 +11,6 @@ export default {
         secondary: '#FF1CB4', // Shocking Pink
         accent: '#FFFFFF',    // White
         silver: '#BBBAB8',    // Silver
-        blue: {
-          50: '#eff6ff',
-          100: '#dbeafe',
-          200: '#bfdbfe',
-          500: '#3b82f6',
-          700: '#1d4ed8',
-        },
       },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',

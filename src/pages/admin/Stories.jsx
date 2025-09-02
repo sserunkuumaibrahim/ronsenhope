@@ -350,7 +350,7 @@ export default function Stories() {
               <div className="w-12 h-12 bg-orange-500 rounded-full flex items-center justify-center mx-auto mb-3">
                 <FiMessageCircle className="w-6 h-6 text-white" />
               </div>
-              <div className="text-2xl font-bold text-orange-600 mb-1">{stories.reduce((sum, story) => sum + story.comments, 0)}</div>
+              <div className="text-2xl font-bold text-orange-600 mb-1">{stories.reduce((sum, story) => sum + (Array.isArray(story.comments) ? story.comments.length : story.comments || 0), 0)}</div>
               <div className="text-sm text-base-content/60">Comments</div>
             </div>
           </motion.div>
@@ -502,7 +502,7 @@ export default function Stories() {
                   </div>
                   <div className="flex items-center gap-1">
                     <FiMessageCircle className="w-4 h-4 text-blue-500" />
-                    <span>{story.comments}</span>
+                    <span>{Array.isArray(story.comments) ? story.comments.length : story.comments || 0}</span>
                   </div>
                 </div>
                 
@@ -772,7 +772,7 @@ export default function Stories() {
                     </span>
                     <span className="flex items-center gap-1">
                       <FiMessageCircle className="w-3 h-3 text-blue-500" />
-                      {selectedStory.comments}
+                      {Array.isArray(selectedStory.comments) ? selectedStory.comments.length : selectedStory.comments || 0}
                     </span>
                   </div>
                 </div>

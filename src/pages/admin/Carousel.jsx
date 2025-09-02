@@ -5,6 +5,8 @@ import { FiSearch, FiEdit, FiTrash2, FiPlus, FiFilter, FiEye, FiX, FiImage, FiUp
 import AdminLayout from '../../components/layout/AdminLayout';
 import { db } from '../../firebase/config';
 import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc, serverTimestamp } from 'firebase/firestore';
+import { storage } from '../../firebase/config';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
 export default function Carousel() {
   const [carouselItems, setCarouselItems] = useState([]);
@@ -50,15 +52,33 @@ export default function Carousel() {
     fetchCarouselItems();
   }, []);
 
+  // Upload image to Firebase Storage
+  const uploadImageToFirebase = async (file) => {
+    try {
+      const timestamp = Date.now();
+      const fileName = `carousel/${timestamp}_${file.name}`;
+      const storageRef = ref(storage, fileName);
+      
+      const snapshot = await uploadBytes(storageRef, file);
+      const downloadURL = await getDownloadURL(snapshot.ref);
+      
+      return downloadURL;
+    } catch (error) {
+      console.error('Error uploading to Firebase Storage:', error);
+      throw error;
+    }
+  };
+
   // Handle image file selection
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
       setImageFile(file);
+      // Clear the URL field when a file is selected
+      setFormData(prev => ({ ...prev, imageUrl: '' }));
       const reader = new FileReader();
       reader.onload = (e) => {
         setImagePreview(e.target.result);
-        setFormData(prev => ({ ...prev, imageUrl: e.target.result }));
       };
       reader.readAsDataURL(file);
     }
@@ -70,8 +90,21 @@ export default function Carousel() {
     setUploading(true);
 
     try {
+      let imageUrl = formData.imageUrl;
+      
+      // Upload image to Firebase Storage if a file was selected
+      if (imageFile) {
+        imageUrl = await uploadImageToFirebase(imageFile);
+      }
+      
+      // Validate that we have an image URL
+      if (!imageUrl) {
+        throw new Error('Please provide an image URL or upload an image file');
+      }
+
       const carouselData = {
         ...formData,
+        imageUrl,
         order: parseInt(formData.order) || 0,
         updatedAt: serverTimestamp()
       };
@@ -100,8 +133,12 @@ export default function Carousel() {
       
       // Refresh data
       fetchCarouselItems();
+      
+      // Show success message
+      alert(editingItem ? 'Carousel item updated successfully!' : 'Carousel item added successfully!');
     } catch (error) {
       console.error('Error saving carousel item:', error);
+      alert(`Error saving carousel item: ${error.message}`);
     } finally {
       setUploading(false);
     }
@@ -346,9 +383,14 @@ export default function Carousel() {
                       placeholder="Image URL (optional if file uploaded)"
                       value={formData.imageUrl}
                       onChange={(e) => {
-                        setFormData(prev => ({ ...prev, imageUrl: e.target.value }));
-                        if (e.target.value && !imageFile) {
-                          setImagePreview(e.target.value);
+                        const url = e.target.value;
+                        setFormData(prev => ({ ...prev, imageUrl: url }));
+                        if (url) {
+                          // Clear file selection when URL is entered
+                          setImageFile(null);
+                          setImagePreview(url);
+                        } else if (!imageFile) {
+                          setImagePreview('');
                         }
                       }}
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
@@ -429,7 +471,7 @@ export default function Carousel() {
                   </button>
                   <button
                     type="submit"
-                    disabled={uploading || !formData.imageUrl}
+                    disabled={uploading || (!formData.imageUrl && !imageFile)}
                     className="inline-flex items-center px-4 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                   >
                     {uploading ? (

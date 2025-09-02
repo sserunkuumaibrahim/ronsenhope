@@ -93,38 +93,12 @@ export default function Forum() {
     return unsubscribe;
   }, []);
   
-  // Check if user has read forum guidelines
+  // Show guidelines modal for every user (logged in or not)
   useEffect(() => {
-    const checkGuidelinesStatus = async () => {
-      if (!currentUser) {
-        setCheckingGuidelines(false);
-        return;
-      }
-      
-      try {
-        const userDoc = await getDoc(doc(db, 'users', currentUser.uid));
-        if (userDoc.exists()) {
-          const userData = userDoc.data();
-          const hasReadGuidelines = userData.hasReadForumGuidelines;
-          
-          if (!hasReadGuidelines) {
-            setShowGuidelinesModal(true);
-          }
-        } else {
-          // If user document doesn't exist, show guidelines
-          setShowGuidelinesModal(true);
-        }
-      } catch (error) {
-        console.error('Error checking guidelines status:', error);
-        // On error, show guidelines to be safe
-        setShowGuidelinesModal(true);
-      } finally {
-        setCheckingGuidelines(false);
-      }
-    };
-    
-    checkGuidelinesStatus();
-  }, [currentUser]);
+    // Always show guidelines modal for all users
+    setShowGuidelinesModal(true);
+    setCheckingGuidelines(false);
+  }, []);
   
   // Add new topic function
   const handleNewTopicSubmit = async (e) => {
@@ -425,7 +399,7 @@ export default function Forum() {
                 className="bg-primary text-white px-6 py-4 rounded-xl font-semibold flex items-center gap-2 shadow-lg hover:shadow-xl transition-all duration-200 w-full lg:w-auto justify-center"
                 onClick={() => {
                   if (!currentUser) {
-                    toast.error('Please log in to create a topic');
+                    navigate('/login');
                     return;
                   }
                   setShowNewTopicModal(true);

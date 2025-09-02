@@ -366,7 +366,7 @@ export default function About() {
               </p>
               <div dangerouslySetInnerHTML={{
                 __html: `
-                  <a class="dbox-donation-button" style="background: rgb(223, 24, 167); color: rgb(255, 255, 255); text-decoration: none; font-family: Verdana, sans-serif; display: inline-flex; gap: 8px; font-size: 16px; border-radius: 25px; line-height: 24px; padding: 12px 24px; font-weight: 600;" href="https://donorbox.org/survive-and-thrive-804282?">Donate Now</a>
+                  <a class="dbox-donation-button" style="background: rgb(223, 24, 167); color: rgb(255, 255, 255); text-decoration: none; font-family: Verdana, sans-serif; display: inline-flex; gap: 8px; font-size: 16px; border-radius: 25px; line-height: 24px; padding: 12px 24px; font-weight: 600; border: 2px solid rgb(223, 24, 167);" href="https://donorbox.org/survive-and-thrive-804282?">Donate Now</a>
                 `
               }} />
             </motion.div>
@@ -672,7 +672,7 @@ export default function About() {
                 <div dangerouslySetInnerHTML={{
                   __html: `
                     <script type="text/javascript" defer src="https://donorbox.org/install-popup-button.js"></script>
-                    <a class="dbox-donation-button" style="background: rgb(223, 24, 167); color: rgb(255, 255, 255); text-decoration: none; font-family: Verdana, sans-serif; display: flex; gap: 8px; width: fit-content; font-size: 16px; border-radius: 5px; line-height: 24px; padding: 8px 24px;" href="https://donorbox.org/survive-and-thrive-804282?"><img src="https://donorbox.org/images/white_logo.svg" alt="Donate with DonorBox" />Donate Now</a>
+                    <a class="dbox-donation-button" style="background: rgb(223, 24, 167); color: rgb(255, 255, 255); text-decoration: none; font-family: Verdana, sans-serif; display: flex; gap: 8px; width: fit-content; font-size: 16px; border-radius: 5px; line-height: 24px; padding: 8px 24px; border: 2px solid white;" href="https://donorbox.org/survive-and-thrive-804282?"><img src="https://donorbox.org/images/white_logo.svg" alt="Donate with DonorBox" />Donate Now</a>
                   `
                 }} />
                 <a href="/volunteer" className="group relative px-10 py-5 bg-transparent border-2 border-white text-white rounded-full font-bold text-xl hover:bg-white hover:text-pink-600 transition-all duration-300 transform hover:-translate-y-2">

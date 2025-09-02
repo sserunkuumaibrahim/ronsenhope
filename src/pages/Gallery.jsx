@@ -34,39 +34,21 @@ export default function Gallery() {
       try {
         const photosCollection = collection(db, 'gallery');
         const photosSnapshot = await getDocs(photosCollection);
-        
-        // Log raw data from Firestore
-        console.log('Raw Firestore data:', photosSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
-        
-        const photosData = photosSnapshot.docs.map(doc => {
-          // Get the data with proper date conversion
-          const data = doc.data();
-          console.log(`Processing photo ${doc.id}:`, data);
-          
-          // Check for missing imageUrl
-          if (!data.imageUrl) {
-            console.error(`Photo ${doc.id} is missing imageUrl:`, data);
-          }
-          
-          // Ensure we have proper date conversion
-          const uploadDate = data.uploadDate?.toDate ? data.uploadDate.toDate() : new Date(data.uploadDate || Date.now());
-          // Ensure tags is always an array
-          const tags = Array.isArray(data.tags) ? data.tags : (data.tags ? data.tags.split(',').map(tag => tag.trim()).filter(tag => tag) : []);
-          
-          return {
-            id: doc.id,
-            ...data,
-            uploadDate,
-            tags,
-            // Provide a fallback for imageUrl
-            imageUrl: data.imageUrl || 'https://via.placeholder.com/400x300?text=No+Image'
-          };
-        });
-        
-        console.log('Processed photos data:', photosData); // Debug log
+        const photosData = photosSnapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data(),
+          uploadDate: doc.data().uploadDate?.toDate ? doc.data().uploadDate.toDate() : new Date(doc.data().uploadDate)
+        }));
         setPhotos(photosData);
       } catch (error) {
         console.error('Error fetching photos:', error);
+        console.error('Error details:', {
+          message: error.message,
+          code: error.code,
+          stack: error.stack
+        });
+        // Set empty array on error to show "no photos" state
+        setPhotos([]);
       } finally {
         setLoading(false);
       }
@@ -86,9 +68,7 @@ export default function Gallery() {
   }, {});
   
   // Filter photos based on selected category
-  console.log('Photos before filtering:', photos);
   const filteredPhotos = selectedCategory === 'all' ? photos : photos.filter(photo => photo.category === selectedCategory);
-  console.log('Filtered photos after category selection:', filteredPhotos);
   
   // Get unique categories
   const categories = ['all', ...new Set(photos.map(photo => photo.category || 'community'))];
@@ -492,25 +472,17 @@ export default function Gallery() {
              {!loading && filteredPhotos.length > 0 && (
                <div ref={gridRef} className="masonry-grid">
                  {/* Display photos from Firebase */}
-                 {console.log('Rendering filteredPhotos:', filteredPhotos)}
-                 {filteredPhotos.map((photo, index) => {
-                    // Check if photo has valid data
-                    if (!photo || !photo.id) {
-                      console.error('Invalid photo object:', photo);
-                      return null;
-                    }
-                    
-                    return (
-                      <motion.div
-                        key={photo.id}
-                        variants={itemVariants}
-                        className="gallery-item group relative"
-                        onMouseEnter={(e) => {
-                          if (!isTouchDevice()) {
-                            showTooltip(photo, e.currentTarget);
-                          }
-                        }}
-                      >
+                 {filteredPhotos.map((photo, index) => (
+                     <motion.div
+                       key={photo.id}
+                       variants={itemVariants}
+                       className="gallery-item group relative"
+                       onMouseEnter={(e) => {
+                         if (!isTouchDevice()) {
+                           showTooltip(photo, e.currentTarget);
+                         }
+                       }}
+                     >
                        <div className="absolute inset-0 bg-pink-500 rounded-2xl transform rotate-1 group-hover:rotate-2 transition-transform duration-300 opacity-10"></div>
                        <div className="relative bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2"
                        onMouseLeave={() => {
@@ -527,16 +499,11 @@ export default function Gallery() {
                      >
                        <div className="relative overflow-hidden">
                          <img
-                           src={photo.imageUrl || 'https://via.placeholder.com/400x300?text=No+Image'}
-                           alt={photo.title || 'Gallery image'}
+                           src={photo.imageUrl}
+                           alt={photo.title}
                            className="w-full h-auto object-cover group-hover:scale-110 transition-transform duration-700"
                            loading="lazy"
                            onLoad={handleImageLoad}
-                           onError={(e) => {
-                             console.error('Image failed to load:', photo.imageUrl);
-                             e.target.src = 'https://via.placeholder.com/400x300?text=Image+Error';
-                             e.target.onerror = null; // Prevent infinite error loop
-                           }}
                            style={{
                              aspectRatio: 'auto',
                              minHeight: '200px',
@@ -575,9 +542,8 @@ export default function Gallery() {
                          </div>
                        </div>
                      </div>
-                     </motion.div>
-                   );
-                  })}
+                   </motion.div>
+                 ))}
                 </div>
              )}
              </motion.div>
