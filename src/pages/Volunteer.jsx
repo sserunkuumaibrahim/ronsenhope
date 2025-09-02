@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { FiCalendar, FiMapPin, FiClock, FiUsers, FiHeart, FiStar, FiUser, FiMail, FiPhone, FiMessageSquare, FiDollarSign } from 'react-icons/fi';
+import { FiCalendar, FiMapPin, FiClock, FiUsers, FiHeart, FiStar, FiUser, FiMail, FiPhone, FiMessageSquare, FiDollarSign, FiFacebook, FiTwitter, FiInstagram, FiLinkedin } from 'react-icons/fi';
 import MainLayout from '../components/layout/MainLayout';
 import { db } from '../firebase/config';
 import { collection, addDoc, getDocs } from 'firebase/firestore';
@@ -11,6 +11,7 @@ import { ref, onValue, off } from 'firebase/database';
 
 export default function Volunteer() {
   const [activeTab, setActiveTab] = useState('opportunities');
+  const [showSocialPopup, setShowSocialPopup] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -23,6 +24,31 @@ export default function Volunteer() {
   });
   const [loadingOpportunities, setLoadingOpportunities] = useState(true);
   const [formSubmitted, setFormSubmitted] = useState(false);
+
+  // Close social popup when clicking outside or pressing escape
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (showSocialPopup && !event.target.closest('.social-popup')) {
+        setShowSocialPopup(false);
+      }
+    };
+
+    const handleEscapeKey = (event) => {
+      if (event.key === 'Escape' && showSocialPopup) {
+        setShowSocialPopup(false);
+      }
+    };
+
+    if (showSocialPopup) {
+      document.addEventListener('mousedown', handleClickOutside);
+      document.addEventListener('keydown', handleEscapeKey);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('keydown', handleEscapeKey);
+    };
+  }, [showSocialPopup]);
   
   // Animation variants
   const containerVariants = {
@@ -294,18 +320,15 @@ export default function Volunteer() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.2 }}
-              className="flex flex-col sm:flex-row gap-6 justify-center"
+              className="flex flex-col sm:flex-row gap-6 justify-center relative"
             >
               <button 
                 className="group relative px-8 py-4 bg-white text-pink-600 rounded-full font-semibold text-lg shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300 overflow-hidden"
-                onClick={() => {
-                  setActiveTab('application');
-                  document.getElementById('application-section').scrollIntoView({ behavior: 'smooth' });
-                }}
+                onClick={() => setShowSocialPopup(!showSocialPopup)}
               >
-                <span className="relative z-10">Apply Now</span>
+                <span className="relative z-10">Follow us on socials</span>
                 <div className="absolute inset-0 bg-gradient-to-r from-pink-500 to-pink-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                <span className="absolute inset-0 z-10 flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 font-semibold">Apply Now</span>
+                <span className="absolute inset-0 z-10 flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 font-semibold">Follow us on socials</span>
               </button>
               <button 
                 className="px-8 py-4 border-2 border-white text-white rounded-full font-semibold text-lg hover:bg-white hover:text-pink-600 transition-all duration-300 backdrop-blur-sm"
@@ -316,6 +339,8 @@ export default function Volunteer() {
               >
                 View Opportunities
               </button>
+              
+
               <div dangerouslySetInnerHTML={{
                 __html: `
                   <script type="text/javascript" defer src="https://donorbox.org/install-popup-button.js"></script>
@@ -333,6 +358,67 @@ export default function Volunteer() {
           />
         </div>
       </section>
+
+      {/* Social Media Modal */}
+      {showSocialPopup && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[9999] social-popup">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.9 }}
+            className="bg-white rounded-2xl shadow-2xl p-8 mx-4 max-w-md w-full"
+          >
+            <div className="text-center mb-6">
+              <h3 className="text-2xl font-semibold text-gray-800 mb-2">Follow Us On</h3>
+              <p className="text-gray-600">Choose your preferred platform</p>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <a
+                 href="https://www.facebook.com/profile.php?id=100067651137058"
+                 target="_blank"
+                 rel="noopener noreferrer"
+                 className="flex items-center gap-3 p-4 rounded-xl bg-blue-50 hover:bg-blue-100 transition-colors duration-200 group"
+               >
+                 <FiFacebook className="text-blue-600 text-xl group-hover:scale-110 transition-transform" />
+                 <span className="text-blue-800 font-medium">Facebook</span>
+               </a>
+               <a
+                 href="https://x.com/AwayLumps"
+                 target="_blank"
+                 rel="noopener noreferrer"
+                 className="flex items-center gap-3 p-4 rounded-xl bg-gray-50 hover:bg-gray-100 transition-colors duration-200 group"
+               >
+                 <FiTwitter className="text-gray-800 text-xl group-hover:scale-110 transition-transform" />
+                 <span className="text-gray-800 font-medium">X (Twitter)</span>
+               </a>
+               <a
+                 href="https://www.instagram.com/lumpsawayfoundation/"
+                 target="_blank"
+                 rel="noopener noreferrer"
+                 className="flex items-center gap-3 p-4 rounded-xl bg-pink-50 hover:bg-pink-100 transition-colors duration-200 group"
+               >
+                 <FiInstagram className="text-pink-600 text-xl group-hover:scale-110 transition-transform" />
+                 <span className="text-pink-800 font-medium">Instagram</span>
+               </a>
+               <a
+                 href="https://www.linkedin.com/company/lumps-away-foundatin/?viewAsMember=true"
+                 target="_blank"
+                 rel="noopener noreferrer"
+                 className="flex items-center gap-3 p-4 rounded-xl bg-blue-50 hover:bg-blue-100 transition-colors duration-200 group"
+               >
+                 <FiLinkedin className="text-blue-700 text-xl group-hover:scale-110 transition-transform" />
+                 <span className="text-blue-800 font-medium">LinkedIn</span>
+               </a>
+            </div>
+            <button
+              onClick={() => setShowSocialPopup(false)}
+              className="w-full mt-6 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl transition-colors font-medium"
+            >
+              Close
+            </button>
+          </motion.div>
+        </div>
+      )}
       
       {/* Why Volunteer Section */}
       <section className="py-20 bg-gray-50">
@@ -355,10 +441,10 @@ export default function Volunteer() {
               <span>Why Choose Us</span>
             </motion.div>
             <h2 className="text-4xl md:text-5xl font-bold mb-6 text-gray-800">
-              Why Volunteer With Us?
+              Why We Need You
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-              Volunteering with Lumps Away Foundation offers unique opportunities to make a real difference while developing new skills and connections.
+              Every small act of support creates a big difference in someone's cancer journey
             </p>
           </motion.div>
           
@@ -375,8 +461,8 @@ export default function Volunteer() {
                 <div className="w-16 h-16 bg-pink-500 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
                   <FiHeart className="text-2xl text-white" />
                 </div>
-                <h3 className="text-2xl font-bold mb-4 text-gray-800">Make a Direct Impact</h3>
-                <p className="text-gray-600 leading-relaxed">Our volunteer programs are designed to create meaningful, measurable change in the communities we serve.</p>
+                <h3 className="text-2xl font-bold mb-4 text-gray-800">Make a Real Impact</h3>
+                <p className="text-gray-600 leading-relaxed">Your time directly improves lives - whether it's providing comfort to someone going through treatment, helping with practical needs, or raising awareness that could save lives. Every hour you give creates tangible change in your community.</p>
               </div>
             </motion.div>
             
@@ -386,8 +472,8 @@ export default function Volunteer() {
                 <div className="w-16 h-16 bg-pink-500 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
                   <FiStar className="text-2xl text-white" />
                 </div>
-                <h3 className="text-2xl font-bold mb-4 text-gray-800">Develop New Skills</h3>
-                <p className="text-gray-600 leading-relaxed">Gain valuable experience, enhance your resume, and develop both professional and personal skills.</p>
+                <h3 className="text-2xl font-bold mb-4 text-gray-800">Gain Meaningful Experience</h3>
+                <p className="text-gray-600 leading-relaxed">Volunteering builds valuable skills in communication, empathy, and teamwork while giving you perspective on what truly matters. You'll develop both personally and professionally while contributing to something bigger than yourself.</p>
               </div>
             </motion.div>
             
@@ -397,8 +483,8 @@ export default function Volunteer() {
                 <div className="w-16 h-16 bg-pink-500 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
                   <FiUsers className="text-2xl text-white" />
                 </div>
-                <h3 className="text-2xl font-bold mb-4 text-gray-800">Join a Global Community</h3>
-                <p className="text-gray-600 leading-relaxed">Connect with like-minded individuals from around the world who share your passion for creating positive change.</p>
+                <h3 className="text-2xl font-bold mb-4 text-gray-800">Join a Supportive Community</h3>
+                <p className="text-gray-600 leading-relaxed">Connect with like-minded people who share your values and commitment to helping others. You'll build lasting friendships and become part of a network of people dedicated to making a difference - creating your own support system while supporting others.</p>
               </div>
             </motion.div>
           </motion.div>
@@ -903,6 +989,9 @@ export default function Volunteer() {
                   <p className="text-3xl font-bold text-yellow-600 font-mono tracking-wider">0784 012 345</p>
                 </div>
               </div>
+              <button className="w-full py-3 bg-yellow-500 hover:bg-yellow-600 text-white font-bold rounded-xl transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg mb-4">
+                Donate via MTN
+              </button>
               <p className="text-sm text-gray-600">*MTN Mobile Money charges may apply</p>
             </motion.div>
 
@@ -930,22 +1019,14 @@ export default function Volunteer() {
                   <p className="text-3xl font-bold text-red-600 font-mono tracking-wider">0755 012 345</p>
                 </div>
               </div>
+              <button className="w-full py-3 bg-red-500 hover:bg-red-600 text-white font-bold rounded-xl transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg mb-4">
+                Donate via Airtel
+              </button>
               <p className="text-sm text-gray-600">*Airtel Money charges may apply</p>
             </motion.div>
           </motion.div>
 
-          <motion.div
-            variants={fadeInUp}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            className="mt-12 text-center"
-          >
-            <p className="text-gray-600 max-w-2xl mx-auto">
-              After sending your donation, you'll receive a confirmation message. For donations above UGX 500,000, 
-              please contact us for a receipt at <a href="mailto:donations@lumpsaway.org" className="text-primary hover:underline">donations@lumpsaway.org</a>
-            </p>
-          </motion.div>
+
         </div>
       </section>
 
@@ -969,19 +1050,16 @@ export default function Volunteer() {
               Ready to Make a Difference?
             </h2>
             <p className="text-xl md:text-2xl mb-12 text-pink-100 leading-relaxed max-w-3xl mx-auto">
-              Join our community of volunteers today and help us create lasting change around the world.
+              Want to help us make a difference? We'd love to hear from you - let's discuss how to make a real impact together. Contact us.
             </p>
-            <button 
-              className="group relative px-10 py-5 bg-white text-pink-600 rounded-full font-bold text-xl shadow-2xl hover:shadow-3xl transform hover:-translate-y-2 transition-all duration-300 overflow-hidden"
-              onClick={() => {
-                setActiveTab('application');
-                document.getElementById('application-section').scrollIntoView({ behavior: 'smooth' });
-              }}
+            <Link 
+              to="/contact"
+              className="group relative px-10 py-5 bg-white text-pink-600 rounded-full font-bold text-xl shadow-2xl hover:shadow-3xl transform hover:-translate-y-2 transition-all duration-300 overflow-hidden inline-block"
             >
-              <span className="relative z-10">Apply Now</span>
+              <span className="relative z-10">Contact Us</span>
               <div className="absolute inset-0 bg-pink-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-              <span className="absolute inset-0 z-10 flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 font-bold">Apply Now</span>
-            </button>
+              <span className="absolute inset-0 z-10 flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 font-bold">Contact Us</span>
+            </Link>
           </motion.div>
         </div>
         <div className="absolute inset-0 opacity-10">

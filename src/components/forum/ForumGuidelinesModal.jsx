@@ -61,13 +61,17 @@ Please private message or email us at info@lumpsaway.ug with any concerns you ha
 
 
   const handleCancel = () => {
+    // Don't set localStorage when canceling - user should see guidelines again
     navigate('/');
     onClose();
   };
 
   const handleAccept = async () => {
     try {
-      // If user is logged in, update their document
+      // Always set localStorage for quick future checks
+      localStorage.setItem('hasSeenForumGuidelines', 'true');
+      
+      // If user is logged in, also update their Firebase document
       if (currentUser) {
         await updateDoc(doc(db, 'users', currentUser.uid), {
           hasReadForumGuidelines: true,
@@ -80,7 +84,8 @@ Please private message or email us at info@lumpsaway.ug with any concerns you ha
       onClose();
     } catch (error) {
       console.error('Error updating user guidelines status:', error);
-      // Still allow non-logged users to proceed even if database update fails
+      // Still allow users to proceed even if database update fails
+      // localStorage is already set, so they won't see guidelines again
       toast.success('Guidelines accepted! Welcome to the forum.');
       onAccept();
       onClose();

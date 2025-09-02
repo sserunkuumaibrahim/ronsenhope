@@ -464,7 +464,9 @@ export default function Contact() {
                  
                  <div className="grid grid-cols-2 gap-4">
                    <motion.a 
-                     href="#" 
+                     href="https://www.facebook.com/profile.php?id=100067651137058" 
+                     target="_blank"
+                     rel="noopener noreferrer"
                      whileHover={{ scale: 1.05, y: -2 }}
                      whileTap={{ scale: 0.95 }}
                      className="group flex items-center gap-3 p-4 rounded-2xl bg-gradient-to-r from-blue-50 to-blue-100 hover:from-blue-100 hover:to-blue-200 transition-all duration-300"
@@ -476,7 +478,9 @@ export default function Contact() {
                    </motion.a>
                    
                    <motion.a 
-                     href="#" 
+                     href="https://x.com/AwayLumps" 
+                     target="_blank"
+                     rel="noopener noreferrer"
                      whileHover={{ scale: 1.05, y: -2 }}
                      whileTap={{ scale: 0.95 }}
                      className="group flex items-center gap-3 p-4 rounded-2xl bg-gradient-to-r from-sky-50 to-sky-100 hover:from-sky-100 hover:to-sky-200 transition-all duration-300"
@@ -488,7 +492,9 @@ export default function Contact() {
                    </motion.a>
                    
                    <motion.a 
-                     href="#" 
+                     href="https://www.instagram.com/lumpsawayfoundation/" 
+                     target="_blank"
+                     rel="noopener noreferrer"
                      whileHover={{ scale: 1.05, y: -2 }}
                      whileTap={{ scale: 0.95 }}
                      className="group flex items-center gap-3 p-4 rounded-2xl bg-gradient-to-r from-pink-50 to-pink-100 hover:from-pink-100 hover:to-pink-200 transition-all duration-300"
@@ -500,7 +506,9 @@ export default function Contact() {
                    </motion.a>
                    
                    <motion.a 
-                     href="#" 
+                     href="https://www.linkedin.com/company/lumps-away-foundatin/?viewAsMember=true" 
+                     target="_blank"
+                     rel="noopener noreferrer"
                      whileHover={{ scale: 1.05, y: -2 }}
                      whileTap={{ scale: 0.95 }}
                      className="group flex items-center gap-3 p-4 rounded-2xl bg-gradient-to-r from-indigo-50 to-indigo-100 hover:from-indigo-100 hover:to-indigo-200 transition-all duration-300"

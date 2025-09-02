@@ -196,17 +196,10 @@ export default function About() {
               className="space-y-6"
             >
               <div className="bg-gradient-to-r from-pink-50 to-pink-100 p-8 rounded-2xl border border-pink-200">
-                <h3 className="text-2xl font-bold text-pink-800 mb-4">Linda's Journey (2017)</h3>
+                <h3 className="text-2xl font-bold text-pink-800 mb-4">Founding Story</h3>
                 <p className="text-gray-700 leading-relaxed mb-4">
-                  During Linda Tusiime's journey with breast cancer in 2017, she was faced with the dilemma that many people who've been diagnosed are faced with – where can I get information? She frantically searched online for young women like her who had faced a similar experience but only found voices from outside Uganda. Voices she could not relate to.
+                  During Linda Tusiime's journey with breast cancer in 2017, she was faced with the dilemma that many people who've been diagnosed are faced with – where can I get information? (A question that closely follows fear of the severity of cancer). She frantically searched online for young women like her who had faced a similar experience but only found voices from outside Uganda. Voices she could not relate to. So, she started a blog – Lumps Away. It was her way of sharing her ordeal while also connecting with others out there to help each other through their shared journeys.
                 </p>
-                <p className="text-gray-700 leading-relaxed">
-                  So, she started a blog – Lumps Away. It was her way of sharing her ordeal while also connecting with others out there to help each other through their shared journeys.
-                </p>
-              </div>
-              
-              <div className="bg-gradient-to-r from-blue-50 to-blue-100 p-8 rounded-2xl border border-blue-200">
-                <h3 className="text-2xl font-bold text-blue-800 mb-4">The Foundation (2019)</h3>
                 <p className="text-gray-700 leading-relaxed">
                   In 2019, with her friend, Fiona Toliva, Lumps Away shifted from being a blog to a Cancer Survivorship and Advocacy Organization. The Lumps Away Foundation is an organization built on hope and a passion for helping those going through pain we've known intimately.
                 </p>
@@ -232,6 +225,74 @@ export default function About() {
                   "We can't fix it all, but we can do our best. If you care about our cause or are just curious, join us; we're always looking for the extra hand."
                 </p>
               </div>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* Our Values Section */}
+      <section className="py-20 bg-white">
+        <div className="container-custom">
+          <motion.div
+            variants={fadeInUp}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <h2 className="text-4xl md:text-5xl font-bold mb-6 text-secondary">Our Values</h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              The core principles that guide everything we do in our mission to support cancer patients and survivors.
+            </p>
+          </motion.div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              viewport={{ once: true }}
+              className="bg-gradient-to-br from-pink-50 to-pink-100 p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 border border-pink-200"
+            >
+              <div className="w-16 h-16 bg-gradient-to-r from-pink-500 to-pink-600 rounded-xl flex items-center justify-center mb-6">
+                <FiHeart className="text-2xl text-white" />
+              </div>
+              <h3 className="text-2xl font-bold text-pink-800 mb-4">LOVE</h3>
+              <p className="text-gray-700 leading-relaxed">
+                Is at the heart of everything we do, driving us to build meaningful connections, and prioritize the well-being of others
+              </p>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+              viewport={{ once: true }}
+              className="bg-gradient-to-br from-blue-50 to-blue-100 p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 border border-blue-200"
+            >
+              <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl flex items-center justify-center mb-6">
+                <FiTarget className="text-2xl text-white" />
+              </div>
+              <h3 className="text-2xl font-bold text-blue-800 mb-4">ADVOCACY</h3>
+              <p className="text-gray-700 leading-relaxed">
+                Be a voice to raise awareness about cancer prevention, early detection, treatment options, and survivorship issues
+              </p>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              viewport={{ once: true }}
+              className="bg-gradient-to-br from-purple-50 to-purple-100 p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 border border-purple-200"
+            >
+              <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-purple-600 rounded-xl flex items-center justify-center mb-6">
+                <FiShield className="text-2xl text-white" />
+              </div>
+              <h3 className="text-2xl font-bold text-purple-800 mb-4">FORTITUDE</h3>
+              <p className="text-gray-700 leading-relaxed">
+                Encouraging strength and courage through a sense of community and support among individuals affected by cancer, encouraging shared experiences and strength.
+              </p>
             </motion.div>
           </div>
         </div>
@@ -602,48 +663,7 @@ export default function About() {
 
 
 
-      {/* Impact Stats */}
-      <section className="py-20 bg-gray-50">
-        <div className="container-custom">
-          <motion.div
-            variants={fadeInUp}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 text-black">Our Impact</h2>
-            <p className="text-xl text-black max-w-3xl mx-auto">
-              Inspired by stories like Carol's, we're making a real difference in cancer care across Uganda.
-            </p>
-          </motion.div>
-          
-          <motion.div
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"
-          >
-            <motion.div variants={itemVariants} className="bg-accent p-8 rounded-2xl shadow-lg border border-gray-100 text-center hover:shadow-xl transition-all duration-300">
-              <div className="text-4xl md:text-5xl font-bold text-green-700 mb-2">500+</div>
-              <div className="text-lg text-black">Patients Supported</div>
-            </motion.div>
-            
-            <motion.div variants={itemVariants} className="bg-accent p-8 rounded-2xl shadow-lg border border-gray-100 text-center hover:shadow-xl transition-all duration-300">
-              <div className="text-4xl md:text-5xl font-bold text-blue-700 mb-2">15</div>
-              <div className="text-lg text-black">Partner Hospitals</div>
-            </motion.div>
-            
-            <motion.div variants={itemVariants} className="bg-accent p-8 rounded-2xl shadow-lg border border-gray-100 text-center hover:shadow-xl transition-all duration-300">
-              <div className="text-4xl md:text-5xl font-bold text-yellow-500 mb-2">100%</div>
-              <div className="text-lg text-black">Free Treatment</div>
-            </motion.div>
-            
-            
-          </motion.div>
-        </div>
-      </section>
+
 
       {/* Call to Action */}
       <section className="relative py-20 overflow-hidden">

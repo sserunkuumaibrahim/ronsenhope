@@ -54,10 +54,10 @@ export default function Settings() {
         contactPhone: '+256 (700) 123-456',
         address: 'Kampala, Uganda',
         websiteUrl: 'https://lumpsaway.org',
-        socialFacebook: 'https://facebook.com/lumpsaway',
-        socialTwitter: 'https://twitter.com/lumpsaway',
-        socialInstagram: 'https://instagram.com/lumpsaway',
-        socialLinkedIn: 'https://linkedin.com/company/lumpsaway'
+        socialFacebook: 'https://www.facebook.com/profile.php?id=100067651137058',
+        socialTwitter: 'https://x.com/AwayLumps',
+        socialInstagram: 'https://www.instagram.com/lumpsawayfoundation/',
+        socialLinkedIn: 'https://www.linkedin.com/company/lumps-away-foundatin/?viewAsMember=true'
       };
       
       const emailSettings = {

@@ -401,8 +401,8 @@ export default function Home() {
   return (
     <MainLayout>
       <Helmet>
-        <title>Lumps Away Foundation - Empowering Lives Through Breast Cancer Support</title>
-        <meta name="description" content="We are the Lumps Away Foundation dedicated to supporting breast cancer patients through education, awareness, and community engagement in Uganda." />
+        <title>Lumps Away Foundation - A Cancer Survivorship Organization</title>
+        <meta name="description" content="We are an canacer survivorship and organization dedicated to helping manage emotional and physical changes before and after treatment for cancer patients" />
         <meta name="keywords" content="charity, NGO, nonprofit, community, education, sustainability" />
       </Helmet>
 
@@ -460,7 +460,7 @@ export default function Home() {
                 }}
                 className="text-5xl md:text-7xl font-bold mb-8 bg-gradient-to-r from-white to-pink-100 bg-clip-text text-transparent"
               >
-                Making a Difference Together
+                Lumps Away Foundation - A Cancer Survivorship Organization
               </motion.h1>
               <motion.p 
                 initial={{ opacity: 0, y: -30, scale: 0.9 }}
@@ -470,9 +470,9 @@ export default function Home() {
                   delay: 0.05,
                   ease: "easeOut"
                 }}
-                className="text-xl md:text-2xl mb-10 text-white/90 leading-relaxed max-w-3xl mx-auto lg:mx-0"
+                className="text-md md:text-lg mb-10 text-white/90 leading-relaxed max-w-3xl mx-auto lg:mx-0"
               >
-                Join us in our mission to create positive change through community engagement, education, and sustainable development.
+                We are an canacer survivorship and organization dedicated to helping manage emotional and physical changes before and after treatment for cancer patients
               </motion.p>
               <motion.div 
                 initial={{ opacity: 0, y: 30, scale: 0.9 }}
@@ -606,7 +606,6 @@ export default function Home() {
             className="text-center mb-16"
           >
             <h2 className="text-3xl md:text-5xl font-bold mb-4 apple-text tracking-tight">Our Mission</h2>
-            <p className="text-lg max-w-3xl mx-auto apple-text opacity-90">We're committed to creating meaningful change through these core principles</p>
           </motion.div>
           
           <motion.div 
@@ -636,7 +635,7 @@ export default function Home() {
                   <FiHeart className="text-4xl text-primary" />
                 </div>
                 <h2 className="text-2xl font-bold mb-4 apple-text tracking-tight">Our Mission</h2>
-                <p className="apple-text opacity-80 leading-relaxed">To empower communities through sustainable development initiatives that address critical social, economic, and environmental challenges.</p>
+                <p className="apple-text opacity-80 leading-relaxed">To provide comprehensive support and resources to individuals and families affected by breast cancer, with a focus on emotional, educational, and practical assistance, to improve their quality of life and promote positive outcomes.</p>
               </div>
             </motion.div>
             
@@ -655,8 +654,8 @@ export default function Home() {
                 <div className="apple-icon-container">
                   <FiGlobe className="text-4xl text-primary" />
                 </div>
-                <h2 className="text-2xl font-bold mb-4 apple-text tracking-tight">Our Impact</h2>
-                <p className="apple-text opacity-80 leading-relaxed">Measurable improvements in education, healthcare, environmental sustainability, and community development worldwide.</p>
+                <h2 className="text-2xl font-bold mb-4 apple-text tracking-tight">Our Vision</h2>
+                <p className="apple-text opacity-80 leading-relaxed">To be a safe space for women, men, caregivers, friends and more that are affected by the nightmare that is cancer. That the fear of the disease is dispelled, as one that can be effectively managed through comprehensive breast cancer support services and education, and that survivors can be inspired to live positive lives after diagnosis.  </p>
               </div>
             </motion.div>
           </motion.div>
@@ -683,7 +682,7 @@ export default function Home() {
               transition={{ duration: 0.7, delay: 0.2 }}
               className="text-lg max-w-3xl mx-auto apple-text opacity-90"
             >
-              We focus on sustainable development through these key program areas
+              We focus on sustainable futures beyond cancer.
             </motion.p>
           </div>
           
@@ -831,9 +830,9 @@ export default function Home() {
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.6, delay: 0.4 }}
-                  className="text-base md:text-lg opacity-90 drop-shadow-md leading-relaxed"
+                  className="text-base  md:text-lg opacity-90 drop-shadow-md leading-relaxed"
                 >
-                  Discover our comprehensive programs designed to create lasting positive impact in communities worldwide.
+                  Discover our comprehensive programs designed to create lasting positive impact in communities through improve in  education, health care, Patient support survivorship and advocacy.
                 </motion.p>
               </div>
             </div>
@@ -1080,7 +1079,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Community Section */}
+      {/* Our Impact Section */}
       <section className="py-20 md:py-32 bg-gradient-to-br from-gray-50 to-white text-secondary mt-[-1px]">
         <div className="container-custom">
           <div className="text-center mb-16">
@@ -1091,17 +1090,17 @@ export default function Home() {
               transition={{ duration: 0.7 }}
               className="text-3xl md:text-5xl font-bold mb-4 text-gray-800 font-serif"
             >
-              Our Community Impact
+              Our Impact
             </motion.h2>
             <motion.p 
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.7, delay: 0.2 }}
-              className="text-lg max-w-3xl mx-auto text-gray-600 leading-relaxed"
-            >
-              See how our volunteers and supporters are making a difference around the world
-            </motion.p>
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.7, delay: 0.2 }}
+                className="text-lg max-w-3xl mx-auto text-gray-600 leading-relaxed"
+              >
+                See how our volunteers and supporters are making a difference around the world
+              </motion.p>
           </div>
           
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 items-start">
@@ -1125,14 +1124,6 @@ export default function Home() {
                    ></iframe>
                  </div>
                </div>
-              
-              {/* Video Caption */}
-              <div className="mt-6 text-center">
-                <h4 className="text-xl font-semibold text-gray-800 mb-2 font-serif">Stories of Change</h4>
-                <p className="text-gray-600 text-sm leading-relaxed">
-                  Watch how our community initiatives are transforming lives and building stronger, more resilient communities worldwide.
-                </p>
-              </div>
             </motion.div>
             
             {/* Classic Content Side - Takes 1/3 of the space */}
@@ -1155,82 +1146,14 @@ export default function Home() {
                 
                 <div className="space-y-6">
                   <p className="text-gray-700 leading-relaxed text-sm">
-                    Our community of volunteers, donors, and partners work tirelessly to create positive change in communities around the world.
+                    Our goal is to create a safe space for women, men, caregivers, friends, and more who are affected by the nightmare that is cancer. We do what we can to help, bring awareness, and be an emotional support while making the lives of those affected by it a little easier.
                   </p>
-                  
-                  <div className="border-l-4 border-primary pl-4">
-                    <p className="text-gray-600 italic text-sm leading-relaxed">
-                      "From building schools and clean water systems to providing disaster relief and healthcare services, we're making a tangible difference in people's lives."
-                    </p>
                   </div>
-                  
-                  <div className="space-y-4">
-                    <div className="flex items-start space-x-3">
-                      <div className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></div>
-                      <div>
-                        <h5 className="font-semibold text-gray-800 text-sm">Global Reach</h5>
-                        <p className="text-gray-600 text-xs">Operating in 45+ countries worldwide</p>
-                      </div>
-                    </div>
-                    
-                    <div className="flex items-start space-x-3">
-                      <div className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></div>
-                      <div>
-                        <h5 className="font-semibold text-gray-800 text-sm">Community-Led</h5>
-                        <p className="text-gray-600 text-xs">Local solutions for local challenges</p>
-                      </div>
-                    </div>
-                    
-                    <div className="flex items-start space-x-3">
-                      <div className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></div>
-                      <div>
-                        <h5 className="font-semibold text-gray-800 text-sm">Sustainable Impact</h5>
-                        <p className="text-gray-600 text-xs">Long-term solutions that last</p>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div className="pt-6 border-t border-gray-200">
-                     <Link 
-                       to="/forum" 
-                       className="w-full bg-primary text-white py-3 px-6 rounded-lg font-semibold text-sm hover:bg-primary/90 transition-colors duration-300 text-center block"
-                     >
-                       Join Our Community
-                     </Link>
-                   </div>
-                 </div>
                </div>
              </motion.div>
            </div>
            
-           {/* Impact by Numbers - Moved below the section */}
-           <motion.div
-             initial={{ opacity: 0, y: 20 }}
-             whileInView={{ opacity: 1, y: 0 }}
-             viewport={{ once: true }}
-             transition={{ duration: 0.7, delay: 0.4 }}
-             className="mt-16 max-w-4xl mx-auto"
-           >
-             <h4 className="text-2xl font-bold text-gray-800 mb-8 font-serif text-center">Impact by Numbers</h4>
-             <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-               <div>
-                 <div className="text-3xl md:text-4xl font-bold text-primary mb-2">250K+</div>
-                 <div className="text-sm text-gray-600 font-medium">Lives Impacted</div>
-               </div>
-               <div>
-                 <div className="text-3xl md:text-4xl font-bold text-primary mb-2">45+</div>
-                 <div className="text-sm text-gray-600 font-medium">Countries</div>
-               </div>
-               <div>
-                 <div className="text-3xl md:text-4xl font-bold text-primary mb-2">1,200+</div>
-                 <div className="text-sm text-gray-600 font-medium">Volunteers</div>
-               </div>
-               <div>
-                 <div className="text-3xl md:text-4xl font-bold text-primary mb-2">150+</div>
-                 <div className="text-sm text-gray-600 font-medium">Projects</div>
-               </div>
-             </div>
-           </motion.div>
+
          </div>
        </section>
 
@@ -1345,11 +1268,11 @@ export default function Home() {
             className="flex justify-center space-x-6"
           >
             {[
-              { icon: FiFacebook, name: 'Facebook', color: 'hover:bg-blue-600', link: '#' },
-              { icon: FiTwitter, name: 'Twitter', color: 'hover:bg-blue-400', link: '#' },
-              { icon: FiInstagram, name: 'Instagram', color: 'hover:bg-pink-500', link: '#' },
-              { icon: FiLinkedin, name: 'LinkedIn', color: 'hover:bg-blue-700', link: '#' },
-              { icon: FiYoutube, name: 'YouTube', color: 'hover:bg-red-600', link: '#' }
+              { icon: FiFacebook, name: 'Facebook', color: 'hover:bg-blue-600', link: 'https://www.facebook.com/profile.php?id=100067651137058' },
+              { icon: FiTwitter, name: 'Twitter', color: 'hover:bg-blue-400', link: 'https://x.com/AwayLumps' },
+              { icon: FiInstagram, name: 'Instagram', color: 'hover:bg-pink-500', link: 'https://www.instagram.com/lumpsawayfoundation/' },
+              { icon: FiLinkedin, name: 'LinkedIn', color: 'hover:bg-blue-700', link: 'https://www.linkedin.com/company/lumps-away-foundatin/?viewAsMember=true' },
+              { icon: FiYoutube, name: 'YouTube', color: 'hover:bg-red-600', link: 'https://youtu.be/RHOoFn1K2Hw?si=tL3s2LsRFoDR6Km4' }
             ].map((social, index) => (
               <motion.a
                 key={social.name}
@@ -1449,7 +1372,7 @@ export default function Home() {
             transition={{ duration: 0.7 }}
             className="text-4xl md:text-6xl font-bold mb-8 apple-text tracking-tight"
           >
-            Join Our Community Forum
+            Join Our Community
           </motion.h2>
           <motion.p 
             initial={{ opacity: 0 }}
@@ -1458,8 +1381,7 @@ export default function Home() {
             transition={{ duration: 0.7, delay: 0.2 }}
             className="text-xl md:text-2xl mb-12 max-w-3xl mx-auto apple-text opacity-90 leading-relaxed"
           >
-            Connect with like-minded individuals, share ideas, and participate in meaningful discussions about causes that matter.
-          </motion.p>
+We’d like to be a place for all affected by the nightmare that is cancer – patients, survivors and families. Share, Laugh, Give tips to help others.          </motion.p>
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}

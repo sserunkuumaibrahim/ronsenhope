@@ -93,12 +93,44 @@ export default function Forum() {
     return unsubscribe;
   }, []);
   
-  // Show guidelines modal for every user (logged in or not)
+  // Show guidelines modal only for first-time users
   useEffect(() => {
-    // Always show guidelines modal for all users
-    setShowGuidelinesModal(true);
-    setCheckingGuidelines(false);
-  }, []);
+    const checkGuidelinesStatus = async () => {
+      try {
+        // Check localStorage first for quick response
+        const hasSeenGuidelines = localStorage.getItem('hasSeenForumGuidelines');
+        
+        if (hasSeenGuidelines === 'true') {
+          setShowGuidelinesModal(false);
+          setCheckingGuidelines(false);
+          return;
+        }
+        
+        // If user is logged in, also check their Firebase profile
+        if (currentUser) {
+          const userDoc = await getDoc(doc(db, 'users', currentUser.uid));
+          if (userDoc.exists() && userDoc.data().hasReadForumGuidelines) {
+            // User has read guidelines before, update localStorage and don't show modal
+            localStorage.setItem('hasSeenForumGuidelines', 'true');
+            setShowGuidelinesModal(false);
+            setCheckingGuidelines(false);
+            return;
+          }
+        }
+        
+        // First-time user, show the guidelines modal
+        setShowGuidelinesModal(true);
+        setCheckingGuidelines(false);
+      } catch (error) {
+        console.error('Error checking guidelines status:', error);
+        // On error, show guidelines to be safe
+        setShowGuidelinesModal(true);
+        setCheckingGuidelines(false);
+      }
+    };
+    
+    checkGuidelinesStatus();
+  }, [currentUser]);
   
   // Add new topic function
   const handleNewTopicSubmit = async (e) => {
