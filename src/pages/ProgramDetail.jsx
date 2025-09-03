@@ -383,41 +383,6 @@ export default function ProgramDetail() {
 
           <div className="space-y-8">
             <div className="bg-gradient-to-br from-white to-green-50/50 border border-green-200/60 shadow-xl hover:shadow-2xl transition-all duration-300 rounded-xl overflow-hidden">
-              <div className="bg-gradient-to-r from-green-500/10 to-emerald-500/10 border-b border-green-200/40 p-6">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-emerald-600 rounded-full flex items-center justify-center">
-                    <FiDollarSign className="w-5 h-5 text-white" />
-                  </div>
-                  <h3 className="text-xl font-bold text-gray-800">Program Progress</h3>
-                </div>
-                
-                <div className="space-y-4">
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-700 font-medium">Fundraising Goal</span>
-                    <span className="text-lg font-bold text-green-600">${program.budget.toLocaleString()}</span>
-                  </div>
-                  
-                  <div className="relative">
-                    <div className="w-full bg-gray-200 rounded-full h-6 overflow-hidden">
-                      <div 
-                        className="bg-gradient-to-r from-green-500 to-emerald-500 h-6 rounded-full transition-all duration-1000 ease-out relative" 
-                        style={{ width: `${program.progress}%` }}
-                      >
-                        <div className="absolute inset-0 bg-white/20 animate-pulse"></div>
-                      </div>
-                    </div>
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <span className="text-sm font-bold text-white drop-shadow-lg">{program.progress}%</span>
-                    </div>
-                  </div>
-                  
-                  <div className="flex justify-between items-center text-sm">
-                    <span className="text-gray-600">${program.raised.toLocaleString()} raised</span>
-                    <span className="text-gray-600">${(program.budget - program.raised).toLocaleString()} remaining</span>
-                  </div>
-                </div>
-              </div>
-              
               <div className="p-6 bg-white">
                   <div className="space-y-3">
                     <div dangerouslySetInnerHTML={{

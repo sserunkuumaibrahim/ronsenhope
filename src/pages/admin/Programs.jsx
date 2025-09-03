@@ -58,9 +58,6 @@ export default function Programs() {
     title: '',
     category: '',
     location: '',
-    budget: '',
-    raised: 0,
-    progress: 0,
     startDate: '',
     endDate: '',
     image: '',
@@ -327,9 +324,6 @@ export default function Programs() {
       title: '',
       category: '',
       location: '',
-      budget: '',
-      raised: 0,
-      progress: 0,
       startDate: '',
       endDate: '',
       image: '',
@@ -393,9 +387,6 @@ export default function Programs() {
       title: program.title || '',
       category: program.category || '',
       location: program.location || '',
-      budget: program.budget || '',
-      raised: program.raised || 0,
-      progress: program.progress || 0,
       startDate: program.startDate || '',
       endDate: program.endDate || '',
       image: program.image || '',
@@ -868,13 +859,7 @@ export default function Programs() {
                         </ul>
                       </div>
                     )}
-                    {selectedProgram.budget && (
-                      <div>
-                        <h6 className="font-medium mb-1">Budget Information</h6>
-                        <p className="text-gray-600 text-sm">Budget: ${selectedProgram.budget?.toLocaleString()}</p>
-                        <p className="text-gray-600 text-sm">Raised: ${(selectedProgram.raised || 0).toLocaleString()}</p>
-                      </div>
-                    )}
+
                   </div>
                 </div>
               </div>
@@ -1119,91 +1104,7 @@ export default function Programs() {
                        )}
                      </div>
                     
-                    {/* Funding Tracking Section */}
-                    <div className="bg-gray-50 p-4 rounded-lg space-y-4">
-                      <h5 className="font-medium text-gray-900">Funding Tracking</h5>
-                      
-                      <div className="grid grid-cols-2 gap-4">
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1">Budget Goal ($)</label>
-                          <input
-                            type="number"
-                            min="0"
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50"
-                            value={formData.budget}
-                            onChange={(e) => {
-                              const budget = parseInt(e.target.value) || 0;
-                              const progress = budget > 0 ? Math.round((formData.raised / budget) * 100) : 0;
-                              setFormData({...formData, budget, progress});
-                            }}
-                          />
-                        </div>
-                        
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1">Amount Raised ($)</label>
-                          <input
-                            type="number"
-                            min="0"
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50"
-                            value={formData.raised}
-                            onChange={(e) => {
-                              const raised = parseInt(e.target.value) || 0;
-                              const progress = formData.budget > 0 ? Math.round((raised / formData.budget) * 100) : 0;
-                              setFormData({...formData, raised, progress});
-                            }}
-                          />
-                        </div>
-                      </div>
-                      
-                      {/* Progress Visualization */}
-                      {formData.budget > 0 && (
-                        <div className="space-y-2">
-                          <div className="flex justify-between items-center">
-                            <span className="text-sm font-medium text-gray-700">Funding Progress</span>
-                            <span className="text-sm text-gray-600">{formData.progress}% ({formData.raised.toLocaleString()} / {formData.budget.toLocaleString()})</span>
-                          </div>
-                          <div className="w-full bg-gray-200 rounded-full h-3">
-                            <div 
-                              className="bg-primary h-3 rounded-full transition-all duration-300" 
-                              style={{ width: `${Math.min(formData.progress, 100)}%` }}
-                            ></div>
-                          </div>
-                          <div className="flex justify-between text-xs text-gray-500">
-                            <span>$0</span>
-                            <span>${formData.budget.toLocaleString()}</span>
-                          </div>
-                          {formData.progress >= 100 && (
-                            <div className="flex items-center gap-2 text-green-600 text-sm">
-                              <FiCheck className="w-4 h-4" />
-                              <span>Funding goal achieved!</span>
-                            </div>
-                          )}
-                          {formData.raised > formData.budget && (
-                            <div className="text-blue-600 text-sm">
-                              <span>Exceeded goal by ${(formData.raised - formData.budget).toLocaleString()}</span>
-                            </div>
-                          )}
-                        </div>
-                      )}
-                      
-                      {/* Funding Statistics */}
-                      {formData.budget > 0 && (
-                        <div className="grid grid-cols-3 gap-4 pt-3 border-t border-gray-200">
-                          <div className="text-center">
-                            <div className="text-lg font-semibold text-gray-900">${formData.raised.toLocaleString()}</div>
-                            <div className="text-xs text-gray-500">Raised</div>
-                          </div>
-                          <div className="text-center">
-                            <div className="text-lg font-semibold text-gray-900">${(formData.budget - formData.raised).toLocaleString()}</div>
-                            <div className="text-xs text-gray-500">Remaining</div>
-                          </div>
-                          <div className="text-center">
-                            <div className="text-lg font-semibold text-primary">{formData.progress}%</div>
-                            <div className="text-xs text-gray-500">Complete</div>
-                          </div>
-                        </div>
-                      )}
-                    </div>
+
                   </div>
                   
                   <div>

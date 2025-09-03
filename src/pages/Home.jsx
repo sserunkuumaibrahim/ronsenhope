@@ -351,14 +351,7 @@ export default function Home() {
             <span className="text-gray-500">Location:</span>
             <span className="font-semibold text-secondary">{tooltip.program.location}</span>
           </div>
-          <div className="flex justify-between text-sm md:text-base">
-            <span className="text-gray-500">Progress:</span>
-            <span className="font-semibold text-primary">{tooltip.program.progress || 0}% complete</span>
-          </div>
-          <div className="flex justify-between text-sm md:text-base">
-            <span className="text-gray-500">Budget:</span>
-            <span className="font-semibold text-secondary">${tooltip.program.budget?.toLocaleString() || '0'}</span>
-          </div>
+
         </div>
         
         <Link 

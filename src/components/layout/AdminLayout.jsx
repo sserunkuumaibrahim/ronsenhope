@@ -82,22 +82,22 @@ export default function AdminLayout({ children }) {
             animate={{ width: 280, opacity: 1 }}
             exit={{ width: 0, opacity: 0 }}
             transition={{ duration: 0.3, ease: "easeInOut" }}
-            className="bg-white shadow-2xl fixed left-0 top-0 h-full z-20 overflow-hidden border-r border-gray-200"
+            className="bg-white shadow-2xl fixed left-0 top-0 h-full z-20 border-r border-gray-200 flex flex-col overflow-hidden"
           >
             {/* Sidebar Header */}
-            <div className="p-6 border-b border-gray-100 bg-gradient-to-r from-primary to-secondary">
+            <div className="flex-shrink-0 p-4 sm:p-6 border-b border-gray-100 bg-gradient-to-r from-primary to-secondary">
               <div className="flex justify-between items-center">
-                <Link to="/admin" className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-sm">
-                    <FiGlobe className="text-white text-xl" />
+                <Link to="/admin" className="flex items-center gap-3 min-w-0">
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-sm">
+                    <FiGlobe className="text-white text-lg sm:text-xl" />
                   </div>
-                  <div>
-                    <h2 className="text-xl font-bold text-white">Admin Panel</h2>
-                    <p className="text-white/80 text-sm">Management Dashboard</p>
+                  <div className="min-w-0">
+                    <h2 className="text-lg sm:text-xl font-bold text-white truncate">Admin Panel</h2>
+                    <p className="text-white/80 text-xs sm:text-sm truncate">Management Dashboard</p>
                   </div>
                 </Link>
                 <button 
-                  className="lg:hidden text-white/80 hover:text-white text-2xl focus:outline-none transition-colors"
+                  className="lg:hidden text-white/80 hover:text-white text-xl sm:text-2xl focus:outline-none transition-colors p-1 rounded-lg hover:bg-white/10"
                   onClick={() => setIsSidebarOpen(false)}
                 >
                   <FiX />
@@ -106,8 +106,8 @@ export default function AdminLayout({ children }) {
             </div>
             
             {/* Navigation */}
-            <nav className="mt-6 px-4">
-              <div className="space-y-2">
+            <nav className="flex-1 mt-4 sm:mt-6 px-3 sm:px-4 overflow-y-auto" style={{scrollbarWidth: 'thin', scrollbarColor: '#d1d5db transparent'}}>
+              <div className="space-y-1 sm:space-y-2 pb-6">
                 {sidebarItems.map((item, index) => (
                   <motion.div
                     key={item.path}
@@ -117,22 +117,23 @@ export default function AdminLayout({ children }) {
                   >
                     <Link 
                       to={item.path} 
-                      className={`group flex items-center gap-4 p-4 rounded-xl transition-all duration-300 relative overflow-hidden ${
+                      className={`group flex items-center gap-3 sm:gap-4 p-3 sm:p-4 rounded-xl transition-all duration-300 relative overflow-hidden min-h-[60px] sm:min-h-[auto] ${
                         location.pathname === item.path 
                           ? 'bg-gradient-to-r from-primary to-secondary text-white shadow-lg transform scale-[1.02]' 
-                          : 'hover:bg-gray-50 text-gray-700 hover:text-primary hover:shadow-md'
+                          : 'hover:bg-gray-50 text-gray-700 hover:text-primary hover:shadow-md active:bg-gray-100'
                       }`}
+                      onClick={() => window.innerWidth < 1024 && setIsSidebarOpen(false)}
                     >
-                      <div className={`w-10 h-10 rounded-lg flex items-center justify-center transition-all duration-300 ${
+                      <div className={`w-8 h-8 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center transition-all duration-300 flex-shrink-0 ${
                         location.pathname === item.path 
                           ? 'bg-white/20 text-white' 
                           : 'bg-gray-100 text-gray-600 group-hover:bg-primary/10 group-hover:text-primary'
                       }`}>
-                        <span className="text-lg">{item.icon}</span>
+                        <span className="text-base sm:text-lg">{item.icon}</span>
                       </div>
-                      <div className="flex-1">
-                        <div className="font-semibold">{item.label}</div>
-                        <div className={`text-sm transition-colors ${
+                      <div className="flex-1 min-w-0">
+                        <div className="font-semibold text-sm sm:text-base truncate">{item.label}</div>
+                        <div className={`text-xs sm:text-sm transition-colors truncate ${
                           location.pathname === item.path 
                             ? 'text-white/80' 
                             : 'text-gray-500 group-hover:text-primary/70'
@@ -151,23 +152,23 @@ export default function AdminLayout({ children }) {
                   </motion.div>
                 ))}
               </div>
-              
-              {/* Logout Button */}
-              <div className="mt-8 pt-6 border-t border-gray-100">
-                <button 
-                  onClick={handleLogout}
-                  className="group flex items-center gap-4 p-4 rounded-xl w-full text-left hover:bg-red-50 text-gray-700 hover:text-red-600 transition-all duration-300 hover:shadow-md"
-                >
-                  <div className="w-10 h-10 rounded-lg bg-gray-100 group-hover:bg-red-100 flex items-center justify-center transition-all duration-300">
-                    <FiLogOut className="text-lg" />
-                  </div>
-                  <div className="flex-1">
-                    <div className="font-semibold">Logout</div>
-                    <div className="text-sm text-gray-500 group-hover:text-red-500 transition-colors">Sign out of admin panel</div>
-                  </div>
-                </button>
-              </div>
             </nav>
+            
+            {/* Logout Button - Fixed at bottom */}
+            <div className="flex-shrink-0 p-3 sm:p-4 border-t border-gray-100 bg-white">
+              <button 
+                onClick={handleLogout}
+                className="group flex items-center gap-3 sm:gap-4 p-3 sm:p-4 rounded-xl w-full text-left hover:bg-red-50 text-gray-700 hover:text-red-600 transition-all duration-300 hover:shadow-md active:bg-red-100 min-h-[60px] sm:min-h-[auto]"
+              >
+                <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-gray-100 group-hover:bg-red-100 flex items-center justify-center transition-all duration-300 flex-shrink-0">
+                  <FiLogOut className="text-base sm:text-lg" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="font-semibold text-sm sm:text-base truncate">Logout</div>
+                  <div className="text-xs sm:text-sm text-gray-500 group-hover:text-red-500 transition-colors truncate">Sign out of admin panel</div>
+                </div>
+              </button>
+            </div>
           </motion.aside>
         )}
       </AnimatePresence>
@@ -184,44 +185,44 @@ export default function AdminLayout({ children }) {
       )}
       
       {/* Main Content */}
-      <div className={`flex-1 transition-all duration-300 ${isSidebarOpen ? 'ml-0 lg:ml-[280px]' : 'ml-0'} min-w-0`}>
+      <div className={`flex-1 transition-all duration-300 ${isSidebarOpen ? 'ml-0 lg:ml-[280px]' : 'ml-0'} min-w-0 flex flex-col h-screen`}>
         {/* Header */}
-        <header className="bg-white/80 backdrop-blur-sm shadow-sm border-b border-gray-200 sticky top-0 z-10">
-          <div className="flex justify-between items-center p-6">
-            <div className="flex items-center gap-4">
+        <header className="bg-white/80 backdrop-blur-sm shadow-sm border-b border-gray-200 sticky top-0 z-10 flex-shrink-0">
+          <div className="flex justify-between items-center p-4 sm:p-6">
+            <div className="flex items-center gap-3 sm:gap-4 min-w-0">
               <button 
-                className="p-2 rounded-xl bg-gray-100 hover:bg-gray-200 text-gray-600 hover:text-gray-800 focus:outline-none transition-all duration-200 hover:shadow-md"
+                className="p-2 rounded-xl bg-gray-100 hover:bg-gray-200 text-gray-600 hover:text-gray-800 focus:outline-none transition-all duration-200 hover:shadow-md active:bg-gray-300 touch-manipulation"
                 onClick={() => setIsSidebarOpen(!isSidebarOpen)}
               >
-                {isSidebarOpen ? <FiX className="text-xl" /> : <FiMenu className="text-xl" />}
+                {isSidebarOpen ? <FiX className="text-lg sm:text-xl" /> : <FiMenu className="text-lg sm:text-xl" />}
               </button>
               
-              <div className="hidden md:block">
-                <h1 className="text-2xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+              <div className="hidden sm:block min-w-0">
+                <h1 className="text-lg sm:text-2xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent truncate">
                   Admin Dashboard
                 </h1>
-                <p className="text-gray-600 text-sm">Manage your organization efficiently</p>
+                <p className="text-gray-600 text-xs sm:text-sm truncate">Manage your organization efficiently</p>
               </div>
             </div>
             
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2 sm:gap-4">
               {/* Quick Actions */}
-              <div className="hidden lg:flex items-center gap-2">
+              <div className="hidden md:flex items-center gap-2">
                 <Link 
                   to="/" 
-                  className="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-all duration-200 text-sm font-medium hover:shadow-md flex items-center gap-2"
+                  className="px-3 sm:px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-all duration-200 text-xs sm:text-sm font-medium hover:shadow-md flex items-center gap-1 sm:gap-2 active:bg-gray-300 touch-manipulation"
                 >
-                  <FiGlobe className="text-sm" />
-                  View Site
+                  <FiGlobe className="text-xs sm:text-sm" />
+                  <span className="hidden lg:inline">View Site</span>
                 </Link>
               </div>
               
               {/* User Menu */}
               <div className="dropdown dropdown-end">
-                <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar hover:shadow-lg transition-all duration-200">
-                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary to-secondary p-0.5">
+                <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar hover:shadow-lg transition-all duration-200 touch-manipulation">
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gradient-to-br from-primary to-secondary p-0.5">
                     <div className="w-full h-full rounded-full bg-white flex items-center justify-center">
-                      <span className="text-lg font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+                      <span className="text-sm sm:text-lg font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
                         {currentUser.displayName ? currentUser.displayName.charAt(0).toUpperCase() : 'A'}
                       </span>
                     </div>
@@ -248,11 +249,12 @@ export default function AdminLayout({ children }) {
         </header>
         
         {/* Page Content */}
-        <main className="p-4 sm:p-6 lg:p-8 w-full overflow-x-auto">
+        <main className="flex-1 p-3 sm:p-4 lg:p-6 xl:p-8 w-full overflow-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
+            className="h-full"
           >
             {children}
           </motion.div>
