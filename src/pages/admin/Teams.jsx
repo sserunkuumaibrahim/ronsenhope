@@ -228,7 +228,7 @@ export default function Teams() {
           </div>
           <button
             onClick={() => setShowAddForm(true)}
-            className="bg-pink-600 text-white px-4 py-2 rounded-lg hover:bg-pink-700 transition-colors flex items-center gap-2"
+            className="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary/90 transition-colors flex items-center gap-2"
           >
             <FiPlus className="w-4 h-4" />
             Add Team
@@ -280,7 +280,7 @@ export default function Teams() {
               <div className="flex gap-2">
                 <button
                   type="submit"
-                  className="bg-pink-600 text-white px-4 py-2 rounded-md hover:bg-pink-700 transition-colors flex items-center gap-2"
+                  className="bg-primary text-white px-4 py-2 rounded-md hover:bg-primary/90 transition-colors flex items-center gap-2"
                 >
                   <FiSave className="w-4 h-4" />
                   Save Team
@@ -349,7 +349,7 @@ export default function Teams() {
                     <div className="flex gap-2">
                       <button
                         type="submit"
-                        className="bg-pink-600 text-white px-4 py-2 rounded-md hover:bg-pink-700 transition-colors flex items-center gap-2"
+                        className="bg-primary text-white px-4 py-2 rounded-md hover:bg-primary/90 transition-colors flex items-center gap-2"
                       >
                         <FiSave className="w-4 h-4" />
                         Save
@@ -464,7 +464,7 @@ export default function Teams() {
                     <div className="flex gap-2">
                       <button
                         type="submit"
-                        className="bg-pink-600 text-white px-4 py-2 rounded-md hover:bg-pink-700 transition-colors flex items-center gap-2"
+                        className="bg-primary text-white px-4 py-2 rounded-md hover:bg-primary/90 transition-colors flex items-center gap-2"
                       >
                         <FiSave className="w-4 h-4" />
                         Add Member
@@ -545,7 +545,7 @@ export default function Teams() {
                             <div className="flex gap-2">
                               <button
                                 type="submit"
-                                className="bg-pink-600 text-white px-3 py-1 rounded-md hover:bg-pink-700 transition-colors flex items-center gap-1 text-sm"
+                                className="bg-primary text-white px-3 py-1 rounded-md hover:bg-primary/90 transition-colors flex items-center gap-1 text-sm"
                               >
                                 <FiSave className="w-3 h-3" />
                                 Save
@@ -607,7 +607,7 @@ export default function Teams() {
             <p className="text-gray-600 mb-4">Get started by creating your first team.</p>
             <button
               onClick={() => setShowAddForm(true)}
-              className="bg-pink-600 text-white px-4 py-2 rounded-lg hover:bg-pink-700 transition-colors flex items-center gap-2 mx-auto"
+              className="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary/90 transition-colors flex items-center gap-2 mx-auto"
             >
               <FiPlus className="w-4 h-4" />
               Add Your First Team

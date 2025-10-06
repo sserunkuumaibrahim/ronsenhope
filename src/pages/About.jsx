@@ -1,6 +1,6 @@
 import { Helmet } from 'react-helmet-async';
-import { motion } from 'framer-motion';
 import { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import { FiHeart, FiTarget, FiUsers, FiAward, FiGlobe, FiCalendar, FiShield, FiStar, FiArrowRight, FiMessageCircle, FiUser, FiBookOpen, FiActivity, FiDollarSign, FiCheckCircle, FiAlertTriangle } from 'react-icons/fi';
 import MainLayout from '../components/layout/MainLayout';
 import { ref, onValue, off } from 'firebase/database';
@@ -10,28 +10,6 @@ export default function About() {
   // State for teams from Firebase
   const [teams, setTeams] = useState([]);
   const [teamsLoading, setTeamsLoading] = useState(true);
-
-  // Animation variants
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.2
-      }
-    }
-  };
-  
-  const itemVariants = {
-    hidden: { y: 20, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: {
-        duration: 0.5
-      }
-    }
-  };
 
   const fadeInUp = {
     hidden: { opacity: 0, y: 30 },
@@ -63,39 +41,95 @@ export default function About() {
     return () => off(teamsRef, 'value', unsubscribe);
   }, []);
 
-  // Team members from boi.md
+  // Team members from Ronsen Hope
   const teamMembers = [
     {
-      name: 'Fiona Kirabo',
-      role: 'Board Chair',
-      image: '/Fiona Kirabo Photo .jpg',
+      name: 'Mr. Ssenfuma Ronald',
+      role: 'Director - Chairperson',
+      image: '/team-ronald.jpg',
       icon: FiUser,
-      description: 'Passionate through personal experience with both her sister, Linda, and a close friend who passed away from breast cancer. Has worked in business advisory services and strategic innovation for 15 years across global organizations and Africa.',
-      expertise: 'Management, Talent Leadership, Team Resource & Risk Implementation'
+      description: 'Founder of Ronsen Hope Christian Foundation Uganda, continuing his late father\'s legacy of helping vulnerable children.',
+      expertise: 'Leadership & Community Development'
     },
     {
-       name: 'Justus Amanyire',
-       role: 'Legal',
-       image: '/Justus Amanyire Photo.jpg',
-       icon: FiBookOpen,
-      description: 'Lawyer by profession and businessman in real estate development. Believes everyone has interacted with cancer through family and friends, and hopes for Lumps Away to fill the gap in service delivery.',
-      expertise: 'Legal Affairs & Real Estate Development'
+      name: 'Mrs Nandawula Mariam',
+      role: 'Director - Vice Chairperson',
+      image: '/team-mariam.jpg',
+      icon: FiUsers,
+      description: 'Dedicated to supporting the foundation\'s mission of providing care and education to orphaned children.',
+      expertise: 'Administration & Family Support'
     },
     {
-      name: 'Dr. Alfred Jatho',
-      role: 'Technical',
-      image: '/Alfred Jatho Photo.jpg',
-      icon: FiActivity,
-      description: 'Works at Uganda Cancer Institute (UCI) and heads the Department of Community Health Services. Part of the National Cancer Control Secretariat team developing the National Cancer Control Plan.',
-      expertise: 'Cancer Control, Population Health & Community Engagement'
+      name: 'Mrs Ampiire Florence',
+      role: 'Director - Executive Secretary',
+      image: '/team-florence.jpg',
+      icon: FiBookOpen,
+      description: 'Manages administrative operations and ensures smooth coordination of foundation activities.',
+      expertise: 'Executive Management & Operations'
     },
     {
-      name: 'Winnie Birungi',
-      role: 'Finance',
-      image: '/Winnie Birungi Photo.jpg',
+      name: 'Mrs Nabuule Sarah',
+      role: 'Director - Treasurer',
+      image: '/team-sarah.jpg',
       icon: FiDollarSign,
-      description: 'Senior Consultant and Finance Lead for EYDCD Program. Over 8 years of experience serving as Finance Lead for HIV, CDC PEPFA and USAID programs under the Ministry of Health.',
-      expertise: 'Financial Management & Project Accounting'
+      description: 'Oversees financial management and ensures transparent use of donations for children\'s welfare.',
+      expertise: 'Financial Management & Accountability'
+    },
+    {
+      name: 'Mr. Mukalazi Martin',
+      role: 'Project Manager',
+      image: '/team-martin.jpg',
+      icon: FiTarget,
+      description: 'Leads project implementation and coordinates outreach programs for vulnerable communities.',
+      expertise: 'Project Management & Community Outreach'
+    },
+    {
+      name: 'Nakakande Suzan',
+      role: 'Head of Education Ministry',
+      image: '/team-suzan.jpg',
+      icon: FiBookOpen,
+      description: 'Oversees educational programs and ensures quality learning opportunities for children.',
+      expertise: 'Education & Child Development'
+    },
+    {
+      name: 'Mr. Yiga Dunstan',
+      role: 'Head of Welfare Department',
+      image: '/team-dunstan.jpg',
+      icon: FiHeart,
+      description: 'Manages welfare programs ensuring children\'s basic needs and emotional support.',
+      expertise: 'Child Welfare & Care'
+    },
+    {
+      name: 'Rev. Sr. Nandyowa Slyvia',
+      role: 'Head of Advisory Committee',
+      image: '/team-slyvia.jpg',
+      icon: FiShield,
+      description: 'Provides spiritual guidance and advisory support to the foundation\'s operations.',
+      expertise: 'Spiritual Leadership & Advisory'
+    },
+    {
+      name: 'Youth Pastor Shadrack Tendo Ssemanda',
+      role: 'Head of Religious Outreaches',
+      image: '/team-shadrack.jpg',
+      icon: FiGlobe,
+      description: 'Leads religious outreach programs and community spiritual development initiatives.',
+      expertise: 'Religious Outreach & Youth Ministry'
+    },
+    {
+      name: 'Mr. Ssegawa Frank',
+      role: 'Head of Community Affairs',
+      image: '/team-frank.jpg',
+      icon: FiUsers,
+      description: 'Manages community relations and coordinates local partnerships for children\'s support.',
+      expertise: 'Community Relations & Partnerships'
+    },
+    {
+      name: 'Mrs Nabukeera Diana-Rose',
+      role: 'Head of Health Affairs',
+      image: '/team-diana.jpg',
+      icon: FiActivity,
+      description: 'Oversees health programs and ensures medical care for vulnerable children and families.',
+      expertise: 'Health Services & Medical Care'
     }
   ];
 
@@ -104,14 +138,14 @@ export default function About() {
   return (
     <MainLayout>
       <Helmet>
-        <title>About Us - Lumps Away Foundation</title>
-        <meta name="description" content="Learn about our mission to support cancer patients through Carol's inspiring story of survival and hope." />
+        <title>About Us - Ronsen Hope Christian Foundation Uganda</title>
+        <meta name="description" content="Learn about Ronsen Hope Christian Foundation Uganda's mission to provide holistic care and support to vulnerable children, orphans, youths and elderly in Uganda." />
         <script type="text/javascript" defer src="https://donorbox.org/install-popup-button.js" id="donorbox-popup-button-installer"></script>
       </Helmet>
       
       {/* Hero Section */}
       <section className="relative py-20 md:py-32 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-pink-500 to-pink-600"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-primary to-primary"></div>
         <div className="absolute inset-0 bg-black/20"></div>
         <div className="container-custom relative z-10">
           <motion.div 
@@ -126,14 +160,14 @@ export default function About() {
               transition={{ duration: 0.6, delay: 0.1 }}
               className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm rounded-full px-6 py-3 mb-8 border border-white/30"
             >
-              <FiHeart className="text-pink-200" />
+              <FiHeart className="text-primary" />
               <span className="text-sm font-medium">Our Story of Hope</span>
             </motion.div>
-            <h1 className="text-5xl md:text-7xl font-bold mb-8 bg-gradient-to-r from-white to-pink-100 bg-clip-text text-transparent">
-              About Lumps Away Foundation
+            <h1 className="text-5xl md:text-7xl font-bold mb-8 bg-gradient-to-r from-white to-primary bg-clip-text text-transparent">
+              About Ronsen Hope Christian Foundation Uganda
             </h1>
             <p className="text-xl md:text-2xl mb-12 text-white/90 leading-relaxed max-w-3xl mx-auto">
-              Transforming cancer care in Uganda through accessible treatment, community support, and inspiring stories of hope.
+              A Christian based non-profit organization dedicated to providing holistic care and support to vulnerable children, orphans, youths and elderly in Uganda - East Africa.
             </p>
             <motion.div 
               initial={{ opacity: 0, y: 20 }}
@@ -142,17 +176,17 @@ export default function About() {
               className="flex flex-col sm:flex-row gap-4 justify-center items-center"
             >
               <button 
-                className="group relative px-8 py-4 bg-white text-pink-600 rounded-full font-semibold text-lg shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300 overflow-hidden"
+                className="group relative px-8 py-4 bg-white text-primary rounded-full font-semibold text-lg shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300 overflow-hidden"
                 onClick={() => {
                   document.getElementById('our-story').scrollIntoView({ behavior: 'smooth' });
                 }}
               >
                 <span className="relative z-10">Learn Our Story</span>
-                <div className="absolute inset-0 bg-gradient-to-r from-pink-500 to-pink-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <div className="absolute inset-0 bg-gradient-to-r from-primary to-primary opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                 <span className="absolute inset-0 z-10 flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 font-semibold">Learn Our Story</span>
               </button>
               <button 
-                className="px-8 py-4 border-2 border-white text-white rounded-full font-semibold text-lg hover:bg-white hover:text-pink-600 transition-all duration-300 backdrop-blur-sm"
+                className="px-8 py-4 border-2 border-white text-white rounded-full font-semibold text-lg hover:bg-white hover:text-primary transition-all duration-300 backdrop-blur-sm"
                 onClick={() => {
                   window.location.href = '/contact';
                 }}
@@ -165,7 +199,7 @@ export default function About() {
         <div className="absolute inset-0 opacity-15">
           <img 
             src="/partners/LAF Logos/logo 7.png" 
-            alt="Lumps Away Foundation background" 
+            alt="Ronsen Hope Christian Foundation Uganda background" 
             className="w-full h-full object-contain scale-150"
           />
         </div>
@@ -183,7 +217,7 @@ export default function About() {
           >
             <h2 className="text-4xl md:text-5xl font-bold mb-6 text-secondary">Our Founding Story</h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Born from personal experience and a passion to help others navigate their cancer journey.
+              Born from the legacy of our late father and a passion to continue his work of helping vulnerable children.
             </p>
           </motion.div>
 
@@ -195,13 +229,16 @@ export default function About() {
               viewport={{ once: true }}
               className="space-y-6"
             >
-              <div className="bg-gradient-to-r from-pink-50 to-pink-100 p-8 rounded-2xl border border-pink-200">
-                <h3 className="text-2xl font-bold text-pink-800 mb-4">Founding Story</h3>
+              <div className="bg-gradient-to-r from-orange-50 to-orange-100 p-8 rounded-2xl border border-orange-200">
+                <h3 className="text-2xl font-bold text-orange-800 mb-4">Our History</h3>
                 <p className="text-gray-700 leading-relaxed mb-4">
-                  During Linda Tusiime's journey with breast cancer in 2017, she was faced with the dilemma that many people who've been diagnosed are faced with – where can I get information? (A question that closely follows fear of the severity of cancer). She frantically searched online for young women like her who had faced a similar experience but only found voices from outside Uganda. Voices she could not relate to. So, she started a blog – Lumps Away. It was her way of sharing her ordeal while also connecting with others out there to help each other through their shared journeys.
+                  Ronsen Hope Christian Foundation Uganda started in 2016 after the death of our Father Late Ssemukuutu Charles. He used to help a number of children in our community and he was so passionate about rescuing those vulnerable children and orphans who were facing difficulties in life even if he was not a rich man. He could feed, shelter and give them some aid in sponsoring their education. When he died a number of needy children suffered because they were depending on him.
+                </p>
+                <p className="text-gray-700 leading-relaxed mb-4">
+                  I sat down with my Mother and my two young Sisters, Rev. Sr. Nandyowa Slyvia and Nabuule Sarah and we discussed how we can continue with our father's passion of supporting the needy and I came up with an idea of setting up an orphanage here at home even if the place was not big enough. They supported my passion and idea of setting up an orphanage. I came up with the name "RONSEN" I abbreviated it from my name RONALD SSENFUMA and we registered it as Ronsen Hope Christian Foundation Uganda.
                 </p>
                 <p className="text-gray-700 leading-relaxed">
-                  In 2019, with her friend, Fiona Toliva, Lumps Away shifted from being a blog to a Cancer Survivorship and Advocacy Organization. The Lumps Away Foundation is an organization built on hope and a passion for helping those going through pain we've known intimately.
+                  We started with 15 children whom the Late Father had left at our home. Me and my mum struggled alot to look after these children because we did not have any job at that time, we could seek support from our church St. Agnes Catholic church kibuye - Makindye, community leaders and entire community. In 2021 God blessed us with a first donation from Pastor Frank Hurley the President of Equipping the Saints Global from USA who blessed us with bibles, food and scholastic materials. This motivated us to continue with our Godly mission of helping vulnerable children in our communities.
                 </p>
               </div>
             </motion.div>
@@ -211,18 +248,18 @@ export default function About() {
               whileInView={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
               viewport={{ once: true }}
-              className="bg-gradient-to-br from-pink-500 to-pink-600 p-8 rounded-3xl text-white shadow-2xl"
+              className="bg-gradient-to-br from-orange-500 to-orange-600 p-8 rounded-3xl text-white shadow-2xl"
             >
               <div className="text-center mb-8">
-                <FiHeart className="text-6xl text-pink-200 mx-auto mb-4" />
+                <FiHeart className="text-6xl text-orange-200 mx-auto mb-4" />
                 <h3 className="text-3xl font-bold mb-4">Our Mission</h3>
               </div>
               <p className="text-lg leading-relaxed mb-6">
-                Our mission is to create a safe space for women, men, caregivers, friends, and more who are affected by the nightmare that is cancer. We do what we can to help, bring awareness, and be an emotional support while making the lives of those affected by it a little easier.
+                Providing a loving, safe, nurturing environment for orphans and vulnerable children, equipping them with education, care, spiritual guidance to thrive, become confident, compassionate responsible individuals and guided by Christian values.
               </p>
               <div className="bg-white/20 backdrop-blur-sm rounded-xl p-6">
-                <p className="text-pink-100 font-medium text-center">
-                  "We can't fix it all, but we can do our best. If you care about our cause or are just curious, join us; we're always looking for the extra hand."
+                <p className="text-orange-100 font-medium text-center">
+                  "To be a beacon of hope, love, transforming the lives of orphaned and vulnerable children, empowering them to reach their full potential and become positive contributions to their communities, shining with hope and purpose."
                 </p>
               </div>
             </motion.div>
@@ -240,9 +277,9 @@ export default function About() {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 text-secondary">Our Values</h2>
+            <h2 className="text-4xl md:text-5xl font-bold mb-6 text-secondary">Our Core Values</h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              The core principles that guide everything we do in our mission to support cancer patients and survivors.
+              The Christian principles that guide our work in supporting vulnerable children and orphans.
             </p>
           </motion.div>
 
@@ -252,14 +289,14 @@ export default function About() {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
               viewport={{ once: true }}
-              className="bg-gradient-to-br from-pink-50 to-pink-100 p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 border border-pink-200"
+              className="bg-gradient-to-br from-orange-50 to-orange-100 p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 border border-orange-200"
             >
-              <div className="w-16 h-16 bg-gradient-to-r from-pink-500 to-pink-600 rounded-xl flex items-center justify-center mb-6">
+              <div className="w-16 h-16 bg-gradient-to-r from-orange-500 to-orange-600 rounded-xl flex items-center justify-center mb-6">
                 <FiHeart className="text-2xl text-white" />
               </div>
-              <h3 className="text-2xl font-bold text-pink-800 mb-4">LOVE</h3>
+              <h3 className="text-2xl font-bold text-orange-800 mb-4">Unconditional Love & Care</h3>
               <p className="text-gray-700 leading-relaxed">
-                Is at the heart of everything we do, driving us to build meaningful connections, and prioritize the well-being of others
+                Demonstrating unconditional love and care for each child, showing empathy and kindness to those in need.
               </p>
             </motion.div>
 
@@ -273,9 +310,9 @@ export default function About() {
               <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl flex items-center justify-center mb-6">
                 <FiTarget className="text-2xl text-white" />
               </div>
-              <h3 className="text-2xl font-bold text-blue-800 mb-4">ADVOCACY</h3>
+              <h3 className="text-2xl font-bold text-blue-800 mb-4">Christian Principles</h3>
               <p className="text-gray-700 leading-relaxed">
-                Be a voice to raise awareness about cancer prevention, early detection, treatment options, and survivorship issues
+                Guiding our work with Christian principles and values, operating with transparency, honesty and accountability.
               </p>
             </motion.div>
 
@@ -289,9 +326,9 @@ export default function About() {
               <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-purple-600 rounded-xl flex items-center justify-center mb-6">
                 <FiShield className="text-2xl text-white" />
               </div>
-              <h3 className="text-2xl font-bold text-purple-800 mb-4">FORTITUDE</h3>
+              <h3 className="text-2xl font-bold text-purple-800 mb-4">Empowerment</h3>
               <p className="text-gray-700 leading-relaxed">
-                Encouraging strength and courage through a sense of community and support among individuals affected by cancer, encouraging shared experiences and strength.
+                Empowering children to reach their full potential, fostering a sense of belonging and community, treating each individual with dignity and respect.
               </p>
             </motion.div>
           </div>
@@ -308,9 +345,9 @@ export default function About() {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 text-secondary">Our Services</h2>
+            <h2 className="text-4xl md:text-5xl font-bold mb-6 text-secondary">Our Programs</h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Comprehensive support services designed to help cancer patients and survivors at every stage of their journey.
+              Comprehensive outreach programs designed to provide holistic care and support to vulnerable children, orphans, youths and elderly in Uganda.
             </p>
           </motion.div>
 
@@ -325,9 +362,9 @@ export default function About() {
               <div className="w-16 h-16 bg-gradient-to-r from-green-500 to-green-600 rounded-xl flex items-center justify-center mb-6">
                 <FiActivity className="text-2xl text-white" />
               </div>
-              <h3 className="text-2xl font-bold text-secondary mb-4">Survivorship Programs</h3>
+              <h3 className="text-2xl font-bold text-secondary mb-4">Education & Care</h3>
               <p className="text-gray-600 leading-relaxed">
-                Support services designed to help cancer survivors navigate life after treatment, including personalized survivorship care plans and access to counseling and therapy sessions that address the unique challenges of post-cancer life.
+                Providing standard education and medical care to vulnerable children and orphans, equipping them with education, care, and spiritual guidance to thrive and become confident, compassionate individuals.
               </p>
             </motion.div>
 
@@ -341,9 +378,9 @@ export default function About() {
               <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl flex items-center justify-center mb-6">
                 <FiUsers className="text-2xl text-white" />
               </div>
-              <h3 className="text-2xl font-bold text-secondary mb-4">Patient Support</h3>
+              <h3 className="text-2xl font-bold text-secondary mb-4">Outreach Programs</h3>
               <p className="text-gray-600 leading-relaxed">
-                Direct assistance for those currently facing cancer, featuring peer counseling services that connect patients with survivors who understand their journey, and assisted transportation services to ensure treatment accessibility regardless of location or financial constraints.
+                Food and nutrition support, healthcare services, shelter and housing assistance, clothing and basic needs provision, and community development initiatives to alleviate suffering in rural and urban slum areas.
               </p>
             </motion.div>
 
@@ -357,9 +394,9 @@ export default function About() {
               <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-purple-600 rounded-xl flex items-center justify-center mb-6">
                 <FiGlobe className="text-2xl text-white" />
               </div>
-              <h3 className="text-2xl font-bold text-secondary mb-4">Advocacy & Education</h3>
+              <h3 className="text-2xl font-bold text-secondary mb-4">Youth & Elderly Empowerment</h3>
               <p className="text-gray-600 leading-relaxed">
-                Community-wide initiatives focused on raising cancer awareness, providing educational programs that empower individuals with knowledge about prevention and early detection, and collaborative advocacy efforts that work to improve cancer care policies and resources across Uganda.
+                Supporting elderly with livelihood programs, empowering youth through skilling and vocational training, and providing evangelistic materials and support to partner churches and schools.
               </p>
             </motion.div>
           </div>
@@ -403,10 +440,10 @@ export default function About() {
             className="bg-gradient-to-r from-pink-50 to-pink-100 p-8 lg:p-12 rounded-3xl border border-pink-200 mb-12"
           >
             <p className="text-lg lg:text-xl text-gray-700 leading-relaxed mb-6">
-              We started Lumps Away because we knew intimately the gaps that exist when facing cancer in our community. When you support us, you're investing in giving hope to patients by making vital cancer information accessible in our local context, providing community connections when people feel most alone, and delivering tangible support through programs like scholarships that keep children in school despite family health crises, and skills training that helps survivors rebuild their livelihoods.
+              We started Ronsen Hope Christian Foundation Uganda in 2016 following the passing of our father, who was dedicated to helping vulnerable children in our community. When you support us, you're investing in giving hope to orphaned and vulnerable children by providing education, healthcare, shelter, and spiritual guidance. Your donations help us maintain our orphanage, sponsor school fees, provide medical care, and support community outreach programs that transform lives.
             </p>
             <p className="text-lg lg:text-xl text-gray-700 leading-relaxed">
-              You're not just supporting an organization - you're helping build the community of care that transforms how cancer is experienced in Uganda. Support us because together, we're proving that from the pain of cancer can come the most beautiful growth.
+              You're not just supporting an organization - you're helping build a community of care that demonstrates Christ's love through practical acts of service. Support us because together, we're creating a lasting impact, transforming lives and communities through faith, love, and service.
             </p>
           </motion.div>
 
@@ -469,10 +506,10 @@ export default function About() {
                 Get the latest updates of our activities, events, stories and more.
               </p>
               <div className="flex justify-center gap-3">
-                <a href="https://www.facebook.com/profile.php?id=100067651137058" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white hover:scale-110 transition-transform duration-300">
+                <a href="https://www.facebook.com/100082882375342" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white hover:scale-110 transition-transform duration-300">
                   <FiMessageCircle className="text-lg" />
                 </a>
-                <a href="https://www.instagram.com/lumpsawayfoundation/" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-pink-600 rounded-full flex items-center justify-center text-white hover:scale-110 transition-transform duration-300">
+                <a href="https://www.instagram.com/ronsenhopefoundation/" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-pink-600 rounded-full flex items-center justify-center text-white hover:scale-110 transition-transform duration-300">
                   <FiStar className="text-lg" />
                 </a>
                 <a href="https://www.linkedin.com/company/lumps-away-foundatin/?viewAsMember=true" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-blue-800 rounded-full flex items-center justify-center text-white hover:scale-110 transition-transform duration-300">

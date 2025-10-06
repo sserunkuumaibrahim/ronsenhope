@@ -298,7 +298,7 @@ export default function ImageCarousel() {
                  onMouseLeave={handleItemLeave}
                >
                 {/* Pink background overlay */}
-                <div className="absolute inset-0 bg-pink-500 rounded-2xl transform rotate-1 group-hover:rotate-2 transition-transform duration-300 opacity-10"></div>
+                <div className="absolute inset-0 bg-primary rounded-2xl transform rotate-1 group-hover:rotate-2 transition-transform duration-300 opacity-10"></div>
                 {/* Card */}
                 <div className="relative w-full h-full bg-white rounded-2xl shadow-2xl overflow-hidden border border-gray-100">
                   {/* Image */}

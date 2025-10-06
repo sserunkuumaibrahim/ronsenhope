@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { motion } from 'framer-motion';
 import { FiSave, FiSettings, FiMail, FiGlobe, FiUsers, FiLock, FiImage, FiAlertTriangle, FiCheck } from 'react-icons/fi';
 import { useForm } from 'react-hook-form';
 import AdminLayout from '../../components/layout/AdminLayout';
@@ -28,15 +27,13 @@ export default function Settings() {
   const { 
     register: registerAppearance, 
     handleSubmit: handleSubmitAppearance,
-    setValue: setValueAppearance,
-    formState: { errors: errorsAppearance }
+    setValue: setValueAppearance
   } = useForm();
   
   const { 
     register: registerSecurity, 
     handleSubmit: handleSubmitSecurity,
-    setValue: setValueSecurity,
-    formState: { errors: errorsSecurity }
+    setValue: setValueSecurity
   } = useForm();
 
   useEffect(() => {
@@ -48,15 +45,15 @@ export default function Settings() {
       
       // Sample settings data
       const generalSettings = {
-        organizationName: 'Lumps Away Foundation',
-        tagline: 'Empowering lives through breast cancer support',
+        organizationName: 'Ronsen Hope Christian Foundation Uganda',
+        tagline: 'Empowering lives through child welfare and education',
         contactEmail: 'contact@lumpsaway.org',
         contactPhone: '+256 (700) 123-456',
         address: 'Kampala, Uganda',
         websiteUrl: 'https://lumpsaway.org',
-        socialFacebook: 'https://www.facebook.com/profile.php?id=100067651137058',
+        socialFacebook: 'https://www.facebook.com/100082882375342',
         socialTwitter: 'https://x.com/AwayLumps',
-        socialInstagram: 'https://www.instagram.com/lumpsawayfoundation/',
+        socialInstagram: 'https://www.instagram.com/ronsenhopefoundation/',
         socialLinkedIn: 'https://www.linkedin.com/company/lumps-away-foundatin/?viewAsMember=true'
       };
       
@@ -65,13 +62,13 @@ export default function Settings() {
         smtpPort: '587',
         smtpUsername: 'notifications@lumpsaway.org',
         smtpPassword: '********',
-        senderName: 'Lumps Away Foundation',
+        senderName: 'Ronsen Hope Christian Foundation Uganda',
         senderEmail: 'no-reply@lumpsaway.org',
         enableEmailNotifications: true,
         notifyOnDonations: true,
         notifyOnNewUsers: true,
         notifyOnContactForm: true,
-        emailFooter: 'Lumps Away Foundation - Empowering lives through breast cancer support.'
+        emailFooter: 'Ronsen Hope Christian Foundation Uganda - Transforming lives through faith, love, and service.'
       };
       
       const appearanceSettings = {
@@ -84,7 +81,7 @@ export default function Settings() {
         enableDarkMode: true,
         customCss: '',
         homepageBannerUrl: 'https://placehold.co/1200x400/3b82f6/ffffff?text=Lumps+Away+Banner',
-        footerText: '© 2023 Lumps Away Foundation. All rights reserved.'
+        footerText: '© 2024 Ronsen Hope Christian Foundation Uganda. All rights reserved.'
       };
       
       const securitySettings = {
@@ -171,7 +168,7 @@ export default function Settings() {
   return (
     <AdminLayout>
       <Helmet>
-        <title>Settings - Lumps Away Foundation Admin</title>
+        <title>Settings - Ronsen Hope Christian Foundation Uganda Admin</title>
         <meta name="description" content="Admin panel for managing application settings" />
       </Helmet>
 

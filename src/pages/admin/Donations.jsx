@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
-import { motion } from 'framer-motion';
 import { FiSearch, FiFilter, FiDownload, FiEye, FiCheck, FiX, FiDollarSign, FiCalendar, FiPieChart } from 'react-icons/fi';
 import AdminLayout from '../../components/layout/AdminLayout';
 
@@ -306,9 +305,6 @@ export default function Donations() {
   
   // Get all unique donation types
   const types = ['all', ...new Set(donations.map(donation => donation.type))];
-  
-  // Get all unique programs
-  const programs = ['all', ...new Set(donations.map(donation => donation.program))];
 
   // Sort donations
   const sortedDonations = [...donations].sort((a, b) => {
@@ -405,7 +401,7 @@ export default function Donations() {
   return (
     <AdminLayout>
       <Helmet>
-        <title>Manage Donations - Lumps Away Foundation Admin</title>
+        <title>Manage Donations - Ronsen Hope Christian Foundation Uganda Admin</title>
         <meta name="description" content="Admin panel for managing donations" />
       </Helmet>
 

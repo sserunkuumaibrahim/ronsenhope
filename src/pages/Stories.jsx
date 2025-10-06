@@ -73,10 +73,10 @@ export default function Stories() {
   return (
     <MainLayout>
       <Helmet>
-        <title>Stories - Lumps Away Foundation</title>
-        <meta name="description" content="Read inspiring stories of impact, transformation, and hope from our breast cancer support work in Uganda." />
-        <meta property="og:title" content="Stories - Lumps Away Foundation" />
-        <meta property="og:description" content="Read inspiring stories of impact, transformation, and hope from our breast cancer support work in Uganda." />
+        <title>Stories - Ronsen Hope Christian Foundation Uganda</title>
+        <meta name="description" content="Read inspiring stories of impact, transformation, and hope from our work supporting vulnerable children and families in Uganda." />
+        <meta property="og:title" content="Stories - Ronsen Hope Christian Foundation Uganda" />
+        <meta property="og:description" content="Read inspiring stories of impact, transformation, and hope from our work supporting vulnerable children and families in Uganda." />
         <meta property="og:type" content="website" />
         <link rel="canonical" href="/stories" />
       </Helmet>
@@ -104,7 +104,7 @@ export default function Stories() {
               transition={{ duration: 0.8, delay: 0.4 }}
               className="text-xl md:text-2xl mb-8 text-secondary/80 leading-relaxed"
             >
-              Read inspiring stories of impact, transformation, and hope from our breast cancer support work in Uganda.
+              Read inspiring stories of impact, transformation, and hope from our work supporting vulnerable children and families in Uganda.
             </motion.p>
             
             <motion.div

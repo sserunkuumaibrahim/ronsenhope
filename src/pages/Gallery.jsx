@@ -57,16 +57,6 @@ export default function Gallery() {
     fetchPhotos();
   }, []);
   
-  // Group photos by category
-  const groupedPhotos = photos.reduce((acc, photo) => {
-    const category = photo.category || 'community';
-    if (!acc[category]) {
-      acc[category] = [];
-    }
-    acc[category].push(photo);
-    return acc;
-  }, {});
-  
   // Filter photos based on selected category
   const filteredPhotos = selectedCategory === 'all' ? photos : photos.filter(photo => photo.category === selectedCategory);
   
@@ -298,7 +288,7 @@ export default function Gallery() {
   return (
     <MainLayout>
       <Helmet>
-        <title>Gallery - Lumps Away Foundation</title>
+        <title>Gallery - Ronsen Hope Christian Foundation Uganda</title>
         <meta name="description" content="Photo gallery showcasing our charitable work and community impact." />
       </Helmet>
       
@@ -472,7 +462,7 @@ export default function Gallery() {
              {!loading && filteredPhotos.length > 0 && (
                <div ref={gridRef} className="masonry-grid">
                  {/* Display photos from Firebase */}
-                 {filteredPhotos.map((photo, index) => (
+                 {filteredPhotos.map((photo) => (
                      <motion.div
                        key={photo.id}
                        variants={itemVariants}
@@ -483,7 +473,7 @@ export default function Gallery() {
                          }
                        }}
                      >
-                       <div className="absolute inset-0 bg-pink-500 rounded-2xl transform rotate-1 group-hover:rotate-2 transition-transform duration-300 opacity-10"></div>
+                       <div className="absolute inset-0 bg-primary rounded-2xl transform rotate-1 group-hover:rotate-2 transition-transform duration-300 opacity-10"></div>
                        <div className="relative bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2"
                        onMouseLeave={() => {
                          if (!isTouchDevice()) {

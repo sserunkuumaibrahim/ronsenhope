@@ -93,8 +93,8 @@ export default function Login() {
   return (
     <MainLayout>
       <Helmet>
-        <title>Welcome Back - Lumps Away Foundation</title>
-        <meta name="description" content="Sign in to your Lumps Away Foundation account to access the community forum, manage your profile, and continue making a difference." />
+        <title>Welcome Back - Ronsen Hope Christian Foundation Uganda</title>
+        <meta name="description" content="Sign in to your Ronsen Hope Christian Foundation Uganda account to access the community forum, manage your profile, and continue making a difference." />
       </Helmet>
 
       {/* Login Section with Soft White Background */}
@@ -163,10 +163,10 @@ export default function Login() {
                     initial={{ scale: 0.8, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
                     transition={{ duration: 0.6, delay: 0.2 }}
-                    className="inline-flex items-center gap-2 bg-pink-100 rounded-full px-6 py-3 mb-6 border border-pink-200"
+                    className="inline-flex items-center gap-2 bg-orange-100 rounded-full px-6 py-3 mb-6 border border-orange-200"
                   >
-                    <FiHeart className="text-pink-500" />
-                    <span className="text-sm font-medium text-pink-700">Welcome Back</span>
+                    <FiHeart className="text-orange-500" />
+                    <span className="text-sm font-medium text-orange-700">Welcome Back</span>
                   </motion.div>
                   <h1 className="text-3xl md:text-4xl font-bold mb-3 bg-gradient-to-r from-pink-600 to-pink-500 bg-clip-text text-transparent">
                     Sign In

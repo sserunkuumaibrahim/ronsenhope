@@ -44,8 +44,9 @@ VOLUNTEER
 Whether it's your time, ideas, or services, reach out. We'd love to hear from you. 
 FOLLOW US ON OUR SOCIALS
 Get the latest updates of our activities, events, stories and more.. Insert icons going to each social media page
-Facebook - https://www.facebook.com/profile.php?id=100067651137058
-Instagram - https://www.instagram.com/lumpsawayfoundation/
+Facebook - https://www.facebook.com/100082882375342
+Instagram - https://www.instagram.com/ronsenhopefoundation/
 Linkedin - https://www.linkedin.com/company/lumps-away-foundatin/?viewAsMember=true
 X - https://x.com/AwayLumps
+YouTube - https://www.youtube.com/@Ronsenministry
 

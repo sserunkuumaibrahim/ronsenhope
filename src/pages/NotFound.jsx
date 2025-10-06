@@ -8,7 +8,7 @@ export default function NotFound() {
   return (
     <MainLayout>
       <Helmet>
-        <title>Page Not Found - Lumps Away Foundation</title>
+        <title>Page Not Found - Ronsen Hope Christian Foundation Uganda</title>
         <meta name="description" content="The page you are looking for does not exist." />
       </Helmet>
 

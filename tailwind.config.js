@@ -7,8 +7,8 @@ export default {
   theme: {
     extend: {
       colors: {
-        primary: '#FE4FC3',   // Rose Pink
-        secondary: '#FF1CB4', // Shocking Pink
+        primary: '#f98621ff',   // Rose Pink
+        secondary: '#0c4da3ff', // Shocking Pink
         accent: '#FFFFFF',    // White
         silver: '#BBBAB8',    // Silver
       },
@@ -22,8 +22,8 @@ export default {
   daisyui: {
     themes: [{
       mytheme: {
-        "primary": "#FE4FC3",
-        "secondary": "#FF1CB4",
+        "primary": "#f98621ff",
+        "secondary": "#0c4da3ff",
         "accent": "#FFFFFF",
         "neutral": "#000000",
         "base-100": "#FFFFFF",

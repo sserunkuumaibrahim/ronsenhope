@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
+import { motion, AnimatePresence } from 'framer-motion';
 import { FiMenu, FiX } from 'react-icons/fi';
-import {  motion,AnimatePresence } from 'framer-motion';
 
 export default function MainLayout({ children }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -28,7 +28,7 @@ export default function MainLayout({ children }) {
       <header className="bg-primary text-accent shadow-md">
         <div className="container-custom py-4">
           <div className="flex justify-between items-center">
-            <Link to="/" className="text-2xl font-bold">Lumpsaway</Link>
+            <Link to="/" className="text-2xl font-bold">Ronsen Hope</Link>
             
             {/* Desktop Navigation */}
             <nav className="hidden xl:flex space-x-6 items-center">
@@ -208,7 +208,7 @@ export default function MainLayout({ children }) {
             <div>
               <h3 className="text-xl font-bold mb-4">Contact Info</h3>
               <ul className="space-y-2">
-                <li>Email: contact@lumpsaway.org</li>
+                <li>Email: info@ronsenhopeministries.org</li>
                 <li>Phone: +256 123 456 789</li>
                 <li>Address: Kampala, Uganda</li>
               </ul>
@@ -216,7 +216,7 @@ export default function MainLayout({ children }) {
             
           </div>
           <div className="mt-8 pt-8 border-t border-accent/20 text-center">
-            <p>&copy; {new Date().getFullYear()} Lumps Away Foundation. All rights reserved.</p>
+            <p>&copy; {new Date().getFullYear()} Ronsen Hope Christian Foundation Uganda. All rights reserved.</p>
           </div>
         </div>
       </footer>

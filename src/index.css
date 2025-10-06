@@ -11,8 +11,8 @@
   color: #000000;
   background-color: #FFFFFF;
   
-  /* Primary color RGB values for rose-pink */
-  --primary-rgb: 254, 79, 195;
+  /* Primary color RGB values for orange */
+  --primary-rgb: 249, 134, 33;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -187,7 +187,7 @@
   .apple-card::before {
     content: '';
     @apply absolute inset-0 pointer-events-none opacity-10;
-    background: #ec4899;
+    background: #f98621;
     border-radius: inherit;
     transform: rotate(1deg);
     transition: transform 0.3s ease;

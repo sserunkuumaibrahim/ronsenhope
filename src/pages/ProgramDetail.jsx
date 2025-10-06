@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
-import { motion } from 'framer-motion';
 import { FiMapPin, FiCalendar, FiUsers, FiDollarSign, FiClock, FiArrowLeft, FiShare2, FiHeart } from 'react-icons/fi';
 import MainLayout from '../components/layout/MainLayout';
 import { db } from '../firebase/config';
@@ -195,7 +194,7 @@ export default function ProgramDetail() {
                           <div className="text-xs font-semibold text-gray-800 mb-2">Specialties</div>
                           <div className="flex flex-wrap gap-1">
                             {member.specialties.map((specialty, idx) => (
-                              <span key={idx} className="px-2 py-1 bg-pink-100 text-pink-700 text-xs rounded-full">
+                              <span key={idx} className="px-2 py-1 bg-orange-100 text-orange-700 text-xs rounded-full">
                                 {specialty}
                               </span>
                             ))}
@@ -303,7 +302,7 @@ export default function ProgramDetail() {
   return (
     <MainLayout>
       <Helmet>
-        <title>{program.title} - Lumps Away Foundation</title>
+        <title>{program.title} - Ronsen Hope Christian Foundation Uganda</title>
         <meta name="description" content={program.description} />
       </Helmet>
 
@@ -391,7 +390,7 @@ export default function ProgramDetail() {
                         <a class="dbox-donation-button" style="background: rgb(223, 24, 167); color: rgb(255, 255, 255); text-decoration: none; font-family: Verdana, sans-serif; display: flex; gap: 8px; width: 100%; font-size: 16px; border-radius: 5px; line-height: 24px; padding: 8px 24px; justify-content: center; border: 2px solid rgb(223, 24, 167);" href="https://donorbox.org/survive-and-thrive-804282?"><img src="https://donorbox.org/images/white_logo.svg" alt="Donate with DonorBox"/>Donate to This Program</a>
                       `
                     }} />
-                  <Link to="/volunteer" className="w-full border-2 border-pink-500 text-pink-600 hover:bg-pink-50 font-semibold py-3 px-4 rounded-lg transition-all duration-300 flex items-center justify-center gap-2">
+                  <Link to="/volunteer" className="w-full border-2 border-primary text-primary hover:bg-orange-50 font-semibold py-3 px-4 rounded-lg transition-all duration-300 flex items-center justify-center gap-2">
                     <FiClock className="w-5 h-5" /> Volunteer Your Time
                   </Link>
                 </div>

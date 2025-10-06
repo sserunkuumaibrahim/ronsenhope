@@ -1,8 +1,8 @@
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
 import { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
+import { motion } from 'framer-motion';
 import MainLayout from '../components/layout/MainLayout';
 import { FiHeart, FiUsers, FiGlobe, FiMail, FiFacebook, FiTwitter, FiInstagram, FiLinkedin, FiYoutube } from 'react-icons/fi';
 import { db } from '../firebase/config';
@@ -36,7 +36,6 @@ export default function Home() {
   const [storiesLoading, setStoriesLoading] = useState(true);
   
   // Quotes state
-  const [quotes, setQuotes] = useState([]);
   const [currentQuote, setCurrentQuote] = useState(null);
   
   // Newsletter state
@@ -54,8 +53,6 @@ export default function Home() {
           ...doc.data()
         }))
         .filter(quote => quote.status === 'active' && (quote.location === 'homepage' || quote.location === 'general'));
-      
-      setQuotes(quotesData);
       
       // Set a random quote or the first one
       if (quotesData.length > 0) {
@@ -183,6 +180,7 @@ export default function Home() {
 
   // Autoplay functionality
   useEffect(() => {
+    if (carouselImages.length === 0) return;
     const interval = setInterval(() => {
       setCurrentImageIndex((prevIndex) => 
         (prevIndex + 1) % carouselImages.length
@@ -394,14 +392,14 @@ export default function Home() {
   return (
     <MainLayout>
       <Helmet>
-        <title>Lumps Away Foundation - A Cancer Survivorship Organization</title>
-        <meta name="description" content="We are an canacer survivorship and organization dedicated to helping manage emotional and physical changes before and after treatment for cancer patients" />
-        <meta name="keywords" content="charity, NGO, nonprofit, community, education, sustainability" />
+        <title>Ronsen Hope - Transforming Lives Through Faith</title>
+        <meta name="description" content="Ronsen Hope is dedicated to providing holistic care and support to vulnerable children, orphans, youths and elderly in Uganda through education, healthcare, and spiritual guidance." />
+        <meta name="keywords" content="charity, NGO, nonprofit, community, education, children, orphans, Uganda, Christian foundation" />
       </Helmet>
 
       {/* Hero Section */}
       <section className="relative py-20 md:py-32 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-pink-400 via-pink-500 to-white"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-orange-300 via-orange-400 to-orange-100"></div>
         <div className="absolute inset-0 bg-black/20"></div>
         
         {/* Animated background elements */}
@@ -441,7 +439,7 @@ export default function Home() {
                 transition={{ duration: 0.6, delay: 0.1 }}
                 className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm rounded-full px-6 py-3 mb-8 border border-white/30"
               >
-                <FiHeart className="text-pink-200" />
+                <FiHeart className="text-primary" />
                 <span className="text-sm font-medium">Creating Change Together</span>
               </motion.div>
               <motion.h1 
@@ -451,9 +449,9 @@ export default function Home() {
                   duration: 0.6, 
                   ease: "easeOut"
                 }}
-                className="text-5xl md:text-7xl font-bold mb-8 bg-gradient-to-r from-white to-pink-100 bg-clip-text text-transparent"
+                className="text-5xl md:text-7xl font-bold mb-8 text-white drop-shadow-lg"
               >
-                Lumps Away Foundation - A Cancer Survivorship Organization
+                Ronsen Hope - Transforming Lives Through Faith
               </motion.h1>
               <motion.p 
                 initial={{ opacity: 0, y: -30, scale: 0.9 }}
@@ -463,9 +461,9 @@ export default function Home() {
                   delay: 0.05,
                   ease: "easeOut"
                 }}
-                className="text-md md:text-lg mb-10 text-white/90 leading-relaxed max-w-3xl mx-auto lg:mx-0"
+                className="text-md md:text-lg mb-10 text-white leading-relaxed max-w-3xl mx-auto lg:mx-0 drop-shadow-md"
               >
-                We are an canacer survivorship and organization dedicated to helping manage emotional and physical changes before and after treatment for cancer patients
+                Ronsen Hope is dedicated to providing holistic care and support to vulnerable children, orphans, youths and elderly in Uganda through education, healthcare, and spiritual guidance.
               </motion.p>
               <motion.div 
                 initial={{ opacity: 0, y: 30, scale: 0.9 }}
@@ -486,7 +484,7 @@ export default function Home() {
                   <div dangerouslySetInnerHTML={{
                     __html: `
                       <script type="text/javascript" defer src="https://donorbox.org/install-popup-button.js"></script>
-                      <a class="dbox-donation-button" style="background: rgb(223, 24, 167); color: rgb(255, 255, 255); text-decoration: none; font-family: Verdana, sans-serif; display: flex; gap: 8px; width: fit-content; font-size: 16px; border-radius: 5px; line-height: 24px; padding: 8px 24px; border: 2px solid white;" href="https://donorbox.org/survive-and-thrive-804282?"><img src="https://donorbox.org/images/white_logo.svg" alt="Donate with DonorBox" />Donate Now</a>
+                      <a class="dbox-donation-button" style="background: rgb(249, 134, 33); color: rgb(255, 255, 255); text-decoration: none; font-family: Verdana, sans-serif; display: flex; gap: 8px; width: fit-content; font-size: 16px; border-radius: 5px; line-height: 24px; padding: 8px 24px; border: 2px solid white;" href="https://donorbox.org/survive-and-thrive-804282?"><img src="https://donorbox.org/images/white_logo.svg" alt="Donate with DonorBox" />Donate Now</a>
                     `
                   }} />
                 </motion.div>
@@ -496,7 +494,7 @@ export default function Home() {
                   transition={{ type: "spring", stiffness: 400, damping: 17 }}
                   className="w-full sm:w-auto"
                 >
-                  <Link to="/volunteer" className="px-8 py-4 border-2 border-white text-white rounded-full font-semibold text-lg hover:bg-white hover:text-pink-600 transition-all duration-300 backdrop-blur-sm inline-flex items-center justify-center w-full sm:w-auto">
+                  <Link to="/volunteer" className="px-8 py-4 border-2 border-white text-white rounded-full font-semibold text-lg hover:bg-white hover:text-primary transition-all duration-300 backdrop-blur-sm inline-flex items-center justify-center w-full sm:w-auto">
                     <FiUsers className="mr-2" />
                     Get Involved
                   </Link>
@@ -1026,7 +1024,7 @@ export default function Home() {
                 </motion.div>
               ))
             ) : stories.length > 0 ? (
-              stories.map((story, index) => (
+              stories.map((story) => (
                 <motion.div key={story.id} variants={itemVariants} className="apple-blog-card">
                   <div className="apple-blog-image">
                     <img 
@@ -1109,7 +1107,7 @@ export default function Home() {
                  <div className="relative h-64 md:h-80 lg:h-[500px]">
                    <iframe 
                      className="w-full h-full" 
-                     src="https://www.youtube.com/embed/RHOoFn1K2Hw" 
+                     src="https://www.youtube.com/embed/dE-LPR7robw" 
                      title="Community Impact Video"
                      frameBorder="0" 
                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
@@ -1151,7 +1149,7 @@ export default function Home() {
        </section>
 
       {/* Inspirational Quote Section */}
-      <section className="py-20 bg-gradient-to-br from-pink-50 to-purple-50">
+      <section className="py-20 bg-gradient-to-br from-primary/10 to-orange-50">
         <div className="container-custom">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -1162,12 +1160,12 @@ export default function Home() {
           >
             {currentQuote ? (
               <div className="relative">
-                <div className="absolute -top-8 -left-8 text-8xl text-pink-200 font-serif opacity-50">"</div>
+                <div className="absolute -top-8 -left-8 text-8xl text-primary font-serif opacity-50">"</div>
                 <blockquote className="text-3xl md:text-4xl font-light text-gray-800 leading-relaxed mb-8 italic">
                   {currentQuote.content}
                 </blockquote>
-                <div className="absolute -bottom-8 -right-8 text-8xl text-pink-200 font-serif opacity-50">"</div>
-                <cite className="text-xl text-pink-600 font-semibold not-italic">
+                <div className="absolute -bottom-8 -right-8 text-8xl text-primary font-serif opacity-50">"</div>
+                <cite className="text-xl text-primary font-semibold not-italic">
                   {currentQuote.author ? `- ${currentQuote.author}` : ''}
                 </cite>
                 {currentQuote.context && (
@@ -1261,11 +1259,11 @@ export default function Home() {
             className="flex justify-center space-x-6"
           >
             {[
-              { icon: FiFacebook, name: 'Facebook', color: 'hover:bg-blue-600', link: 'https://www.facebook.com/profile.php?id=100067651137058' },
+              { icon: FiFacebook, name: 'Facebook', color: 'hover:bg-blue-600', link: 'https://www.facebook.com/100082882375342' },
               { icon: FiTwitter, name: 'Twitter', color: 'hover:bg-blue-400', link: 'https://x.com/AwayLumps' },
-              { icon: FiInstagram, name: 'Instagram', color: 'hover:bg-pink-500', link: 'https://www.instagram.com/lumpsawayfoundation/' },
+              { icon: FiInstagram, name: 'Instagram', color: 'hover:bg-primary', link: 'https://www.instagram.com/ronsenhopefoundation/' },
               { icon: FiLinkedin, name: 'LinkedIn', color: 'hover:bg-blue-700', link: 'https://www.linkedin.com/company/lumps-away-foundatin/?viewAsMember=true' },
-              { icon: FiYoutube, name: 'YouTube', color: 'hover:bg-red-600', link: 'https://youtu.be/RHOoFn1K2Hw?si=tL3s2LsRFoDR6Km4' }
+              { icon: FiYoutube, name: 'YouTube', color: 'hover:bg-red-600', link: 'https://www.youtube.com/@Ronsenministry' }
             ].map((social, index) => (
               <motion.a
                 key={social.name}
@@ -1285,7 +1283,7 @@ export default function Home() {
       </section>
 
       {/* Newsletter Section */}
-      <section className="py-20 bg-gradient-to-r from-pink-500 to-purple-600">
+      <section className="py-20 bg-gradient-to-r from-primary to-orange-600">
         <div className="container-custom">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -1340,7 +1338,7 @@ export default function Home() {
                     <button 
                       type="submit"
                       disabled={newsletterSubmitting || !newsletterEmail.trim()}
-                      className="px-8 py-4 bg-white text-pink-600 rounded-full font-semibold hover:bg-gray-100 transition-all duration-300 transform hover:-translate-y-1 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:transform-none disabled:hover:bg-white"
+                      className="px-8 py-4 bg-white text-primary rounded-full font-semibold hover:bg-gray-100 transition-all duration-300 transform hover:-translate-y-1 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:transform-none disabled:hover:bg-white"
                     >
                       {newsletterSubmitting ? 'Subscribing...' : 'Subscribe'}
                     </button>

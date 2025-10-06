@@ -1,7 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { motion } from 'framer-motion';
 import { FiSearch, FiCalendar, FiUser, FiTag, FiClock, FiArrowRight } from 'react-icons/fi';
 import MainLayout from '../components/layout/MainLayout';
 import { db } from '../firebase/config';
@@ -14,10 +12,9 @@ export default function Blog() {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [currentPage, setCurrentPage] = useState(1);
   const postsPerPage = 6;
-  const navigate = useNavigate();
 
   // Sample data as fallback
-  const postsData = [
+  const postsData = useMemo(() => [
     {
       id: 1,
       title: "Building Wells in Rural Communities",
@@ -96,7 +93,7 @@ export default function Blog() {
       image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=800&h=600&fit=crop",
       tags: ["women", "microfinance", "empowerment"]
     }
-  ];
+  ], []);
 
   const categories = ['all', 'water', 'education', 'healthcare', 'emergency', 'agriculture', 'empowerment'];
 
@@ -118,7 +115,7 @@ export default function Blog() {
     };
 
     fetchPosts();
-  }, []);
+  }, [postsData]);
 
   // Filter posts based on search term and category
   const filteredPosts = posts.filter(post => {
@@ -142,10 +139,10 @@ export default function Blog() {
   return (
     <MainLayout>
       <Helmet>
-        <title>Blog - Lumps Away Foundation</title>
-        <meta name="description" content="Stay updated with the latest news, stories, and insights from our breast cancer support work in Uganda." />
-        <meta property="og:title" content="Blog - Lumps Away Foundation" />
-        <meta property="og:description" content="Stay updated with the latest news, stories, and insights from our breast cancer support work in Uganda." />
+        <title>Blog - Ronsen Hope Christian Foundation Uganda</title>
+        <meta name="description" content="Stay updated with the latest news, stories, and insights from our work supporting vulnerable children and families in Uganda." />
+        <meta property="og:title" content="Blog - Ronsen Hope Christian Foundation Uganda" />
+        <meta property="og:description" content="Stay updated with the latest news, stories, and insights from our work supporting vulnerable children and families in Uganda." />
         <meta property="og:type" content="website" />
         <link rel="canonical" href="/blog" />
       </Helmet>
@@ -173,7 +170,7 @@ export default function Blog() {
               transition={{ duration: 0.8, delay: 0.4 }}
               className="text-xl md:text-2xl mb-8 text-secondary/80 leading-relaxed"
             >
-              Stay updated with the latest news, stories, and insights from our breast cancer support work in Uganda.
+              Stay updated with the latest news, stories, and insights from our work supporting vulnerable children and families in Uganda.
             </motion.p>
             
             <motion.div

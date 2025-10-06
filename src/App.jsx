@@ -46,6 +46,7 @@ import ForumDetail from './pages/ForumDetail';
 import Volunteer from './pages/Volunteer';
 import AdminSetup from './components/AdminSetup';
 import AdminDebug from './components/AdminDebug';
+import FirebaseTest from './components/FirebaseTest';
 const UserDonations = () => <div>User Donations (Coming Soon)</div>;
 
 function App() {
@@ -60,6 +61,7 @@ function App() {
             <Route path="/signup" element={<Signup />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/unauthorized" element={<Unauthorized />} />
+            <Route path="/firebase-test" element={<FirebaseTest />} />
             {/* <Route path="/admin-setup" element={<AdminSetup />} /> */}
             {/* <Route path="/admin-debug" element={<AdminDebug />} /> */}
             

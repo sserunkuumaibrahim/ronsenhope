@@ -1,14 +1,13 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
-import { motion } from 'framer-motion';
 import { FiArrowLeft, FiUser, FiCalendar, FiTag, FiHeart, FiMessageCircle, FiSend, FiFlag, FiAlertCircle, FiX } from 'react-icons/fi';
 import MainLayout from '../components/layout/MainLayout';
 import { useAuth } from '../contexts/AuthContext';
 import { toast } from 'react-hot-toast';
 import LoadingSpinner from '../components/common/LoadingSpinner';
 import { realtimeDb } from '../firebase/config';
-import { ref, get, push, set, onValue, off, update, query, orderByChild, orderByKey } from 'firebase/database';
+import { ref, get, push, onValue, update } from 'firebase/database';
 
 export default function ForumDetail() {
   const { id } = useParams();
@@ -383,7 +382,7 @@ export default function ForumDetail() {
   return (
     <MainLayout>
       <Helmet>
-        <title>{topic?.title} - Forum - Lumps Away Foundation</title>
+        <title>{topic?.title} - Forum - Ronsen Hope Christian Foundation Uganda</title>
         <meta name="description" content={`Join the discussion: ${topic?.title}`} />
       </Helmet>
       

@@ -229,9 +229,9 @@ export default function BlogDetail() {
   return (
     <MainLayout>
       <Helmet>
-        <title>{post.title} - Lumps Away Foundation</title>
+        <title>{post.title} - Ronsen Hope Christian Foundation Uganda</title>
           <meta name="description" content={post.excerpt} />
-          <meta property="og:title" content={`${post.title} - Lumps Away Foundation`} />
+          <meta property="og:title" content={`${post.title} - Ronsen Hope Christian Foundation Uganda`} />
         <meta property="og:description" content={post.excerpt} />
         <meta property="og:type" content="article" />
         <meta property="og:image" content={post.image} />
@@ -418,7 +418,7 @@ export default function BlogDetail() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {relatedPosts.map((relatedPost) => (
               <div key={relatedPost.id} className="card bg-base-100 shadow-md h-full relative group">
-                <div className="absolute inset-0 bg-pink-500 rounded-2xl transform rotate-1 group-hover:rotate-2 transition-transform duration-300 opacity-10"></div>
+                <div className="absolute inset-0 bg-primary rounded-2xl transform rotate-1 group-hover:rotate-2 transition-transform duration-300 opacity-10"></div>
                 <figure className="h-48 relative">
                   <img 
                     src={relatedPost.image} 

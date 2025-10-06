@@ -170,7 +170,7 @@ export default function Volunteer() {
             name: 'James Wilson',
             role: 'Clean Water Project Volunteer',
             image: 'https://randomuser.me/api/portraits/men/41.jpg',
-            content: 'Volunteering with Lumps Away Foundation has been one of the most rewarding experiences of my life. Seeing the direct impact of our work on breast cancer patients and their families is incredibly fulfilling.',
+            content: 'Volunteering with Ronsen Hope Christian Foundation Uganda has been one of the most rewarding experiences of my life. Seeing the direct impact of our work on vulnerable children and their families is incredibly fulfilling.',
             rating: 5
           },
           {
@@ -286,7 +286,7 @@ export default function Volunteer() {
   return (
     <MainLayout>
       <Helmet>
-        <title>Volunteer - Lumps Away Foundation</title>
+        <title>Volunteer - Ronsen Hope Christian Foundation Uganda</title>
         <meta name="description" content="Join our volunteer program and make a direct impact in communities around the world. Find opportunities that match your skills and interests." />
       </Helmet>
       
@@ -374,7 +374,7 @@ export default function Volunteer() {
             </div>
             <div className="grid grid-cols-2 gap-4">
               <a
-                 href="https://www.facebook.com/profile.php?id=100067651137058"
+                 href="https://www.facebook.com/100082882375342"
                  target="_blank"
                  rel="noopener noreferrer"
                  className="flex items-center gap-3 p-4 rounded-xl bg-blue-50 hover:bg-blue-100 transition-colors duration-200 group"
@@ -392,7 +392,7 @@ export default function Volunteer() {
                  <span className="text-gray-800 font-medium">X (Twitter)</span>
                </a>
                <a
-                 href="https://www.instagram.com/lumpsawayfoundation/"
+                 href="https://www.instagram.com/ronsenhopefoundation/"
                  target="_blank"
                  rel="noopener noreferrer"
                  className="flex items-center gap-3 p-4 rounded-xl bg-pink-50 hover:bg-pink-100 transition-colors duration-200 group"
@@ -435,9 +435,9 @@ export default function Volunteer() {
               whileInView={{ scale: 1, opacity: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6 }}
-              className="inline-flex items-center gap-2 bg-pink-100 text-pink-600 rounded-full px-6 py-3 mb-6 font-medium"
+              className="inline-flex items-center gap-2 bg-orange-100 text-orange-600 rounded-full px-6 py-3 mb-6 font-medium"
             >
-              <FiStar className="text-pink-500" />
+              <FiStar className="text-orange-500" />
               <span>Why Choose Us</span>
             </motion.div>
             <h2 className="text-4xl md:text-5xl font-bold mb-6 text-gray-800">
@@ -456,9 +456,9 @@ export default function Volunteer() {
             className="grid grid-cols-1 md:grid-cols-3 gap-8"
           >
             <motion.div variants={itemVariants} className="group relative">
-              <div className="absolute inset-0 bg-pink-500 rounded-2xl transform rotate-1 group-hover:rotate-2 transition-transform duration-300 opacity-10"></div>
+              <div className="absolute inset-0 bg-primary rounded-2xl transform rotate-1 group-hover:rotate-2 transition-transform duration-300 opacity-10"></div>
               <div className="relative bg-white rounded-2xl p-8 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
-                <div className="w-16 h-16 bg-pink-500 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                <div className="w-16 h-16 bg-primary rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
                   <FiHeart className="text-2xl text-white" />
                 </div>
                 <h3 className="text-2xl font-bold mb-4 text-gray-800">Make a Real Impact</h3>
@@ -467,9 +467,9 @@ export default function Volunteer() {
             </motion.div>
             
             <motion.div variants={itemVariants} className="group relative">
-              <div className="absolute inset-0 bg-pink-500 rounded-2xl transform -rotate-1 group-hover:-rotate-2 transition-transform duration-300 opacity-10"></div>
+              <div className="absolute inset-0 bg-primary rounded-2xl transform -rotate-1 group-hover:-rotate-2 transition-transform duration-300 opacity-10"></div>
               <div className="relative bg-white rounded-2xl p-8 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
-                <div className="w-16 h-16 bg-pink-500 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                <div className="w-16 h-16 bg-primary rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
                   <FiStar className="text-2xl text-white" />
                 </div>
                 <h3 className="text-2xl font-bold mb-4 text-gray-800">Gain Meaningful Experience</h3>
@@ -478,9 +478,9 @@ export default function Volunteer() {
             </motion.div>
             
             <motion.div variants={itemVariants} className="group relative">
-              <div className="absolute inset-0 bg-pink-500 rounded-2xl transform rotate-1 group-hover:rotate-2 transition-transform duration-300 opacity-10"></div>
+              <div className="absolute inset-0 bg-primary rounded-2xl transform rotate-1 group-hover:rotate-2 transition-transform duration-300 opacity-10"></div>
               <div className="relative bg-white rounded-2xl p-8 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
-                <div className="w-16 h-16 bg-pink-500 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                <div className="w-16 h-16 bg-primary rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
                   <FiUsers className="text-2xl text-white" />
                 </div>
                 <h3 className="text-2xl font-bold mb-4 text-gray-800">Join a Supportive Community</h3>
@@ -540,9 +540,9 @@ export default function Volunteer() {
                   initial={{ scale: 0.9, opacity: 0 }}
                   animate={{ scale: 1, opacity: 1 }}
                   transition={{ duration: 0.6 }}
-                  className="inline-flex items-center gap-2 bg-pink-100 text-pink-600 rounded-full px-6 py-3 mb-6 font-medium"
+                  className="inline-flex items-center gap-2 bg-orange-100 text-orange-600 rounded-full px-6 py-3 mb-6 font-medium"
                 >
-                  <FiUsers className="text-pink-500" />
+                  <FiUsers className="text-orange-500" />
                   <span>Join Our Team</span>
                 </motion.div>
                 <h2 className="text-4xl md:text-5xl font-bold mb-6 text-gray-800">
@@ -570,17 +570,17 @@ export default function Volunteer() {
                   viewport={{ once: true }}
                   className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
                 >
-                  {opportunities.map((opportunity, index) => {
+                  {opportunities.map((opportunity) => {
                   
                   return (
                     <motion.div key={opportunity.id} variants={itemVariants} className="group relative">
-                      <div className="absolute inset-0 bg-pink-500 rounded-2xl transform rotate-1 group-hover:rotate-2 transition-transform duration-300 opacity-10"></div>
+                      <div className="absolute inset-0 bg-primary rounded-2xl transform rotate-1 group-hover:rotate-2 transition-transform duration-300 opacity-10"></div>
                       <div className="relative bg-white rounded-2xl p-6 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 border border-gray-100">
                         <div className="flex items-start justify-between mb-4">
-                          <div className="w-12 h-12 bg-pink-500 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                          <div className="w-12 h-12 bg-primary rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
                             <FiHeart className="text-white text-xl" />
                           </div>
-                          <span className="px-3 py-1 bg-pink-500 text-white text-sm font-medium rounded-full">
+                          <span className="px-3 py-1 bg-primary text-white text-sm font-medium rounded-full">
                             {opportunity.category}
                           </span>
                         </div>
@@ -616,7 +616,7 @@ export default function Volunteer() {
                         </div>
                         
                         <button 
-                          className="w-full py-3 bg-pink-500 text-white font-semibold rounded-xl hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300 hover:bg-pink-600"
+                          className="w-full py-3 bg-primary text-white font-semibold rounded-xl hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300 hover:bg-primary/90"
                           onClick={() => {
                             setActiveTab('application');
                             document.getElementById('application-section').scrollIntoView({ behavior: 'smooth' });
@@ -644,9 +644,9 @@ export default function Volunteer() {
                     initial={{ scale: 0.9, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
                     transition={{ duration: 0.6 }}
-                    className="inline-flex items-center gap-2 bg-pink-100 text-pink-600 rounded-full px-6 py-3 mb-6 font-medium"
+                    className="inline-flex items-center gap-2 bg-orange-100 text-orange-600 rounded-full px-6 py-3 mb-6 font-medium"
                   >
-                    <FiStar className="text-pink-500" />
+                    <FiStar className="text-orange-500" />
                     <span>Success Stories</span>
                   </motion.div>
                   <h2 className="text-4xl md:text-5xl font-bold mb-6 text-gray-800">
@@ -673,10 +673,10 @@ export default function Volunteer() {
                     viewport={{ once: true }}
                     className="grid grid-cols-1 md:grid-cols-3 gap-8"
                   >
-                    {testimonials.slice(0, 3).map((testimonial, index) => {
+                    {testimonials.slice(0, 3).map((testimonial) => {
                       return (
                         <motion.div key={testimonial.id} variants={itemVariants} className="group relative">
-                          <div className="absolute inset-0 bg-pink-500 rounded-2xl transform rotate-1 group-hover:rotate-2 transition-transform duration-300 opacity-10"></div>
+                          <div className="absolute inset-0 bg-primary rounded-2xl transform rotate-1 group-hover:rotate-2 transition-transform duration-300 opacity-10"></div>
                           <div className="relative bg-white rounded-2xl p-8 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 border border-gray-100">
                             <div className="flex items-center mb-6">
                               <div className="relative">
@@ -685,7 +685,7 @@ export default function Volunteer() {
                                   alt={testimonial.name} 
                                   className="w-16 h-16 rounded-full object-cover border-4 border-white shadow-lg"
                                 />
-                                <div className="absolute -bottom-2 -right-2 w-6 h-6 bg-pink-500 rounded-full flex items-center justify-center">
+                                <div className="absolute -bottom-2 -right-2 w-6 h-6 bg-primary rounded-full flex items-center justify-center">
                                   <FiHeart className="text-white text-xs" />
                                 </div>
                               </div>
@@ -732,9 +732,9 @@ export default function Volunteer() {
                     initial={{ scale: 0.9, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
                     transition={{ duration: 0.6 }}
-                    className="inline-flex items-center gap-2 bg-pink-100 text-pink-600 rounded-full px-6 py-3 mb-6 font-medium"
+                    className="inline-flex items-center gap-2 bg-orange-100 text-orange-600 rounded-full px-6 py-3 mb-6 font-medium"
                   >
-                    <FiHeart className="text-pink-500" />
+                    <FiHeart className="text-orange-500" />
                     <span>Join Us Today</span>
                   </motion.div>
                   <h2 className="text-4xl md:text-5xl font-bold mb-6 text-gray-800">
@@ -751,9 +751,9 @@ export default function Volunteer() {
                     animate={{ opacity: 1, scale: 1 }}
                     className="relative"
                   >
-                    <div className="absolute inset-0 bg-pink-500 rounded-3xl transform rotate-1 opacity-10"></div>
+                    <div className="absolute inset-0 bg-primary rounded-3xl transform rotate-1 opacity-10"></div>
                     <div className="relative bg-white p-12 rounded-3xl text-center max-w-2xl mx-auto shadow-2xl border border-gray-100">
-                      <div className="w-20 h-20 bg-pink-500 rounded-full flex items-center justify-center mx-auto mb-6">
+                      <div className="w-20 h-20 bg-primary rounded-full flex items-center justify-center mx-auto mb-6">
                         <div className="text-3xl text-white">✓</div>
                       </div>
                       <h3 className="text-3xl font-bold mb-4 text-gray-800">Application Submitted!</h3>
@@ -762,7 +762,7 @@ export default function Volunteer() {
                   </motion.div>
                 ) : (
                   <motion.div className="relative max-w-4xl mx-auto">
-                    <div className="absolute inset-0 bg-pink-500 rounded-3xl transform rotate-1 opacity-5"></div>
+                    <div className="absolute inset-0 bg-primary rounded-3xl transform rotate-1 opacity-5"></div>
                     <motion.form 
                       onSubmit={handleSubmit}
                       className="relative bg-white p-8 md:p-12 rounded-3xl shadow-2xl border border-gray-100"
@@ -924,7 +924,7 @@ export default function Volunteer() {
                     <motion.div variants={itemVariants} className="mt-8">
                       <button 
                         type="submit" 
-                        className="w-full py-4 bg-pink-500 text-white font-bold text-lg rounded-2xl hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300 hover:bg-pink-600"
+                        className="w-full py-4 bg-primary text-white font-bold text-lg rounded-2xl hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300 hover:bg-primary/90"
                       >
                         Submit Application
                       </button>
@@ -982,7 +982,7 @@ export default function Volunteer() {
               <div className="bg-yellow-50 rounded-xl p-6 mb-4">
                 <div className="mb-2">
                   <p className="text-sm text-yellow-700 mb-1">Account Name</p>
-                  <p className="text-xl font-bold text-gray-800">Lumps Away Foundation</p>
+                  <p className="text-xl font-bold text-gray-800">Ronsen Hope Christian Foundation Uganda</p>
                 </div>
                 <div>
                   <p className="text-sm text-yellow-700 mb-1">Phone Number</p>
@@ -1012,7 +1012,7 @@ export default function Volunteer() {
               <div className="bg-red-50 rounded-xl p-6 mb-4">
                 <div className="mb-2">
                   <p className="text-sm text-red-700 mb-1">Account Name</p>
-                  <p className="text-xl font-bold text-gray-800">Lumps Away Foundation</p>
+                  <p className="text-xl font-bold text-gray-800">Ronsen Hope Christian Foundation Uganda</p>
                 </div>
                 <div>
                   <p className="text-sm text-red-700 mb-1">Phone Number</p>
@@ -1054,10 +1054,10 @@ export default function Volunteer() {
             </p>
             <Link 
               to="/contact"
-              className="group relative px-10 py-5 bg-white text-pink-600 rounded-full font-bold text-xl shadow-2xl hover:shadow-3xl transform hover:-translate-y-2 transition-all duration-300 overflow-hidden inline-block"
+              className="group relative px-10 py-5 bg-white text-primary rounded-full font-bold text-xl shadow-2xl hover:shadow-3xl transform hover:-translate-y-2 transition-all duration-300 overflow-hidden inline-block"
             >
               <span className="relative z-10">Contact Us</span>
-              <div className="absolute inset-0 bg-pink-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <div className="absolute inset-0 bg-primary opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               <span className="absolute inset-0 z-10 flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 font-bold">Contact Us</span>
             </Link>
           </motion.div>

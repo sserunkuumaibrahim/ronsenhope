@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { useForm } from 'react-hook-form';
 import { motion } from 'framer-motion';
+import { useForm } from 'react-hook-form';
 import { FiMail, FiUser, FiMessageSquare, FiPhone, FiMapPin, FiCheckCircle, FiFacebook, FiTwitter, FiInstagram, FiLinkedin, FiSend, FiClock, FiGlobe } from 'react-icons/fi';
 import MainLayout from '../components/layout/MainLayout';
 import { db } from '../firebase/config';
@@ -63,8 +63,8 @@ export default function Contact() {
   return (
     <MainLayout>
       <Helmet>
-        <title>Contact Us - Lumps Away</title>
-        <meta name="description" content="Get in touch with our team at Lumps Away. We're here to help, listen, and connect with patients, survivors, caregivers, and supporters in our cancer support community." />
+        <title>Contact Us - Ronsen Hope Christian Foundation Uganda</title>
+        <meta name="description" content="Get in touch with Ronsen Hope Christian Foundation Uganda. We're here to help, listen, and connect with supporters, donors, and community members in our mission to support vulnerable children." />
       </Helmet>
 
       {/* Hero Section */}
@@ -405,7 +405,7 @@ export default function Contact() {
                     </div>
                     <div>
                       <h3 className="font-bold text-lg text-gray-800 mb-2">Visit Our Office</h3>
-                      <p className="text-gray-600 leading-relaxed">Uganda Office<br />Kampala, Uganda</p>
+                      <p className="text-gray-600 leading-relaxed">Ronsen Hope Christian Foundation Uganda<br />Namasole Road, Next Kafra Medical Services<br />Kampala, Uganda</p>
                     </div>
                   </motion.div>
 
@@ -419,7 +419,7 @@ export default function Contact() {
                     <div>
                       <h3 className="font-bold text-lg text-gray-800 mb-2">Email Us</h3>
                       <p className="text-gray-600 leading-relaxed">
-                        <a href="mailto:info@lumpsaway.ug" className="hover:text-primary transition-colors">info@lumpsaway.ug</a>
+                        <a href="mailto:ronsenhopefoundation@gmail.com" className="hover:text-primary transition-colors">ronsenhopefoundation@gmail.com</a>
                       </p>
                     </div>
                   </motion.div>
@@ -434,8 +434,8 @@ export default function Contact() {
                     <div>
                       <h3 className="font-bold text-lg text-gray-800 mb-2">Call Us</h3>
                       <p className="text-gray-600 leading-relaxed">
-                        <a href="tel:+256752993950" className="hover:text-primary transition-colors">+256 752 993 950 (UG)</a><br />
-                        <a href="tel:+12023783398" className="hover:text-primary transition-colors">+1 202 378 3398 (US)</a>
+                        <a href="tel:+256700709160" className="hover:text-primary transition-colors">+256 700 709 160</a><br />
+                        <a href="tel:+256392904960" className="hover:text-primary transition-colors">+256 392 904 960</a>
                       </p>
                     </div>
                   </motion.div>
@@ -464,7 +464,7 @@ export default function Contact() {
                  
                  <div className="grid grid-cols-2 gap-4">
                    <motion.a 
-                     href="https://www.facebook.com/profile.php?id=100067651137058" 
+                     href="https://www.facebook.com/100082882375342" 
                      target="_blank"
                      rel="noopener noreferrer"
                      whileHover={{ scale: 1.05, y: -2 }}
@@ -492,7 +492,7 @@ export default function Contact() {
                    </motion.a>
                    
                    <motion.a 
-                     href="https://www.instagram.com/lumpsawayfoundation/" 
+                     href="https://www.instagram.com/ronsenhopefoundation/" 
                      target="_blank"
                      rel="noopener noreferrer"
                      whileHover={{ scale: 1.05, y: -2 }}

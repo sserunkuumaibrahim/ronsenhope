@@ -9,8 +9,8 @@ import { toast } from 'react-hot-toast';
 import LoadingSpinner from '../components/common/LoadingSpinner';
 import ForumGuidelinesModal from '../components/forum/ForumGuidelinesModal';
 import { realtimeDb, db } from '../firebase/config';
-import { ref, push, set, onValue, off, serverTimestamp, update, query, orderByChild, limitToLast, get } from 'firebase/database';
-import { doc, getDoc } from 'firebase/firestore';
+import { ref, push, set, onValue, off, update, query, orderByChild, limitToLast, get } from 'firebase/database';
+import { collection, getDocs, orderBy, startAfter, limit, doc, getDoc } from 'firebase/firestore';
 
 export default function Forum() {
   const { currentUser } = useAuth();
@@ -363,7 +363,7 @@ export default function Forum() {
       partnerships: 'bg-orange-100 text-orange-800',
       health: 'bg-red-100 text-red-800',
       impact: 'bg-indigo-100 text-indigo-800',
-      community: 'bg-pink-100 text-pink-800',
+      community: 'bg-orange-100 text-orange-800',
       youth: 'bg-yellow-100 text-yellow-800'
     };
     return colors[category] || 'bg-gray-100 text-gray-800';
@@ -372,7 +372,7 @@ export default function Forum() {
   return (
     <MainLayout>
       <Helmet>
-        <title>Community Forum - Lumps Away Foundation</title>
+        <title>Community Forum - Ronsen Hope Christian Foundation Uganda</title>
         <meta name="description" content="Join our community forum to connect with like-minded individuals, share ideas, and participate in meaningful discussions about causes that matter." />
       </Helmet>
 

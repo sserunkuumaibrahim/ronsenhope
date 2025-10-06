@@ -1,6 +1,10 @@
-# Lumps Away Foundation Web Application
+# Ronsen Hope Christian Foundation Uganda Web Application
 
-A comprehensive web application for the Lumps Away Foundation, supporting breast cancer patients and their families in Uganda. Built with React, Vite, Tailwind CSS, DaisyUI, and Firebase.
+A comprehensive web application for Ronsen Hope Christian Foundation Uganda, supporting vulnerable children, orphans, youths and elderly in Uganda. Built with React, Vite, Tailwind CSS, DaisyUI, and Firebase.
+
+## About
+
+Ronsen Hope Christian Foundation Uganda is a registered Christian-based non-profit organization dedicated to providing holistic care and support to vulnerable children, orphans, youths and elderly in Uganda - East Africa. Our mission is to demonstrate the love of Christ through practical acts of service, empowering vulnerable children and orphans in rural and urban slum areas of Uganda.
 
 ## Features
 
@@ -32,8 +36,8 @@ A comprehensive web application for the Lumps Away Foundation, supporting breast
 
 1. Clone the repository
    ```bash
-   git clone https://github.com/yourusername/lumpsaway.git
-   cd lumpsaway
+   git clone https://github.com/sserunkuumaibrahim/ronsenhope.git
+   cd ronsenhope
    ```
 
 2. Install dependencies

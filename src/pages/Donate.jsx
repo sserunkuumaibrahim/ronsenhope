@@ -7,7 +7,7 @@ export default function Donate() {
   return (
     <MainLayout>
       <Helmet>
-        <title>Donate - Lumps Away Foundation</title>
+        <title>Donate - Ronsen Hope Christian Foundation Uganda</title>
         <meta name="description" content="Support our mission by making a donation. Your contribution helps us create positive change in communities around the world." />
       </Helmet>
 

@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { useForm } from 'react-hook-form';
-import { motion } from 'framer-motion';
 import { FiUser, FiMail, FiPhone, FiMapPin, FiEdit2, FiDollarSign, FiClock, FiHeart, FiSettings, FiLogOut, FiUsers, FiStar, FiCalendar, FiLock, FiEye, FiEyeOff } from 'react-icons/fi';
 import { useAuth } from '../contexts/AuthContext';
 import MainLayout from '../components/layout/MainLayout';
@@ -12,8 +11,6 @@ export default function Profile() {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('profile');
   const [isEditing, setIsEditing] = useState(false);
-  const [donations, setDonations] = useState([]);
-  const [loading, setLoading] = useState(true);
   const [updateSuccess, setUpdateSuccess] = useState(false);
   const [updateError, setUpdateError] = useState('');
   const [passwordUpdateSuccess, setPasswordUpdateSuccess] = useState(false);
@@ -36,39 +33,8 @@ export default function Profile() {
       
       // Simulate fetching donations
       const fetchDonations = async () => {
-        setLoading(true);
         // In a real app, this would be an API call
         await new Promise(resolve => setTimeout(resolve, 800));
-        
-        // Sample donations data
-        const donationsData = [
-          {
-            id: 1,
-            program: 'Clean Water Initiative',
-            amount: 50,
-            date: 'June 15, 2023',
-            status: 'completed',
-            recurring: false
-          },
-          {
-            id: 2,
-            program: 'Education for All',
-            amount: 25,
-            date: 'May 28, 2023',
-            status: 'completed',
-            recurring: true
-          },
-          {
-            id: 3,
-            program: 'Community Development',
-            amount: 100,
-            date: 'April 10, 2023',
-            status: 'completed',
-            recurring: false
-          }
-        ];
-        
-        setDonations(donationsData);
         
         // Sample enrolled opportunities data
         const enrolledData = [
@@ -99,8 +65,6 @@ export default function Profile() {
         ];
         
         setEnrolledOpportunities(enrolledData);
-        setDonations(donationsData);
-        setLoading(false);
       };
 
       fetchDonations();
@@ -129,7 +93,7 @@ export default function Profile() {
       setTimeout(() => {
         setUpdateSuccess(false);
       }, 3000);
-    } catch (error) {
+    } catch {
       setUpdateError('Failed to update profile. Please try again.');
     }
   };
@@ -154,7 +118,7 @@ export default function Profile() {
       setTimeout(() => {
         setPasswordUpdateSuccess(false);
       }, 3000);
-    } catch (error) {
+    } catch {
       setPasswordUpdateError('Failed to update password. Please try again.');
     }
   };
@@ -288,7 +252,7 @@ export default function Profile() {
                      placeholder="+1 (555) 123-4567"
                      {...register('phone', { 
                        pattern: {
-                         value: /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/,
+                         value: /^[+]?[(]?[0-9]{3}[)]?[-\s.]?[0-9]{3}[-\s.]?[0-9]{4,6}$/,
                          message: 'Please enter a valid phone number'
                        }
                      })}
@@ -658,7 +622,7 @@ export default function Profile() {
   return (
     <MainLayout>
       <Helmet>
-        <title>Your Profile - Lumps Away Foundation</title>
+        <title>Your Profile - Ronsen Hope Christian Foundation Uganda</title>
         <meta name="description" content="Manage your profile, donations, and volunteer activities." />
       </Helmet>
 

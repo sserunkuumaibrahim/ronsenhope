@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { doc, getDoc, collection, query, where, limit, getDocs, addDoc, orderBy } from 'firebase/firestore';
+import { motion } from 'framer-motion';
+import { doc, getDoc, collection, query, where, limit, getDocs, addDoc } from 'firebase/firestore';
 import { db } from '../firebase/config';
 import { useAuth } from '../contexts/AuthContext';
 import MainLayout from '../components/layout/MainLayout';
 import { Helmet } from 'react-helmet-async';
-import { motion } from 'framer-motion';
 import DOMPurify from 'dompurify';
 import { FiArrowLeft, FiUser, FiCalendar, FiClock, FiTag, FiShare2, FiMessageSquare, FiHeart, FiSend } from 'react-icons/fi';
 
@@ -139,12 +139,6 @@ export default function StoryDetail() {
     setLikedComments(newLikedComments);
   };
 
-  // Animation variants
-  const fadeInUp = {
-    hidden: { opacity: 0, y: 30 },
-    visible: { opacity: 1, y: 0 }
-  };
-
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -196,9 +190,9 @@ export default function StoryDetail() {
   return (
     <MainLayout>
       <Helmet>
-        <title>{story.title} - Lumps Away Foundation</title>
+        <title>{story.title} - Ronsen Hope Christian Foundation Uganda</title>
         <meta name="description" content={story.excerpt} />
-        <meta property="og:title" content={`${story.title} - Lumps Away Foundation`} />
+        <meta property="og:title" content={`${story.title} - Ronsen Hope Christian Foundation Uganda`} />
         <meta property="og:description" content={story.excerpt} />
         <meta property="og:type" content="article" />
         <meta property="og:image" content={story.image} />
@@ -271,7 +265,7 @@ export default function StoryDetail() {
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.2 }}
-                className="text-xl xs:text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl 2xl:text-7xl font-bold leading-tight mb-4 xs:mb-5 sm:mb-6 md:mb-8 bg-gradient-to-r from-white to-pink-100 bg-clip-text text-transparent"
+                className="text-xl xs:text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl 2xl:text-7xl font-bold leading-tight mb-4 xs:mb-5 sm:mb-6 md:mb-8 bg-gradient-to-r from-white to-primary bg-clip-text text-transparent"
               >
                 {story.title}
               </motion.h1>
@@ -340,16 +334,16 @@ export default function StoryDetail() {
                 variants={itemVariants}
                 className="group relative mb-8 xs:mb-10 sm:mb-12 md:mb-16"
               >
-                <div className="absolute inset-0 bg-pink-500 rounded-xl xs:rounded-2xl transform rotate-1 group-hover:rotate-2 transition-transform duration-300 opacity-5"></div>
+                <div className="absolute inset-0 bg-primary rounded-xl xs:rounded-2xl transform rotate-1 group-hover:rotate-2 transition-transform duration-300 opacity-5"></div>
                 <div className="relative bg-white rounded-xl xs:rounded-2xl p-4 xs:p-5 sm:p-6 md:p-8 shadow-xl hover:shadow-2xl transition-all duration-300 border border-gray-100">
                   <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 xs:gap-4 md:gap-6">
                     <div className="relative flex-shrink-0">
-                      <div className="w-12 h-12 xs:w-14 xs:h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-xl xs:rounded-2xl bg-gradient-to-br from-pink-500 to-purple-600 ring-2 xs:ring-3 sm:ring-4 ring-pink-100 group-hover:ring-pink-200 transition-all duration-300 flex items-center justify-center">
+                      <div className="w-12 h-12 xs:w-14 xs:h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-xl xs:rounded-2xl bg-gradient-to-br from-primary to-orange-600 ring-2 xs:ring-3 sm:ring-4 ring-orange-100 group-hover:ring-orange-200 transition-all duration-300 flex items-center justify-center">
                         <span className="text-white font-bold text-base xs:text-lg sm:text-xl md:text-2xl">
                           {story.author ? story.author.charAt(0).toUpperCase() : 'A'}
                         </span>
                       </div>
-                      <div className="absolute -bottom-1 -right-1 xs:-bottom-2 xs:-right-2 w-5 h-5 xs:w-6 xs:h-6 md:w-8 md:h-8 bg-pink-500 rounded-full flex items-center justify-center">
+                      <div className="absolute -bottom-1 -right-1 xs:-bottom-2 xs:-right-2 w-5 h-5 xs:w-6 xs:h-6 md:w-8 md:h-8 bg-primary rounded-full flex items-center justify-center">
                         <FiUser className="w-2.5 h-2.5 xs:w-3 xs:h-3 md:w-4 md:h-4 text-white" />
                       </div>
                     </div>
@@ -366,10 +360,10 @@ export default function StoryDetail() {
                       </p>
                     </div>
                     <div className="flex gap-1.5 xs:gap-2 md:gap-3 self-start sm:self-center">
-                      <button className="w-8 h-8 xs:w-9 xs:h-9 sm:w-10 sm:h-10 md:w-12 md:h-12 bg-gray-100 hover:bg-pink-500 text-gray-600 hover:text-white rounded-lg xs:rounded-xl transition-all duration-300 flex items-center justify-center group/btn">
+                      <button className="w-8 h-8 xs:w-9 xs:h-9 sm:w-10 sm:h-10 md:w-12 md:h-12 bg-gray-100 hover:bg-primary text-gray-600 hover:text-white rounded-lg xs:rounded-xl transition-all duration-300 flex items-center justify-center group/btn">
                         <FiShare2 className="w-3 h-3 xs:w-3.5 xs:h-3.5 sm:w-4 sm:h-4 md:w-5 md:h-5 group-hover/btn:scale-110 transition-transform" />
                       </button>
-                      <button className="w-8 h-8 xs:w-9 xs:h-9 sm:w-10 sm:h-10 md:w-12 md:h-12 bg-gray-100 hover:bg-pink-500 text-gray-600 hover:text-white rounded-lg xs:rounded-xl transition-all duration-300 flex items-center justify-center group/btn">
+                      <button className="w-8 h-8 xs:w-9 xs:h-9 sm:w-10 sm:h-10 md:w-12 md:h-12 bg-gray-100 hover:bg-primary text-gray-600 hover:text-white rounded-lg xs:rounded-xl transition-all duration-300 flex items-center justify-center group/btn">
                         <FiHeart className="w-3 h-3 xs:w-3.5 xs:h-3.5 sm:w-4 sm:h-4 md:w-5 md:h-5 group-hover/btn:scale-110 transition-transform" />
                       </button>
                     </div>
@@ -438,10 +432,10 @@ export default function StoryDetail() {
             <motion.div variants={itemVariants} className="mb-8 xs:mb-10 sm:mb-12">
               <div className="flex flex-col xs:flex-row xs:items-center gap-3 xs:gap-4 mb-6 xs:mb-7 sm:mb-8">
                 <h2 className="text-2xl xs:text-2xl sm:text-3xl font-bold text-gray-900 flex items-center gap-2 xs:gap-3">
-                  <FiMessageSquare className="text-pink-500 w-6 h-6 xs:w-7 xs:h-7 sm:w-8 sm:h-8" />
+                  <FiMessageSquare className="text-primary w-6 h-6 xs:w-7 xs:h-7 sm:w-8 sm:h-8" />
                   Comments
                 </h2>
-                <span className="px-3 xs:px-4 py-1.5 xs:py-2 bg-pink-100 text-pink-700 rounded-full text-xs xs:text-sm font-semibold">
+                <span className="px-3 xs:px-4 py-1.5 xs:py-2 bg-orange-100 text-orange-700 rounded-full text-xs xs:text-sm font-semibold">
                   {comments.length}
                 </span>
               </div>
@@ -501,9 +495,9 @@ export default function StoryDetail() {
               </motion.div>
             ) : (
               <motion.div variants={itemVariants} className="mb-8 xs:mb-10 sm:mb-12">
-                <div className="bg-gradient-to-br from-pink-50 to-purple-50 rounded-2xl xs:rounded-3xl p-6 xs:p-7 sm:p-8 border-2 border-pink-100 text-center">
-                  <div className="w-12 h-12 xs:w-14 xs:h-14 sm:w-16 sm:h-16 bg-pink-100 rounded-full flex items-center justify-center mx-auto mb-3 xs:mb-4">
-                    <FiUser className="w-6 h-6 xs:w-7 xs:h-7 sm:w-8 sm:h-8 text-pink-600" />
+                <div className="bg-gradient-to-br from-orange-50 to-amber-50 rounded-2xl xs:rounded-3xl p-6 xs:p-7 sm:p-8 border-2 border-orange-100 text-center">
+                  <div className="w-12 h-12 xs:w-14 xs:h-14 sm:w-16 sm:h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-3 xs:mb-4">
+                    <FiUser className="w-6 h-6 xs:w-7 xs:h-7 sm:w-8 sm:h-8 text-orange-600" />
                   </div>
                   <h4 className="text-lg xs:text-xl font-bold text-gray-900 mb-2">Join the Conversation</h4>
                   <p className="text-sm xs:text-base text-gray-600 mb-4 xs:mb-5 sm:mb-6">Please log in to share your thoughts and connect with our community</p>
@@ -551,8 +545,8 @@ export default function StoryDetail() {
                               onClick={() => handleLikeComment(comment.id)}
                               className={`flex items-center gap-1 px-2 xs:px-3 py-1 rounded-full text-xs xs:text-sm transition-all duration-300 ${
                                 likedComments.has(comment.id) 
-                                  ? 'bg-pink-100 text-pink-600 hover:bg-pink-200' 
-                                  : 'bg-gray-100 text-gray-600 hover:bg-pink-100 hover:text-pink-600'
+                                  ? 'bg-orange-100 text-orange-600 hover:bg-orange-200' 
+                                  : 'bg-gray-100 text-gray-600 hover:bg-orange-100 hover:text-orange-600'
                               }`}
                             >
                               <FiHeart className={`w-3 h-3 ${likedComments.has(comment.id) ? 'fill-current' : ''}`} />
@@ -605,7 +599,7 @@ export default function StoryDetail() {
               </motion.div>
               
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 xs:gap-7 sm:gap-8">
-                {relatedStories.map((relatedStory, index) => (
+                {relatedStories.map((relatedStory) => (
                   <motion.div 
                     key={relatedStory.id}
                     variants={itemVariants}

@@ -1,11 +1,10 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
-import { motion } from 'framer-motion';
 import { FiUsers, FiActivity, FiCalendar, FiArrowUp, FiArrowDown, FiTrendingUp, FiTrendingDown, FiEye, FiHeart, FiTarget } from 'react-icons/fi';
 import AdminLayout from '../../components/layout/AdminLayout';
 import { db, realtimeDb } from '../../firebase/config';
-import { collection, getDocs, query, where, orderBy, limit } from 'firebase/firestore';
+import { collection, getDocs } from 'firebase/firestore';
 import { ref, get } from 'firebase/database';
 
 export default function Dashboard() {
@@ -104,7 +103,6 @@ export default function Dashboard() {
   // Helper function to calculate monthly breakdown
   const calculateMonthlyBreakdown = (users) => {
     const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    const currentYear = new Date().getFullYear();
     const monthlyData = [];
     
     for (let i = 0; i < 6; i++) {
@@ -155,7 +153,7 @@ export default function Dashboard() {
   return (
     <AdminLayout>
       <Helmet>
-        <title>Admin Dashboard - Lumps Away Foundation</title>
+        <title>Admin Dashboard - Ronsen Hope Christian Foundation Uganda</title>
       </Helmet>
 
       <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-blue-50">

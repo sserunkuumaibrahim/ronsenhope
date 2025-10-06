@@ -55,8 +55,8 @@ export default function Programs() {
   return (
     <MainLayout>
       <Helmet>
-        <title>Our Programs - Lumps Away Foundation</title>
-        <meta name="description" content="Explore our various programs and initiatives aimed at creating positive change in communities around the world." />
+        <title>Our Programs - Ronsen Hope Christian Foundation Uganda</title>
+        <meta name="description" content="Explore our outreach programs including education, healthcare, food and nutrition, shelter, and community development initiatives for vulnerable children in Uganda." />
       </Helmet>
 
       {/* Hero Section */}
@@ -246,7 +246,7 @@ export default function Programs() {
                 whileHover={{ y: -8 }}
                 className="group relative"
               >
-                <div className="absolute inset-0 bg-pink-500 rounded-2xl transform rotate-1 group-hover:rotate-2 transition-transform duration-300 opacity-10"></div>
+                <div className="absolute inset-0 bg-primary rounded-2xl transform rotate-1 group-hover:rotate-2 transition-transform duration-300 opacity-10"></div>
                 <div className="relative bg-white rounded-2xl shadow-lg border border-gray-100 hover:shadow-xl transition-all duration-300 overflow-hidden">
                 {/* Image Section - 40% height */}
                 <div className="relative h-32 overflow-hidden">

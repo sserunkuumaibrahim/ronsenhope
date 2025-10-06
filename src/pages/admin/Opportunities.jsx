@@ -157,7 +157,7 @@ const Opportunities = () => {
           </div>
           <button
             onClick={() => setShowForm(true)}
-            className="bg-pink-600 text-white px-6 py-3 rounded-lg hover:bg-pink-700 transition-colors duration-200 flex items-center gap-2"
+            className="bg-primary text-white px-6 py-3 rounded-lg hover:bg-primary/90 transition-colors duration-200 flex items-center gap-2"
           >
             <FiPlus className="text-lg" />
             Add Opportunity
@@ -172,8 +172,8 @@ const Opportunities = () => {
                 <p className="text-sm font-medium text-gray-600">Total Opportunities</p>
                 <p className="text-2xl font-bold text-gray-900">{opportunities.length}</p>
               </div>
-              <div className="w-12 h-12 bg-pink-100 rounded-lg flex items-center justify-center">
-                <FiUsers className="text-pink-600 text-xl" />
+              <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
+                <FiUsers className="text-orange-600 text-xl" />
               </div>
             </div>
           </div>
@@ -234,7 +234,7 @@ const Opportunities = () => {
               <p className="text-gray-600 mb-6">Get started by creating your first volunteer opportunity.</p>
               <button
                 onClick={() => setShowForm(true)}
-                className="bg-pink-600 text-white px-6 py-2 rounded-lg hover:bg-pink-700 transition-colors duration-200"
+                className="bg-primary text-white px-6 py-2 rounded-lg hover:bg-primary/90 transition-colors duration-200"
               >
                 Add Opportunity
               </button>
@@ -259,7 +259,7 @@ const Opportunities = () => {
                         }`}>
                           {opportunity.isActive ? 'Active' : 'Inactive'}
                         </span>
-                        <span className="px-2 py-1 text-xs font-medium rounded-full bg-pink-100 text-pink-800">
+                        <span className="px-2 py-1 text-xs font-medium rounded-full bg-orange-100 text-orange-800">
                           {opportunity.category}
                         </span>
                       </div>
@@ -285,7 +285,7 @@ const Opportunities = () => {
                     <div className="flex items-center gap-2 ml-4">
                       <button
                         onClick={() => handleEdit(opportunity)}
-                        className="p-2 text-gray-600 hover:text-pink-600 hover:bg-pink-50 rounded-lg transition-colors duration-200"
+                        className="p-2 text-gray-600 hover:text-orange-600 hover:bg-orange-50 rounded-lg transition-colors duration-200"
                       >
                         <FiEdit2 className="text-lg" />
                       </button>
@@ -459,7 +459,7 @@ const Opportunities = () => {
                     <button
                       type="submit"
                       disabled={loading}
-                      className="px-6 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-colors duration-200 flex items-center gap-2 disabled:opacity-50"
+                      className="px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors duration-200 flex items-center gap-2 disabled:opacity-50"
                     >
                       <FiSave className="text-lg" />
                       {loading ? 'Saving...' : editingId ? 'Update' : 'Create'}
