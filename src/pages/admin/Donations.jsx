@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
+import { motion } from 'framer-motion';
 import { FiSearch, FiFilter, FiDownload, FiEye, FiCheck, FiX, FiDollarSign, FiCalendar, FiPieChart } from 'react-icons/fi';
 import AdminLayout from '../../components/layout/AdminLayout';
 

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
+import { motion } from 'framer-motion';
 import { FiSearch, FiEye, FiTrash2, FiFilter, FiDownload, FiMail, FiPhone, FiMapPin, FiClock, FiUser, FiCheckCircle, FiXCircle, FiFileText } from 'react-icons/fi';
 import AdminLayout from '../../components/layout/AdminLayout';
 import { db } from '../../firebase/config';

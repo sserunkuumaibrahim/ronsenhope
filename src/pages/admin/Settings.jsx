@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
+import { motion } from 'framer-motion';
 import { FiSave, FiSettings, FiMail, FiGlobe, FiUsers, FiLock, FiImage, FiAlertTriangle, FiCheck } from 'react-icons/fi';
 import { useForm } from 'react-hook-form';
 import AdminLayout from '../../components/layout/AdminLayout';
