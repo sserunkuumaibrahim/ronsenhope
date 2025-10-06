@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { useForm } from 'react-hook-form';
+import { motion } from 'framer-motion';
 import { FiUser, FiMail, FiPhone, FiMapPin, FiEdit2, FiDollarSign, FiClock, FiHeart, FiSettings, FiLogOut, FiUsers, FiStar, FiCalendar, FiLock, FiEye, FiEyeOff } from 'react-icons/fi';
 import { useAuth } from '../contexts/AuthContext';
 import MainLayout from '../components/layout/MainLayout';
