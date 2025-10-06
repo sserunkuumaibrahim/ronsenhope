@@ -1,7 +1,7 @@
 import { useRef } from 'react';
 import { FiX } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../../contexts/AuthContext';
 import { doc, updateDoc } from 'firebase/firestore';
 import { db } from '../../firebase/config';

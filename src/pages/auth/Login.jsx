@@ -168,7 +168,7 @@ export default function Login() {
                     <FiHeart className="text-orange-500" />
                     <span className="text-sm font-medium text-orange-700">Welcome Back</span>
                   </motion.div>
-                  <h1 className="text-3xl md:text-4xl font-bold mb-3 bg-gradient-to-r from-pink-600 to-pink-500 bg-clip-text text-transparent">
+                  <h1 className="text-3xl md:text-4xl font-bold mb-3 bg-gradient-to-r from-orange-600 to-orange-500 bg-clip-text text-transparent">
                     Sign In
                   </h1>
                   <p className="text-gray-600 text-lg">Continue your journey with us</p>
@@ -280,7 +280,7 @@ export default function Login() {
                   <div className="flex justify-end">
                     <Link 
                       to="/forgot-password" 
-                      className="text-sm text-pink-600 hover:text-pink-700 font-medium transition-colors duration-200"
+                      className="text-sm text-orange-600 hover:text-orange-700 font-medium transition-colors duration-200"
                     >
                       Forgot your password?
                     </Link>
@@ -292,7 +292,7 @@ export default function Login() {
                     disabled={loading}
                     whileHover={{ scale: loading ? 1 : 1.02, y: loading ? 0 : -1 }}
                     whileTap={{ scale: loading ? 1 : 0.98 }}
-                    className={`group relative w-full py-4 px-6 bg-gradient-to-r from-pink-500 to-pink-600 text-white rounded-2xl font-semibold text-lg shadow-xl hover:shadow-2xl transition-all duration-300 overflow-hidden ${
+                    className={`group relative w-full py-4 px-6 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-2xl font-semibold text-lg shadow-xl hover:shadow-2xl transition-all duration-300 overflow-hidden ${
                       loading ? 'cursor-not-allowed opacity-70' : 'hover:-translate-y-1'
                     }`}
                   >
@@ -310,7 +310,7 @@ export default function Login() {
                       )}
                     </span>
                     {!loading && (
-                      <div className="absolute inset-0 bg-gradient-to-r from-pink-600 to-pink-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                      <div className="absolute inset-0 bg-gradient-to-r from-orange-600 to-orange-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                     )}
                   </motion.button>
                 </motion.form>
@@ -366,7 +366,7 @@ export default function Login() {
                     New to our community?{' '}
                     <Link 
                       to="/signup" 
-                      className="text-pink-600 hover:text-pink-700 font-semibold transition-colors duration-200 hover:underline"
+                      className="text-orange-600 hover:text-orange-700 font-semibold transition-colors duration-200 hover:underline"
                     >
                       Create an account
                     </Link>

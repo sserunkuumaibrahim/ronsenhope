@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
 import { useForm } from 'react-hook-form';
-import { FiMail, FiUser, FiMessageSquare, FiPhone, FiMapPin, FiCheckCircle, FiFacebook, FiTwitter, FiInstagram, FiLinkedin, FiSend, FiClock, FiGlobe } from 'react-icons/fi';
+import { FiMail, FiUser, FiMessageSquare, FiPhone, FiMapPin, FiCheckCircle, FiFacebook, FiTwitter, FiInstagram, FiLinkedin, FiSend, FiClock, FiGlobe, FiTiktok } from 'react-icons/fi';
 import MainLayout from '../components/layout/MainLayout';
 import { db } from '../firebase/config';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
@@ -69,7 +69,7 @@ export default function Contact() {
 
       {/* Hero Section */}
       <section className="relative py-20 md:py-32 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-pink-400 via-pink-500 to-pink-600"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-orange-400 via-orange-500 to-orange-600"></div>
         <div className="absolute inset-0 bg-black/20"></div>
         
         {/* Animated background elements */}
@@ -113,7 +113,7 @@ export default function Contact() {
               transition={{ duration: 0.6, delay: 0.1 }}
               className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm rounded-full px-6 py-3 mb-8 border border-white/30"
             >
-              <FiMail className="text-pink-200" />
+              <FiMail className="text-orange-200" />
               <span className="text-sm font-medium">Let's Connect</span>
             </motion.div>
             
@@ -121,7 +121,7 @@ export default function Contact() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.3 }}
-              className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 bg-gradient-to-r from-white to-pink-100 bg-clip-text text-transparent"
+              className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 bg-gradient-to-r from-white to-orange-100 bg-clip-text text-transparent"
             >
               Get in Touch
             </motion.h1>
@@ -142,7 +142,7 @@ export default function Contact() {
               className="flex flex-col sm:flex-row gap-4 justify-center items-center"
             >
               <button 
-                className="group relative px-8 py-4 bg-white text-pink-600 rounded-full font-semibold text-lg shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300 overflow-hidden"
+                className="group relative px-8 py-4 bg-white text-orange-600 rounded-full font-semibold text-lg shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300 overflow-hidden"
                 onClick={() => {
                   document.getElementById('contact-form').scrollIntoView({ behavior: 'smooth' });
                 }}
@@ -151,14 +151,14 @@ export default function Contact() {
                   <FiSend className="mr-2" />
                   Send Message
                 </span>
-                <div className="absolute inset-0 bg-gradient-to-r from-pink-500 to-pink-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <div className="absolute inset-0 bg-gradient-to-r from-orange-500 to-orange-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                 <span className="absolute inset-0 z-10 flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 font-semibold">
                   <FiSend className="mr-2" />
                   Send Message
                 </span>
               </button>
               <button 
-                className="px-8 py-4 border-2 border-white text-white rounded-full font-semibold text-lg hover:bg-white hover:text-pink-600 transition-all duration-300 backdrop-blur-sm flex items-center"
+                className="px-8 py-4 border-2 border-white text-white rounded-full font-semibold text-lg hover:bg-white hover:text-orange-600 transition-all duration-300 backdrop-blur-sm flex items-center"
                 onClick={() => {
                   document.getElementById('contact-info').scrollIntoView({ behavior: 'smooth' });
                 }}
@@ -377,8 +377,8 @@ export default function Contact() {
                 <div className="mb-10">
                   <h3 className="text-2xl font-bold text-gray-800 mb-6">How We Can Help You</h3>
                   <div className="space-y-4 text-gray-600 leading-relaxed">
-                    <div className="p-4 bg-gradient-to-r from-pink-50 to-pink-100 rounded-xl">
-                      <strong className="text-pink-700">Patients & Survivors:</strong> Access our support services, find peer support, join our community, or learn more about available resources
+                    <div className="p-4 bg-gradient-to-r from-orange-50 to-orange-100 rounded-xl">
+                      <strong className="text-orange-700">Patients & Survivors:</strong> Access our support services, find peer support, join our community, or learn more about available resources
                     </div>
                     <div className="p-4 bg-gradient-to-r from-blue-50 to-blue-100 rounded-xl">
                       <strong className="text-blue-700">Healthcare Providers:</strong> Partner with us to better serve cancer patients in your community
@@ -455,9 +455,9 @@ export default function Contact() {
                    Stay connected with our latest updates, stories of courage, and community events on our social media platforms.
                  </p>
                  
-                 <div className="mb-8 p-6 bg-gradient-to-r from-pink-50 to-pink-100 rounded-2xl border border-pink-200">
-                   <h4 className="text-lg font-bold text-pink-800 mb-3">We Strongly Believe in the Power of Connection</h4>
-                   <p className="text-pink-700 leading-relaxed">
+                 <div className="mb-8 p-6 bg-gradient-to-r from-orange-50 to-orange-100 rounded-2xl border border-orange-200">
+                   <h4 className="text-lg font-bold text-orange-800 mb-3">We Strongly Believe in the Power of Connection</h4>
+                   <p className="text-orange-700 leading-relaxed">
                      Every conversation matters. Every story has value. Every person deserves support. We look forward to hearing from you.
                    </p>
                  </div>
@@ -478,7 +478,7 @@ export default function Contact() {
                    </motion.a>
                    
                    <motion.a 
-                     href="https://x.com/AwayLumps" 
+                     href="https://twitter.com/RonsenHopeUg" 
                      target="_blank"
                      rel="noopener noreferrer"
                      whileHover={{ scale: 1.05, y: -2 }}
@@ -497,12 +497,12 @@ export default function Contact() {
                      rel="noopener noreferrer"
                      whileHover={{ scale: 1.05, y: -2 }}
                      whileTap={{ scale: 0.95 }}
-                     className="group flex items-center gap-3 p-4 rounded-2xl bg-gradient-to-r from-pink-50 to-pink-100 hover:from-pink-100 hover:to-pink-200 transition-all duration-300"
+                     className="group flex items-center gap-3 p-4 rounded-2xl bg-gradient-to-r from-orange-50 to-orange-100 hover:from-orange-100 hover:to-orange-200 transition-all duration-300"
                    >
-                     <div className="w-10 h-10 bg-pink-500 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                     <div className="w-10 h-10 bg-orange-500 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
                        <FiInstagram className="text-lg text-white" />
                      </div>
-                     <span className="font-semibold text-pink-700">Instagram</span>
+                     <span className="font-semibold text-orange-700">Instagram</span>
                    </motion.a>
                    
                    <motion.a 
@@ -517,6 +517,20 @@ export default function Contact() {
                        <FiLinkedin className="text-lg text-white" />
                      </div>
                      <span className="font-semibold text-indigo-700">LinkedIn</span>
+                   </motion.a>
+                   
+                   <motion.a 
+                     href="https://tiktok.com/@ronsenministry" 
+                     target="_blank"
+                     rel="noopener noreferrer"
+                     whileHover={{ scale: 1.05, y: -2 }}
+                     whileTap={{ scale: 0.95 }}
+                     className="group flex items-center gap-3 p-4 rounded-2xl bg-gradient-to-r from-gray-50 to-gray-100 hover:from-gray-100 hover:to-gray-200 transition-all duration-300"
+                   >
+                     <div className="w-10 h-10 bg-black rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                       <FiTiktok className="text-lg text-white" />
+                     </div>
+                     <span className="font-semibold text-gray-700">TikTok</span>
                    </motion.a>
                  </div>
                </div>

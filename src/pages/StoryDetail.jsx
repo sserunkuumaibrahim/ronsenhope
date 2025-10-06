@@ -241,7 +241,7 @@ export default function StoryDetail() {
                   transition={{ duration: 0.6, delay: 0.1 }}
                   className="inline-flex items-center gap-1.5 xs:gap-2 bg-white/20 backdrop-blur-sm rounded-full px-3 xs:px-4 py-1.5 xs:py-2 sm:px-6 sm:py-3 border border-white/30"
                 >
-                  <FiTag className="text-pink-200 w-2.5 h-2.5 xs:w-3 xs:h-3 sm:w-4 sm:h-4" />
+                  <FiTag className="text-orange-200 w-2.5 h-2.5 xs:w-3 xs:h-3 sm:w-4 sm:h-4" />
                   <span className="text-xs xs:text-xs sm:text-sm font-medium">
                     {story.category === 'lindas-blog' ? "Linda's Blog" : 
                      story.category === 'stories-of-hope' ? 'Stories of Hope' : 
@@ -405,7 +405,7 @@ export default function StoryDetail() {
                     {story.tags.map((tag, index) => (
                       <span 
                         key={index} 
-                        className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-pink-100 to-purple-100 text-pink-700 rounded-2xl text-sm font-semibold hover:from-pink-200 hover:to-purple-200 transition-all duration-300 cursor-pointer transform hover:scale-105 shadow-sm"
+                        className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-orange-100 to-purple-100 text-orange-700 rounded-2xl text-sm font-semibold hover:from-orange-200 hover:to-purple-200 transition-all duration-300 cursor-pointer transform hover:scale-105 shadow-sm"
                       >
                         <FiTag className="w-3 h-3" />
                         {tag}
@@ -616,7 +616,7 @@ export default function StoryDetail() {
                         <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                       </div>
                       <div className="p-5 xs:p-6 sm:p-7 md:p-8">
-                        <h3 className="text-lg xs:text-xl font-bold text-gray-900 mb-2 xs:mb-3 group-hover:text-pink-600 transition-colors duration-300 line-clamp-2">
+                        <h3 className="text-lg xs:text-xl font-bold text-gray-900 mb-2 xs:mb-3 group-hover:text-orange-600 transition-colors duration-300 line-clamp-2">
                           {relatedStory.title}
                         </h3>
                         <p className="text-gray-600 line-clamp-3 mb-3 xs:mb-4 leading-relaxed text-sm xs:text-base">

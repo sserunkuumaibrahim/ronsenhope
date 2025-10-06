@@ -1,7 +1,7 @@
 import { Helmet } from 'react-helmet-async';
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { FiHeart, FiTarget, FiUsers, FiAward, FiGlobe, FiCalendar, FiShield, FiStar, FiArrowRight, FiMessageCircle, FiUser, FiBookOpen, FiActivity, FiDollarSign, FiCheckCircle, FiAlertTriangle } from 'react-icons/fi';
+import { FiHeart, FiTarget, FiUsers, FiAward, FiGlobe, FiCalendar, FiShield, FiStar, FiArrowRight, FiMessageCircle, FiUser, FiBookOpen, FiActivity, FiDollarSign, FiCheckCircle, FiAlertTriangle, FiTiktok } from 'react-icons/fi';
 import MainLayout from '../components/layout/MainLayout';
 import { ref, onValue, off } from 'firebase/database';
 import { realtimeDb } from '../firebase/config';
@@ -464,7 +464,7 @@ export default function About() {
               </p>
               <div dangerouslySetInnerHTML={{
                 __html: `
-                  <a class="dbox-donation-button" style="background: rgb(223, 24, 167); color: rgb(255, 255, 255); text-decoration: none; font-family: Verdana, sans-serif; display: inline-flex; gap: 8px; font-size: 16px; border-radius: 25px; line-height: 24px; padding: 12px 24px; font-weight: 600; border: 2px solid rgb(223, 24, 167);" href="https://donorbox.org/survive-and-thrive-804282?">Donate Now</a>
+                  <a class="dbox-donation-button" style="background: rgb(249, 134, 33); color: rgb(255, 255, 255); text-decoration: none; font-family: Verdana, sans-serif; display: inline-flex; gap: 8px; font-size: 16px; border-radius: 25px; line-height: 24px; padding: 12px 24px; font-weight: 600; border: 2px solid rgb(249, 134, 33);" href="https://donorbox.org/survive-and-thrive-804282?">Donate Now</a>
                 `
               }} />
             </motion.div>
@@ -509,14 +509,17 @@ export default function About() {
                 <a href="https://www.facebook.com/100082882375342" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white hover:scale-110 transition-transform duration-300">
                   <FiMessageCircle className="text-lg" />
                 </a>
-                <a href="https://www.instagram.com/ronsenhopefoundation/" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-pink-600 rounded-full flex items-center justify-center text-white hover:scale-110 transition-transform duration-300">
+                <a href="https://twitter.com/RonsenHopeUg" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-blue-400 rounded-full flex items-center justify-center text-white hover:scale-110 transition-transform duration-300">
+                  <FiGlobe className="text-lg" />
+                </a>
+                <a href="https://www.instagram.com/ronsenhopefoundation/" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-orange-600 rounded-full flex items-center justify-center text-white hover:scale-110 transition-transform duration-300">
                   <FiStar className="text-lg" />
                 </a>
                 <a href="https://www.linkedin.com/company/lumps-away-foundatin/?viewAsMember=true" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-blue-800 rounded-full flex items-center justify-center text-white hover:scale-110 transition-transform duration-300">
                   <FiUsers className="text-lg" />
                 </a>
-                <a href="https://x.com/AwayLumps" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-black rounded-full flex items-center justify-center text-white hover:scale-110 transition-transform duration-300">
-                  <FiGlobe className="text-lg" />
+                <a href="https://tiktok.com/@ronsenministry" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-black rounded-full flex items-center justify-center text-white hover:scale-110 transition-transform duration-300">
+                  <FiTiktok className="text-lg" />
                 </a>
               </div>
             </motion.div>
@@ -704,7 +707,7 @@ export default function About() {
 
       {/* Call to Action */}
       <section className="relative py-20 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-pink-500 to-pink-600"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-orange-500 to-orange-600"></div>
         <div className="absolute inset-0 bg-black/20"></div>
         <div className="container-custom text-center relative z-10">
           <motion.div
@@ -715,13 +718,13 @@ export default function About() {
             className="text-white"
           >
             <div className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm rounded-full px-6 py-3 mb-8 border border-white/30">
-              <FiHeart className="text-pink-300" />
+              <FiHeart className="text-orange-300" />
               <span className="text-sm font-medium">Make a Difference</span>
             </div>
-            <h2 className="text-4xl md:text-6xl font-bold mb-8 bg-gradient-to-r from-white to-pink-100 bg-clip-text text-transparent">
+            <h2 className="text-4xl md:text-6xl font-bold mb-8 bg-gradient-to-r from-white to-orange-100 bg-clip-text text-transparent">
               Be Part of the Solution
             </h2>
-            <p className="text-xl md:text-2xl mb-12 text-pink-100 leading-relaxed max-w-3xl mx-auto">
+            <p className="text-xl md:text-2xl mb-12 text-orange-100 leading-relaxed max-w-3xl mx-auto">
               Every donation, every volunteer hour, every shared story brings us closer to a world where 
               no one faces cancer without hope, support, and access to quality care.
             </p>
@@ -729,10 +732,10 @@ export default function About() {
                 <div dangerouslySetInnerHTML={{
                   __html: `
                     <script type="text/javascript" defer src="https://donorbox.org/install-popup-button.js"></script>
-                    <a class="dbox-donation-button" style="background: rgb(223, 24, 167); color: rgb(255, 255, 255); text-decoration: none; font-family: Verdana, sans-serif; display: flex; gap: 8px; width: fit-content; font-size: 16px; border-radius: 5px; line-height: 24px; padding: 8px 24px; border: 2px solid white;" href="https://donorbox.org/survive-and-thrive-804282?"><img src="https://donorbox.org/images/white_logo.svg" alt="Donate with DonorBox" />Donate Now</a>
+                    <a class="dbox-donation-button" style="background: rgb(249, 134, 33); color: rgb(255, 255, 255); text-decoration: none; font-family: Verdana, sans-serif; display: flex; gap: 8px; width: fit-content; font-size: 16px; border-radius: 5px; line-height: 24px; padding: 8px 24px; border: 2px solid white;" href="https://donorbox.org/survive-and-thrive-804282?"><img src="https://donorbox.org/images/white_logo.svg" alt="Donate with DonorBox" />Donate Now</a>
                   `
                 }} />
-                <a href="/volunteer" className="group relative px-10 py-5 bg-transparent border-2 border-white text-white rounded-full font-bold text-xl hover:bg-white hover:text-pink-600 transition-all duration-300 transform hover:-translate-y-2">
+                <a href="/volunteer" className="group relative px-10 py-5 bg-transparent border-2 border-white text-white rounded-full font-bold text-xl hover:bg-white hover:text-orange-600 transition-all duration-300 transform hover:-translate-y-2">
                   Volunteer With Us
                 </a>
               </div>

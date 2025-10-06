@@ -441,7 +441,7 @@ const Opportunities = () => {
                       name="isActive"
                       checked={formData.isActive}
                       onChange={handleInputChange}
-                      className="h-4 w-4 text-pink-600 focus:ring-pink-500 border-gray-300 rounded"
+                      className="h-4 w-4 text-orange-600 focus:ring-orange-500 border-gray-300 rounded"
                     />
                     <label className="ml-2 block text-sm text-gray-700">
                       Active (visible to volunteers)

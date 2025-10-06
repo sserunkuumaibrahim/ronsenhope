@@ -190,7 +190,7 @@ export default function Messages() {
                 onClick={() => setActiveTab('contact')}
                 className={`py-4 px-1 border-b-2 font-medium text-sm transition-colors ${
                   activeTab === 'contact'
-                    ? 'border-pink-500 text-pink-600'
+                    ? 'border-orange-500 text-orange-600'
                     : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                 }`}
               >
@@ -203,7 +203,7 @@ export default function Messages() {
                 onClick={() => setActiveTab('newsletter')}
                 className={`py-4 px-1 border-b-2 font-medium text-sm transition-colors ${
                   activeTab === 'newsletter'
-                    ? 'border-pink-500 text-pink-600'
+                    ? 'border-orange-500 text-orange-600'
                     : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                 }`}
               >
@@ -272,7 +272,7 @@ export default function Messages() {
                           <div className="flex items-center gap-2">
                             <button
                               onClick={() => viewMessage(message)}
-                              className="text-pink-600 hover:text-pink-900 transition-colors"
+                              className="text-orange-600 hover:text-orange-900 transition-colors"
                               title="View message"
                             >
                               <FiEye className="text-lg" />

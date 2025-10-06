@@ -158,7 +158,7 @@ export default function Signup() {
               transition={{ duration: 0.5 }}
               className="text-center mb-8"
             >
-              <div className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-pink-500 to-pink-600 text-white text-sm font-medium rounded-full mb-4">
+              <div className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-orange-500 to-orange-600 text-white text-sm font-medium rounded-full mb-4">
                 <FiUser className="mr-2" />
                 Join Our Community
               </div>
@@ -312,7 +312,7 @@ export default function Signup() {
                 disabled={loading}
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
-                className={`w-full py-3 px-4 bg-gradient-to-r from-pink-500 to-pink-600 text-white font-medium rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed ${
+                className={`w-full py-3 px-4 bg-gradient-to-r from-orange-500 to-orange-600 text-white font-medium rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed ${
                   loading ? 'animate-pulse' : ''
                 }`}
               >
@@ -375,7 +375,7 @@ export default function Signup() {
             >
               <p className="text-gray-600">
                 Already have an account?{' '}
-                <Link to="/login" className="text-pink-600 hover:text-pink-700 font-medium transition-colors">
+                <Link to="/login" className="text-orange-600 hover:text-orange-700 font-medium transition-colors">
                   Sign in
                 </Link>
               </p>

@@ -335,7 +335,7 @@ export default function Gallery() {
       
       {/* Hero Section */}
       <section className="relative py-20 md:py-32 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-pink-500 to-pink-600"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-orange-500 to-orange-600"></div>
         <div className="absolute inset-0 bg-black/20"></div>
         <div className="container-custom relative z-10">
           <motion.div 
@@ -350,10 +350,10 @@ export default function Gallery() {
               transition={{ duration: 0.6, delay: 0.1 }}
               className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm rounded-full px-6 py-3 mb-8 border border-white/30"
             >
-              <FiCamera className="text-pink-200" />
+              <FiCamera className="text-orange-200" />
               <span className="text-sm font-medium">Visual Stories of Impact</span>
             </motion.div>
-            <h1 className="text-5xl md:text-7xl font-bold mb-8 bg-gradient-to-r from-white to-pink-100 bg-clip-text text-transparent">
+            <h1 className="text-5xl md:text-7xl font-bold mb-8 bg-gradient-to-r from-white to-orange-100 bg-clip-text text-transparent">
               Our Gallery
             </h1>
             <p className="text-xl md:text-2xl mb-12 text-blue-100 leading-relaxed">
@@ -366,17 +366,17 @@ export default function Gallery() {
               className="flex flex-col sm:flex-row gap-6 justify-center"
             >
               <button 
-                className="group relative px-8 py-4 bg-white text-pink-600 rounded-full font-semibold text-lg shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300 overflow-hidden"
+                className="group relative px-8 py-4 bg-white text-orange-600 rounded-full font-semibold text-lg shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300 overflow-hidden"
                 onClick={() => {
                   document.getElementById('gallery-content').scrollIntoView({ behavior: 'smooth' });
                 }}
               >
                 <span className="relative z-10">Explore Gallery</span>
-                <div className="absolute inset-0 bg-gradient-to-r from-pink-500 to-pink-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <div className="absolute inset-0 bg-gradient-to-r from-orange-500 to-orange-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                 <span className="absolute inset-0 z-10 flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 font-semibold">Explore Gallery</span>
               </button>
               <button 
-                className="px-8 py-4 border-2 border-white text-white rounded-full font-semibold text-lg hover:bg-white hover:text-pink-600 transition-all duration-300 backdrop-blur-sm"
+                className="px-8 py-4 border-2 border-white text-white rounded-full font-semibold text-lg hover:bg-white hover:text-orange-600 transition-all duration-300 backdrop-blur-sm"
                 onClick={() => {
                   window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
                 }}

@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { FiCalendar, FiMapPin, FiClock, FiUsers, FiHeart, FiStar, FiUser, FiMail, FiPhone, FiMessageSquare, FiDollarSign, FiFacebook, FiTwitter, FiInstagram, FiLinkedin } from 'react-icons/fi';
+import { FiCalendar, FiMapPin, FiClock, FiUsers, FiHeart, FiStar, FiUser, FiMail, FiPhone, FiMessageSquare, FiDollarSign, FiFacebook, FiTwitter, FiInstagram, FiLinkedin, FiTiktok } from 'react-icons/fi';
 import MainLayout from '../components/layout/MainLayout';
 import { db } from '../firebase/config';
 import { collection, addDoc, getDocs } from 'firebase/firestore';
@@ -292,7 +292,7 @@ export default function Volunteer() {
       
       {/* Hero Section */}
       <section className="relative py-20 md:py-32 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-pink-500 to-pink-600"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-orange-500 to-orange-600"></div>
         <div className="absolute inset-0 bg-black/20"></div>
         <div className="container-custom relative z-10">
           <motion.div 
@@ -307,10 +307,10 @@ export default function Volunteer() {
               transition={{ duration: 0.6, delay: 0.1 }}
               className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm rounded-full px-6 py-3 mb-8 border border-white/30"
             >
-              <FiHeart className="text-pink-200" />
+              <FiHeart className="text-orange-200" />
               <span className="text-sm font-medium">Make a Difference Today</span>
             </motion.div>
-            <h1 className="text-5xl md:text-7xl font-bold mb-8 bg-gradient-to-r from-white to-pink-100 bg-clip-text text-transparent">
+            <h1 className="text-5xl md:text-7xl font-bold mb-8 bg-gradient-to-r from-white to-orange-100 bg-clip-text text-transparent">
               How Can You Help
             </h1>
             <p className="text-xl md:text-2xl mb-12 text-blue-100 leading-relaxed">
@@ -323,15 +323,15 @@ export default function Volunteer() {
               className="flex flex-col sm:flex-row gap-6 justify-center relative"
             >
               <button 
-                className="group relative px-8 py-4 bg-white text-pink-600 rounded-full font-semibold text-lg shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300 overflow-hidden"
+                className="group relative px-8 py-4 bg-white text-orange-600 rounded-full font-semibold text-lg shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300 overflow-hidden"
                 onClick={() => setShowSocialPopup(!showSocialPopup)}
               >
                 <span className="relative z-10">Follow us on socials</span>
-                <div className="absolute inset-0 bg-gradient-to-r from-pink-500 to-pink-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <div className="absolute inset-0 bg-gradient-to-r from-orange-500 to-orange-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                 <span className="absolute inset-0 z-10 flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 font-semibold">Follow us on socials</span>
               </button>
               <button 
-                className="px-8 py-4 border-2 border-white text-white rounded-full font-semibold text-lg hover:bg-white hover:text-pink-600 transition-all duration-300 backdrop-blur-sm"
+                className="px-8 py-4 border-2 border-white text-white rounded-full font-semibold text-lg hover:bg-white hover:text-orange-600 transition-all duration-300 backdrop-blur-sm"
                 onClick={() => {
                   setActiveTab('opportunities');
                   document.getElementById('opportunities-section').scrollIntoView({ behavior: 'smooth' });
@@ -344,7 +344,7 @@ export default function Volunteer() {
               <div dangerouslySetInnerHTML={{
                 __html: `
                   <script type="text/javascript" defer src="https://donorbox.org/install-popup-button.js"></script>
-                  <a class="dbox-donation-button" style="background: rgb(223, 24, 167); color: rgb(255, 255, 255); text-decoration: none; font-family: Verdana, sans-serif; display: flex; gap: 8px; width: fit-content; font-size: 16px; border-radius: 5px; line-height: 24px; padding: 8px 24px; border: 2px solid white;" href="https://donorbox.org/survive-and-thrive-804282?"><img src="https://donorbox.org/images/white_logo.svg" alt="Donate with DonorBox"/>Donate Now</a>
+                  <a class="dbox-donation-button" style="background: rgb(249, 134, 33); color: rgb(255, 255, 255); text-decoration: none; font-family: Verdana, sans-serif; display: flex; gap: 8px; width: fit-content; font-size: 16px; border-radius: 5px; line-height: 24px; padding: 8px 24px; border: 2px solid white;" href="https://donorbox.org/survive-and-thrive-804282?"><img src="https://donorbox.org/images/white_logo.svg" alt="Donate with DonorBox"/>Donate Now</a>
                 `
               }} />
             </motion.div>
@@ -383,7 +383,7 @@ export default function Volunteer() {
                  <span className="text-blue-800 font-medium">Facebook</span>
                </a>
                <a
-                 href="https://x.com/AwayLumps"
+                 href="https://twitter.com/RonsenHopeUg"
                  target="_blank"
                  rel="noopener noreferrer"
                  className="flex items-center gap-3 p-4 rounded-xl bg-gray-50 hover:bg-gray-100 transition-colors duration-200 group"
@@ -395,10 +395,10 @@ export default function Volunteer() {
                  href="https://www.instagram.com/ronsenhopefoundation/"
                  target="_blank"
                  rel="noopener noreferrer"
-                 className="flex items-center gap-3 p-4 rounded-xl bg-pink-50 hover:bg-pink-100 transition-colors duration-200 group"
+                 className="flex items-center gap-3 p-4 rounded-xl bg-orange-50 hover:bg-orange-100 transition-colors duration-200 group"
                >
-                 <FiInstagram className="text-pink-600 text-xl group-hover:scale-110 transition-transform" />
-                 <span className="text-pink-800 font-medium">Instagram</span>
+                 <FiInstagram className="text-orange-600 text-xl group-hover:scale-110 transition-transform" />
+                 <span className="text-orange-800 font-medium">Instagram</span>
                </a>
                <a
                  href="https://www.linkedin.com/company/lumps-away-foundatin/?viewAsMember=true"
@@ -408,6 +408,15 @@ export default function Volunteer() {
                >
                  <FiLinkedin className="text-blue-700 text-xl group-hover:scale-110 transition-transform" />
                  <span className="text-blue-800 font-medium">LinkedIn</span>
+               </a>
+               <a
+                 href="https://tiktok.com/@ronsenministry"
+                 target="_blank"
+                 rel="noopener noreferrer"
+                 className="flex items-center gap-3 p-4 rounded-xl bg-black hover:bg-gray-800 transition-colors duration-200 group"
+               >
+                 <FiTiktok className="text-white text-xl group-hover:scale-110 transition-transform" />
+                 <span className="text-white font-medium">TikTok</span>
                </a>
             </div>
             <button
@@ -499,8 +508,8 @@ export default function Volunteer() {
               <button 
                 className={`px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
                   activeTab === 'opportunities' 
-                    ? 'bg-white text-pink-600 shadow-lg transform scale-105' 
-                    : 'text-gray-600 hover:text-pink-600'
+                    ? 'bg-white text-orange-600 shadow-lg transform scale-105' 
+                    : 'text-gray-600 hover:text-orange-600'
                 }`}
                 onClick={() => setActiveTab('opportunities')}
               >
@@ -509,8 +518,8 @@ export default function Volunteer() {
               <button 
                 className={`px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
                   activeTab === 'testimonials' 
-                    ? 'bg-white text-pink-600 shadow-lg transform scale-105' 
-                    : 'text-gray-600 hover:text-pink-600'
+                    ? 'bg-white text-orange-600 shadow-lg transform scale-105' 
+                    : 'text-gray-600 hover:text-orange-600'
                 }`}
                 onClick={() => setActiveTab('testimonials')}
               >
@@ -519,8 +528,8 @@ export default function Volunteer() {
               <button 
                 className={`px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
                   activeTab === 'application' 
-                    ? 'bg-white text-pink-600 shadow-lg transform scale-105' 
-                    : 'text-gray-600 hover:text-pink-600'
+                    ? 'bg-white text-orange-600 shadow-lg transform scale-105' 
+                    : 'text-gray-600 hover:text-orange-600'
                 }`}
                 onClick={() => setActiveTab('application')}
               >
@@ -698,11 +707,11 @@ export default function Volunteer() {
                               </div>
                             </div>
                             <div className="relative">
-                              <div className="text-4xl text-pink-500 absolute -top-4 -left-2 opacity-50">
+                              <div className="text-4xl text-orange-500 absolute -top-4 -left-2 opacity-50">
                                 &ldquo;
                               </div>
                               <p className="italic text-gray-600 leading-relaxed pl-6 pr-6">{testimonial.content || testimonial.quote}</p>
-                              <div className="text-4xl text-pink-500 absolute -bottom-8 -right-2 opacity-50">
+                              <div className="text-4xl text-orange-500 absolute -bottom-8 -right-2 opacity-50">
                                 &rdquo;
                               </div>
                             </div>
@@ -1032,7 +1041,7 @@ export default function Volunteer() {
 
       {/* Call to Action */}
       <section className="relative py-20 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-pink-500 to-pink-600"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-orange-500 to-orange-600"></div>
         <div className="absolute inset-0 bg-black/20"></div>
         <div className="container-custom text-center relative z-10">
           <motion.div
@@ -1043,13 +1052,13 @@ export default function Volunteer() {
             className="text-white"
           >
             <div className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm rounded-full px-6 py-3 mb-8 border border-white/30">
-              <FiHeart className="text-pink-300" />
+              <FiHeart className="text-orange-300" />
               <span className="text-sm font-medium">Start Your Journey</span>
             </div>
-            <h2 className="text-4xl md:text-6xl font-bold mb-8 bg-gradient-to-r from-white to-pink-100 bg-clip-text text-transparent">
+            <h2 className="text-4xl md:text-6xl font-bold mb-8 bg-gradient-to-r from-white to-orange-100 bg-clip-text text-transparent">
               Ready to Make a Difference?
             </h2>
-            <p className="text-xl md:text-2xl mb-12 text-pink-100 leading-relaxed max-w-3xl mx-auto">
+            <p className="text-xl md:text-2xl mb-12 text-orange-100 leading-relaxed max-w-3xl mx-auto">
               Want to help us make a difference? We'd love to hear from you - let's discuss how to make a real impact together. Contact us.
             </p>
             <Link 
