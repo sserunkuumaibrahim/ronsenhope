@@ -3,9 +3,9 @@ import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { auth, db } from '../firebase/config';
 
 // Admin credentials
-const ADMIN_EMAIL = '28labs@lumpsaway.org';
+const ADMIN_EMAIL = 'admin@ronsenministries.org';
 const ADMIN_PASSWORD = 'Nopasswordhere!';
-const ADMIN_NAME = 'Admin User';
+const ADMIN_NAME = 'Ssenfuma Ronald';
 
 export async function createAdminUser() {
   try {

@@ -62,7 +62,7 @@ function App() {
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/unauthorized" element={<Unauthorized />} />
             <Route path="/firebase-test" element={<FirebaseTest />} />
-            {/* <Route path="/admin-setup" element={<AdminSetup />} /> */}
+            <Route path="/admin-setup" element={<AdminSetup />} />
             {/* <Route path="/admin-debug" element={<AdminDebug />} /> */}
             
             {/* Content Routes */}

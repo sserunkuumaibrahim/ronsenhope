@@ -13,7 +13,7 @@ const AdminDebug = () => {
     setStatus('Testing admin login...');
     
     try {
-      const result = await login('28labs@lumpsaway.org', 'Nopasswordhere!');
+      const result = await login('admin@ronsenministries.org', 'Nopasswordhere!');
       setStatus(`Login successful! User: ${result.user.email}`);
     } catch (error) {
       setStatus(`Login failed: ${error.message}`);
@@ -101,7 +101,7 @@ const AdminDebug = () => {
       
       <div className="mt-6 p-3 bg-yellow-50 border border-yellow-200 rounded">
         <h3 className="font-semibold text-yellow-800">Admin Credentials:</h3>
-        <p className="text-sm text-yellow-700">Email: 28labs@lumpsaway.org</p>
+        <p className="text-sm text-yellow-700">Email: admin@ronsenministries.org</p>
         <p className="text-sm text-yellow-700">Password: Nopasswordhere!</p>
       </div>
     </div>

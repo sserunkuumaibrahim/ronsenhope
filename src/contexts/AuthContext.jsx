@@ -16,7 +16,7 @@ import { createAdminUser } from '../utils/seedAdmin';
 const AuthContext = createContext();
 
 // Admin credentials
-const ADMIN_EMAIL = '28labs@lumpsaway.org';
+const ADMIN_EMAIL = 'admin@ronsenministries.org';
 
 export function useAuth() {
   return useContext(AuthContext);

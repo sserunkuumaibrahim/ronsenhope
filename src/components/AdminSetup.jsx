@@ -12,7 +12,7 @@ const AdminSetup = () => {
     
     try {
       await createAdminUser();
-      setMessage('Admin user created successfully! Email: 28labs@lumpsaway.org, Password: Nopasswordhere!');
+      setMessage('Admin user created successfully! Email: admin@ronsenministries.org, Password: Nopasswordhere!');
     } catch (error) {
       console.error('Error creating admin:', error);
       if (error.code === 'auth/email-already-in-use') {
@@ -32,7 +32,7 @@ const AdminSetup = () => {
         Click the button below to create an admin user with the following credentials:
       </p>
       <div className="bg-gray-100 p-3 rounded mb-4 text-sm">
-        <p><strong>Email:</strong> 28labs@lumpsaway.org</p>
+        <p><strong>Email:</strong> admin@ronsenministries.org</p>
         <p><strong>Password:</strong> Nopasswordhere!</p>
       </div>
       
