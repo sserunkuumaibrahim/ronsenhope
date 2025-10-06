@@ -79,6 +79,7 @@ export default function Programs() {
     }
   });
   const [imageFile, setImageFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
   const [uploading, setUploading] = useState(false);
 
   // Fetch programs from Firebase
@@ -348,6 +349,7 @@ export default function Programs() {
       }
     });
     setImageFile(null);
+    setImagePreview(null);
     setGalleryFiles([]);
     setActiveTab('basic');
     setEditingProgram(null);
@@ -410,6 +412,7 @@ export default function Programs() {
         website: ''
       }
     });
+    setImagePreview(program.image || null);
     setEditingProgram(program);
     setShowEditModal(true);
   };
@@ -1043,13 +1046,14 @@ export default function Programs() {
                       onChange={(e) => {
                         const file = e.target.files[0];
                         if (file) {
-                          setFormData({...formData, imageFile: file, image: URL.createObjectURL(file)});
+                          setImageFile(file);
+                          setImagePreview(URL.createObjectURL(file));
                         }
                       }}
                     />
-                    {formData.image && (
+                    {imagePreview && (
                       <div className="mt-2">
-                        <img src={formData.image} alt="Preview" className="w-32 h-32 object-cover rounded-lg" />
+                        <img src={imagePreview} alt="Preview" className="w-32 h-32 object-cover rounded-lg" />
                       </div>
                     )}
                   </div>
