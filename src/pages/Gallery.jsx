@@ -39,6 +39,8 @@ export default function Gallery() {
           ...doc.data(),
           uploadDate: doc.data().uploadDate?.toDate ? doc.data().uploadDate.toDate() : new Date(doc.data().uploadDate)
         }));
+        console.log('Fetched photos data:', photosData);
+        console.log('Number of photos:', photosData.length);
         setPhotos(photosData);
       } catch (error) {
         console.error('Error fetching photos:', error);

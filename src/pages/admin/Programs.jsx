@@ -284,6 +284,9 @@ export default function Programs() {
         updatedAt: serverTimestamp()
       };
       
+      // Remove imageFile from programData as it's not needed in Firestore
+      delete programData.imageFile;
+      
       if (editingProgram) {
         // Update existing program
         await updateDoc(doc(db, 'programs', editingProgram.id), programData);
