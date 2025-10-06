@@ -1,62 +1,74 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
+    // Helper function to check if user is admin
+    function isAdmin() {
+      return request.auth != null &&
+        exists(/databases/$(database)/documents/adminRoles/$(request.auth.token.email));
+    }
+
+    // Admin roles collection - only admins can manage
+    match /adminRoles/{email} {
+      allow read, write: if isAdmin();
+      allow create: if isAdmin();
+    }
     // Allow read access to public collections (admins can also write)
     match /programs/{document} {
       allow read: if true;
-      allow write: if request.auth != null && request.auth.token.email == 'admin@ronsenministries.org';
+      allow write: if isAdmin();
     }
 
     match /blogs/{document} {
       allow read: if true;
-      allow write: if request.auth != null && request.auth.token.email == 'admin@ronsenministries.org';
+      allow write: if isAdmin();
     }
 
     match /stories/{document} {
       allow read: if true;
-      allow write: if request.auth != null && request.auth.token.email == 'admin@ronsenministries.org';
+      allow write: if isAdmin();
     }
 
     match /carousel/{document} {
       allow read: if true;
-      allow write: if request.auth != null && request.auth.token.email == 'admin@ronsenministries.org';
+      allow write: if isAdmin();
     }
 
     match /quotes/{document} {
       allow read: if true;
-      allow write: if request.auth != null && request.auth.token.email == 'admin@ronsenministries.org';
+      allow write: if isAdmin();
     }
 
     match /gallery/{document} {
       allow read: if true;
-      allow write: if request.auth != null && request.auth.token.email == 'admin@ronsenministries.org';
+      allow write: if isAdmin();
     }
 
     // Allow unauthenticated writes to form submission collections
     match /contactMessages/{document} {
-      allow read: if request.auth != null && request.auth.token.email == 'admin@ronsenministries.org';
+      allow read: if isAdmin();
       allow create: if true; // Allow anyone to submit contact messages
     }
 
     match /newsletterSubscriptions/{document} {
-      allow read: if request.auth != null && request.auth.token.email == 'admin@ronsenministries.org';
+      allow read: if isAdmin();
       allow create: if true; // Allow anyone to subscribe to newsletter
     }
 
     match /applications/{document} {
-      allow read: if request.auth != null && request.auth.token.email == 'admin@ronsenministries.org';
+      allow read: if request.auth != null && 
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
       allow create: if true; // Allow anyone to submit volunteer applications
     }
 
     // User-specific documents
     match /users/{userId} {
       allow read, write: if request.auth != null && request.auth.uid == userId;
-      allow read: if request.auth != null && request.auth.token.email == 'admin@ronsenministries.org';
+      allow read: if isAdmin();
     }
 
     // Admin-only collections
     match /settings/{document} {
-      allow read, write: if request.auth != null && request.auth.token.email == 'admin@ronsenministries.org';
+      allow read, write: if isAdmin();
     }
 
     // Forum-related collections (require authentication)
@@ -64,14 +76,14 @@ service cloud.firestore {
       allow read: if true;
       allow create: if request.auth != null;
       allow update, delete: if request.auth != null &&
-        (request.auth.uid == resource.data.authorId || request.auth.token.email == 'admin@ronsenministries.org');
+        (request.auth.uid == resource.data.authorId || isAdmin());
     }
 
     match /forumComments/{document} {
       allow read: if true;
       allow create: if request.auth != null;
       allow update, delete: if request.auth != null &&
-        (request.auth.uid == resource.data.authorId || request.auth.token.email == 'admin@ronsenministries.org');
+        (request.auth.uid == resource.data.authorId || isAdmin());
     }
 
     // Blog comments (require authentication)
@@ -79,7 +91,7 @@ service cloud.firestore {
       allow read: if true;
       allow create: if request.auth != null;
       allow update, delete: if request.auth != null &&
-        (request.auth.uid == resource.data.authorId || request.auth.token.email == 'admin@ronsenministries.org');
+        (request.auth.uid == resource.data.authorId || isAdmin());
     }
 
     // Story comments (require authentication)
@@ -87,7 +99,7 @@ service cloud.firestore {
       allow read: if true;
       allow create: if request.auth != null;
       allow update, delete: if request.auth != null &&
-        (request.auth.uid == resource.data.authorId || request.auth.token.email == 'admin@ronsenministries.org');
+        (request.auth.uid == resource.data.authorId || isAdmin());
     }
 
     // Default deny all other operations

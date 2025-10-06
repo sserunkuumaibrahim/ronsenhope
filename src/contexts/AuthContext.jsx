@@ -10,13 +10,21 @@ import {
   signInWithPopup
 } from 'firebase/auth';
 import { auth, db } from '../firebase/config';
-import { doc, setDoc, getDoc, serverTimestamp } from 'firebase/firestore';
+import { doc, setDoc, getDoc, serverTimestamp, collection, query, where, getDocs } from 'firebase/firestore';
 import { createAdminUser } from '../utils/seedAdmin';
 
 const AuthContext = createContext();
 
-// Admin credentials
-const ADMIN_EMAIL = 'admin@ronsenministries.org';
+// Helper function to check if user is admin
+async function checkIsAdmin(email) {
+  try {
+    const adminDoc = await getDoc(doc(db, 'adminRoles', email));
+    return adminDoc.exists();
+  } catch (error) {
+    console.error('Error checking admin status:', error);
+    return false;
+  }
+}
 
 export function useAuth() {
   return useContext(AuthContext);
@@ -35,7 +43,8 @@ export function AuthProvider({ children }) {
       await updateProfile(user, { displayName });
       
       // Determine role based on email
-      const role = email === ADMIN_EMAIL ? 'admin' : 'user';
+      const isUserAdmin = await checkIsAdmin(email);
+      const role = isUserAdmin ? 'admin' : 'user';
       
       // Create user document in Firestore
       await setDoc(doc(db, 'users', user.uid), {
@@ -86,7 +95,7 @@ export function AuthProvider({ children }) {
       if (!userDoc.exists()) {
         console.log('Creating new user document for:', user.email);
         // Determine role based on email
-        const role = user.email === ADMIN_EMAIL ? 'admin' : 'user';
+        const role = ADMIN_EMAILS.includes(user.email) ? 'admin' : 'user';
         
         await setDoc(doc(db, 'users', user.uid), {
           uid: user.uid,
@@ -140,7 +149,7 @@ export function AuthProvider({ children }) {
           
           if (!userDoc.exists()) {
             // Create user document if it doesn't exist
-            const role = user.email === ADMIN_EMAIL ? 'admin' : 'user';
+            const role = ADMIN_EMAILS.includes(user.email) ? 'admin' : 'user';
             userData = {
               uid: user.uid,
               email: user.email,
