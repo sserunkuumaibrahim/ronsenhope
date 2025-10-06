@@ -1,85 +1,95 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Allow read access to public collections
+    // Allow read access to public collections (admins can also write)
     match /programs/{document} {
       allow read: if true;
+      allow write: if request.auth != null && request.auth.token.email == 'admin@ronsenministries.org';
     }
-    
+
     match /blogs/{document} {
       allow read: if true;
+      allow write: if request.auth != null && request.auth.token.email == 'admin@ronsenministries.org';
     }
-    
+
     match /stories/{document} {
       allow read: if true;
+      allow write: if request.auth != null && request.auth.token.email == 'admin@ronsenministries.org';
     }
-    
+
     match /carousel/{document} {
       allow read: if true;
+      allow write: if request.auth != null && request.auth.token.email == 'admin@ronsenministries.org';
     }
-    
+
     match /quotes/{document} {
       allow read: if true;
+      allow write: if request.auth != null && request.auth.token.email == 'admin@ronsenministries.org';
     }
-    
+
+    match /gallery/{document} {
+      allow read: if true;
+      allow write: if request.auth != null && request.auth.token.email == 'admin@ronsenministries.org';
+    }
+
     // Allow unauthenticated writes to form submission collections
     match /contactMessages/{document} {
-      allow read: if request.auth != null && request.auth.token.admin == true;
+      allow read: if request.auth != null && request.auth.token.email == 'admin@ronsenministries.org';
       allow create: if true; // Allow anyone to submit contact messages
     }
-    
+
     match /newsletterSubscriptions/{document} {
-      allow read: if request.auth != null && request.auth.token.admin == true;
+      allow read: if request.auth != null && request.auth.token.email == 'admin@ronsenministries.org';
       allow create: if true; // Allow anyone to subscribe to newsletter
     }
-    
+
     match /applications/{document} {
-      allow read: if request.auth != null && request.auth.token.admin == true;
+      allow read: if request.auth != null && request.auth.token.email == 'admin@ronsenministries.org';
       allow create: if true; // Allow anyone to submit volunteer applications
     }
-    
+
     // User-specific documents
     match /users/{userId} {
       allow read, write: if request.auth != null && request.auth.uid == userId;
-      allow read: if request.auth != null && request.auth.token.admin == true;
+      allow read: if request.auth != null && request.auth.token.email == 'admin@ronsenministries.org';
     }
-    
+
     // Admin-only collections
     match /settings/{document} {
-      allow read, write: if request.auth != null && request.auth.token.admin == true;
+      allow read, write: if request.auth != null && request.auth.token.email == 'admin@ronsenministries.org';
     }
-    
+
     // Forum-related collections (require authentication)
     match /forumTopics/{document} {
       allow read: if true;
       allow create: if request.auth != null;
-      allow update, delete: if request.auth != null && 
-        (request.auth.uid == resource.data.authorId || request.auth.token.admin == true);
+      allow update, delete: if request.auth != null &&
+        (request.auth.uid == resource.data.authorId || request.auth.token.email == 'admin@ronsenministries.org');
     }
-    
+
     match /forumComments/{document} {
       allow read: if true;
       allow create: if request.auth != null;
-      allow update, delete: if request.auth != null && 
-        (request.auth.uid == resource.data.authorId || request.auth.token.admin == true);
+      allow update, delete: if request.auth != null &&
+        (request.auth.uid == resource.data.authorId || request.auth.token.email == 'admin@ronsenministries.org');
     }
-    
+
     // Blog comments (require authentication)
     match /blogComments/{document} {
       allow read: if true;
       allow create: if request.auth != null;
-      allow update, delete: if request.auth != null && 
-        (request.auth.uid == resource.data.authorId || request.auth.token.admin == true);
+      allow update, delete: if request.auth != null &&
+        (request.auth.uid == resource.data.authorId || request.auth.token.email == 'admin@ronsenministries.org');
     }
-    
+
     // Story comments (require authentication)
     match /storyComments/{document} {
       allow read: if true;
       allow create: if request.auth != null;
-      allow update, delete: if request.auth != null && 
-        (request.auth.uid == resource.data.authorId || request.auth.token.admin == true);
+      allow update, delete: if request.auth != null &&
+        (request.auth.uid == resource.data.authorId || request.auth.token.email == 'admin@ronsenministries.org');
     }
-    
+
     // Default deny all other operations
     match /{document=**} {
       allow read, write: if false;
