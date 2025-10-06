@@ -2,7 +2,8 @@ import { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { FiCalendar, FiMapPin, FiClock, FiUsers, FiHeart, FiStar, FiUser, FiMail, FiPhone, FiMessageSquare, FiDollarSign, FiFacebook, FiTwitter, FiInstagram, FiLinkedin, FiTiktok } from 'react-icons/fi';
+import { FiCalendar, FiMapPin, FiClock, FiUsers, FiHeart, FiStar, FiUser, FiMail, FiPhone, FiMessageSquare, FiDollarSign, FiFacebook, FiTwitter, FiInstagram, FiLinkedin } from 'react-icons/fi';
+import { SiTiktok } from 'react-icons/si';
 import MainLayout from '../components/layout/MainLayout';
 import { db } from '../firebase/config';
 import { collection, addDoc, getDocs } from 'firebase/firestore';
@@ -415,7 +416,7 @@ export default function Volunteer() {
                  rel="noopener noreferrer"
                  className="flex items-center gap-3 p-4 rounded-xl bg-black hover:bg-gray-800 transition-colors duration-200 group"
                >
-                 <FiTiktok className="text-white text-xl group-hover:scale-110 transition-transform" />
+                 <SiTiktok className="text-white text-xl group-hover:scale-110 transition-transform" />
                  <span className="text-white font-medium">TikTok</span>
                </a>
             </div>

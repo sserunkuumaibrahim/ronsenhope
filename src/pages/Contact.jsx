@@ -2,7 +2,8 @@ import { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
 import { useForm } from 'react-hook-form';
-import { FiMail, FiUser, FiMessageSquare, FiPhone, FiMapPin, FiCheckCircle, FiFacebook, FiTwitter, FiInstagram, FiLinkedin, FiSend, FiClock, FiGlobe, FiTiktok } from 'react-icons/fi';
+import { FiMail, FiUser, FiMessageSquare, FiPhone, FiMapPin, FiCheckCircle, FiFacebook, FiTwitter, FiInstagram, FiLinkedin, FiSend, FiClock, FiGlobe } from 'react-icons/fi';
+import { SiTiktok } from 'react-icons/si';
 import MainLayout from '../components/layout/MainLayout';
 import { db } from '../firebase/config';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
@@ -528,7 +529,7 @@ export default function Contact() {
                      className="group flex items-center gap-3 p-4 rounded-2xl bg-gradient-to-r from-gray-50 to-gray-100 hover:from-gray-100 hover:to-gray-200 transition-all duration-300"
                    >
                      <div className="w-10 h-10 bg-black rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                       <FiTiktok className="text-lg text-white" />
+                       <SiTiktok className="text-lg text-white" />
                      </div>
                      <span className="font-semibold text-gray-700">TikTok</span>
                    </motion.a>

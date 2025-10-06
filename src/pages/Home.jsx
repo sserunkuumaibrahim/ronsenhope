@@ -4,7 +4,8 @@ import { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { motion } from 'framer-motion';
 import MainLayout from '../components/layout/MainLayout';
-import { FiHeart, FiUsers, FiGlobe, FiMail, FiFacebook, FiTwitter, FiInstagram, FiLinkedin, FiYoutube, FiTiktok } from 'react-icons/fi';
+import { FiHeart, FiUsers, FiGlobe, FiMail, FiFacebook, FiTwitter, FiInstagram, FiLinkedin, FiYoutube } from 'react-icons/fi';
+import { SiTiktok } from 'react-icons/si';
 import { db } from '../firebase/config';
 import { collection, getDocs, addDoc, serverTimestamp } from 'firebase/firestore';
 
@@ -1264,7 +1265,7 @@ export default function Home() {
               { icon: FiInstagram, name: 'Instagram', color: 'hover:bg-primary', link: 'https://www.instagram.com/ronsenhopefoundation/' },
               { icon: FiLinkedin, name: 'LinkedIn', color: 'hover:bg-blue-700', link: 'https://www.linkedin.com/company/lumps-away-foundatin/?viewAsMember=true' },
               { icon: FiYoutube, name: 'YouTube', color: 'hover:bg-red-600', link: 'https://www.youtube.com/@Ronsenministry' },
-              { icon: FiTiktok, name: 'TikTok', color: 'hover:bg-black', link: 'https://tiktok.com/@ronsenministry' }
+              { icon: SiTiktok, name: 'TikTok', color: 'hover:bg-black', link: 'https://tiktok.com/@ronsenministry' }
             ].map((social, index) => (
               <motion.a
                 key={social.name}

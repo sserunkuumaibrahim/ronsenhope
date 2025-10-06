@@ -1,7 +1,8 @@
 import { Helmet } from 'react-helmet-async';
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { FiHeart, FiTarget, FiUsers, FiAward, FiGlobe, FiCalendar, FiShield, FiStar, FiArrowRight, FiMessageCircle, FiUser, FiBookOpen, FiActivity, FiDollarSign, FiCheckCircle, FiAlertTriangle, FiTiktok } from 'react-icons/fi';
+import { FiHeart, FiTarget, FiUsers, FiAward, FiGlobe, FiCalendar, FiShield, FiStar, FiArrowRight, FiMessageCircle, FiUser, FiBookOpen, FiActivity, FiDollarSign, FiCheckCircle, FiAlertTriangle } from 'react-icons/fi';
+import { SiTiktok } from 'react-icons/si';
 import MainLayout from '../components/layout/MainLayout';
 import { ref, onValue, off } from 'firebase/database';
 import { realtimeDb } from '../firebase/config';
@@ -519,7 +520,7 @@ export default function About() {
                   <FiUsers className="text-lg" />
                 </a>
                 <a href="https://tiktok.com/@ronsenministry" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-black rounded-full flex items-center justify-center text-white hover:scale-110 transition-transform duration-300">
-                  <FiTiktok className="text-lg" />
+                  <SiTiktok className="text-lg" />
                 </a>
               </div>
             </motion.div>
