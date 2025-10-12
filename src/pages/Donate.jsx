@@ -25,14 +25,16 @@ export default function Donate() {
         </motion.div>
 
         <div className="max-w-4xl mx-auto">
-          <div dangerouslySetInnerHTML={{
-            __html: `
-              <script type="text/javascript" defer src="https://donorbox.org/install-popup-button.js"></script>
-              <div class="flex justify-center">
-                <iframe src="https://donorbox.org/embed/survive-and-thrive-804282?" name="donorbox" scrolling="no" seamless="seamless" frameborder="0" style="max-width: 500px; min-width: 250px; max-height:none!important; margin: 0 auto; border: 3px solid rgb(223, 24, 167); border-radius: 10px;"></iframe>
-              </div>
-            `
-          }} />
+          <div className="text-center">
+            <div dangerouslySetInnerHTML={{
+              __html: `
+                <a href="https://paypal.me/RonsenHopeUgCanada" target="_blank" rel="noopener noreferrer" class="inline-block">
+                  <img src="https://www.paypalobjects.com/webstatic/en_US/i/buttons/PP_logo_h_150x38.png" alt="Donate with PayPal" style="height: 38px;" />
+                </a>
+                <p class="mt-4 text-lg text-base-content/70">Click the PayPal button above to make a secure donation</p>
+              `
+            }} />
+          </div>
         </div>
       </div>
     </MainLayout>

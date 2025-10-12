@@ -95,7 +95,8 @@ export function AuthProvider({ children }) {
       if (!userDoc.exists()) {
         console.log('Creating new user document for:', user.email);
         // Determine role based on email
-        const role = ADMIN_EMAILS.includes(user.email) ? 'admin' : 'user';
+        const isUserAdmin = await checkIsAdmin(user.email);
+        const role = isUserAdmin ? 'admin' : 'user';
         
         await setDoc(doc(db, 'users', user.uid), {
           uid: user.uid,

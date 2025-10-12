@@ -388,8 +388,7 @@ export default function Programs() {
             >
               <div dangerouslySetInnerHTML={{
                   __html: `
-                    <script type="text/javascript" defer src="https://donorbox.org/install-popup-button.js"></script>
-                    <a class="dbox-donation-button" style="background: rgb(249, 134, 33); color: rgb(255, 255, 255); text-decoration: none; font-family: Verdana, sans-serif; display: flex; gap: 8px; width: fit-content; font-size: 16px; border-radius: 5px; line-height: 24px; padding: 8px 24px; border: 2px solid rgb(249, 134, 33);" href="https://donorbox.org/survive-and-thrive-804282?"><img src="https://donorbox.org/images/white_logo.svg" alt="Donate with DonorBox"/>Donate Now</a>
+                    <a class="dbox-donation-button" style="background: rgb(249, 134, 33); color: rgb(255, 255, 255); text-decoration: none; font-family: Verdana, sans-serif; display: flex; gap: 8px; width: fit-content; font-size: 16px; border-radius: 5px; line-height: 24px; padding: 8px 24px; border: 2px solid rgb(249, 134, 33);" href="https://paypal.me/RonsenHopeUgCanada"><img src="https://www.paypalobjects.com/webstatic/en_US/i/buttons/PP_logo_h_100x26.png" alt="Donate with PayPal" style="height: 26px;"/>Donate Now</a>
                   `
                 }} />
                 <Link 
