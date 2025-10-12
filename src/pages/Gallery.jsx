@@ -1,6 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { motion } from 'framer-motion';
 import { createPortal } from 'react-dom';
 import MainLayout from '../components/layout/MainLayout';
 import { FiCamera, FiHeart, FiUsers, FiCalendar, FiMapPin, FiX } from 'react-icons/fi';
@@ -24,8 +23,8 @@ export default function Gallery() {
   // Ref for tooltip timeout
   const tooltipTimeoutRef = useRef(null);
   
-  // Ref for grid container
-  const gridRef = useRef(null);
+  // Ref for grid container - not used with flex layout
+  // const gridRef = useRef(null);
   
   // Fetch photos from Firebase
   useEffect(() => {
@@ -39,6 +38,7 @@ export default function Gallery() {
           ...doc.data(),
           uploadDate: doc.data().uploadDate?.toDate ? doc.data().uploadDate.toDate() : new Date(doc.data().uploadDate)
         }));
+        console.log('Fetched photos:', photosData);
         setPhotos(photosData);
       } catch (error) {
         console.error('Error fetching photos:', error);
@@ -83,10 +83,24 @@ export default function Gallery() {
   
   // Handle image load for better performance
   const handleImageLoad = () => {
-    // Optional: Add any image load handling here
+    // Image loaded successfully
   };
 
-  // Animation variants
+  // Handle image error
+  const handleImageError = (photo) => {
+    console.error('Failed to load image:', photo.title, photo.imageUrl);
+    // Try to fetch the image manually to see what error we get
+    fetch(photo.imageUrl)
+      .then(response => {
+        console.log('Manual fetch status:', response.status, response.statusText);
+        return response.text();
+      })
+      .then(text => console.log('Response:', text.substring(0, 200)))
+      .catch(error => console.error('Manual fetch error:', error));
+  };
+
+  // Animation variants - not used with current layout
+  /*
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -96,17 +110,7 @@ export default function Gallery() {
       }
     }
   };
-
-  const itemVariants = {
-    hidden: { y: 20, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: {
-        duration: 0.5
-      }
-    }
-  };
+  */
 
   // Tooltip positioning function (same as Home page)
   const calculateTooltipPosition = (triggerElement) => {
@@ -338,33 +342,18 @@ export default function Gallery() {
         <div className="absolute inset-0 bg-gradient-to-br from-orange-500 to-orange-600"></div>
         <div className="absolute inset-0 bg-black/20"></div>
         <div className="container-custom relative z-10">
-          <motion.div 
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="text-center max-w-4xl mx-auto text-white"
-          >
-            <motion.div
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ duration: 0.6, delay: 0.1 }}
-              className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm rounded-full px-6 py-3 mb-8 border border-white/30"
-            >
+          <div className="text-center max-w-4xl mx-auto text-white">
+            <div className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm rounded-full px-6 py-3 mb-8 border border-white/30">
               <FiCamera className="text-orange-200" />
               <span className="text-sm font-medium">Visual Stories of Impact</span>
-            </motion.div>
+            </div>
             <h1 className="text-5xl md:text-7xl font-bold mb-8 bg-gradient-to-r from-white to-orange-100 bg-clip-text text-transparent">
               Our Gallery
             </h1>
             <p className="text-xl md:text-2xl mb-12 text-blue-100 leading-relaxed">
               Capturing moments of hope, healing, and community impact through our visual journey of transformation.
             </p>
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-              className="flex flex-col sm:flex-row gap-6 justify-center"
-            >
+            <div className="flex flex-col sm:flex-row gap-6 justify-center">
               <button 
                 className="group relative px-8 py-4 bg-white text-orange-600 rounded-full font-semibold text-lg shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300 overflow-hidden"
                 onClick={() => {
@@ -383,8 +372,8 @@ export default function Gallery() {
               >
                 Contact Us
               </button>
-            </motion.div>
-          </motion.div>
+            </div>
+          </div>
         </div>
         <div className="absolute inset-0 opacity-10">
           <img 
@@ -404,13 +393,7 @@ export default function Gallery() {
         </div>
 
         <div className="container-custom relative">
-          <motion.div
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-100px" }}
-            className="space-y-12"
-          >
+          <div className="space-y-12">
             {/* Gallery Content */}
             <div className="text-center max-w-4xl mx-auto mb-16">
               <h2 className="text-4xl md:text-5xl font-bold text-gray-800 mb-6">
@@ -460,19 +443,19 @@ export default function Gallery() {
 
             {/* CSS Masonry Grid for all items */}
              {!loading && filteredPhotos.length > 0 && (
-               <div ref={gridRef} className="masonry-grid">
+               <div className="flex flex-wrap gap-4">
                  {/* Display photos from Firebase */}
-                 {filteredPhotos.map((photo) => (
-                     <motion.div
-                       key={photo.id}
-                       variants={itemVariants}
-                       className="gallery-item group relative"
-                       onMouseEnter={(e) => {
-                         if (!isTouchDevice()) {
-                           showTooltip(photo, e.currentTarget);
-                         }
-                       }}
-                     >
+                 {filteredPhotos.map((photo) => {
+                     return (
+                       <div
+                         key={photo.id}
+                         className="group relative flex-1 min-w-80"
+                         onMouseEnter={(e) => {
+                           if (!isTouchDevice()) {
+                             showTooltip(photo, e.currentTarget);
+                           }
+                         }}
+                       >
                        <div className="absolute inset-0 bg-primary rounded-2xl transform rotate-1 group-hover:rotate-2 transition-transform duration-300 opacity-10"></div>
                        <div className="relative bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2"
                        onMouseLeave={() => {
@@ -491,27 +474,28 @@ export default function Gallery() {
                          <img
                            src={photo.imageUrl}
                            alt={photo.title}
-                           className="w-full h-auto object-cover group-hover:scale-110 transition-transform duration-700"
+                           className="w-full h-auto object-contain group-hover:scale-110 transition-transform duration-700"
                            loading="lazy"
                            onLoad={handleImageLoad}
+                           onError={() => handleImageError(photo)}
                            style={{
-                             aspectRatio: 'auto',
                              minHeight: '200px',
-                             maxHeight: '500px'
+                             zIndex: 1,
+                             position: 'relative'
                            }}
                          />
                          
                          {/* Image overlay */}
-                         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10" />
                          
                          {/* Image info overlay */}
-                         <div className="absolute bottom-0 left-0 right-0 p-4 text-white transform translate-y-full group-hover:translate-y-0 transition-transform duration-300">
+                         <div className="absolute bottom-0 left-0 right-0 p-4 text-white transform translate-y-full group-hover:translate-y-0 transition-transform duration-300 z-20">
                            <h3 className="font-semibold text-sm mb-1 line-clamp-1">{photo.title}</h3>
                            <p className="text-xs text-white/80 line-clamp-2">{photo.description}</p>
                          </div>
                          
                          {/* Hover indicator */}
-                         <div className="absolute top-4 right-4 w-8 h-8 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                         <div className="absolute top-4 right-4 w-8 h-8 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20">
                            <FiCamera className="text-white text-sm" />
                          </div>
                        </div>
@@ -532,11 +516,12 @@ export default function Gallery() {
                          </div>
                        </div>
                      </div>
-                   </motion.div>
-                 ))}
-                </div>
+                   </div>
+                 );
+                 })}
+               </div>
              )}
-             </motion.div>
+             </div>
         </div>
       </div>
 

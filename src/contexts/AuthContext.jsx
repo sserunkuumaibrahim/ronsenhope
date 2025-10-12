@@ -26,6 +26,26 @@ async function checkIsAdmin(email) {
   }
 }
 
+// Helper function to ensure admin role is set
+async function ensureAdminRole(email) {
+  try {
+    const adminDocRef = doc(db, 'adminRoles', email);
+    const adminDoc = await getDoc(adminDocRef);
+
+    if (!adminDoc.exists()) {
+      await setDoc(adminDocRef, {
+        email: email,
+        addedBy: 'system',
+        addedAt: serverTimestamp(),
+        role: 'admin'
+      });
+      console.log(`Admin role created for ${email}`);
+    }
+  } catch (error) {
+    console.error('Error ensuring admin role:', error);
+  }
+}
+
 export function useAuth() {
   return useContext(AuthContext);
 }
@@ -38,14 +58,18 @@ export function AuthProvider({ children }) {
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
-      
+
       // Update profile with display name
       await updateProfile(user, { displayName });
-      
-      // Determine role based on email
-      const isUserAdmin = await checkIsAdmin(email);
+
+      // Check if this is an admin email and ensure admin role is set
+      const isUserAdmin = email === 'admin@ronsenministries.org'; // For now, hardcode the main admin
+      if (isUserAdmin) {
+        await ensureAdminRole(email);
+      }
+
       const role = isUserAdmin ? 'admin' : 'user';
-      
+
       // Create user document in Firestore
       await setDoc(doc(db, 'users', user.uid), {
         uid: user.uid,
@@ -54,7 +78,7 @@ export function AuthProvider({ children }) {
         role,
         createdAt: serverTimestamp(),
       });
-      
+
       return user;
     } catch (error) {
       throw error;
@@ -95,9 +119,12 @@ export function AuthProvider({ children }) {
       if (!userDoc.exists()) {
         console.log('Creating new user document for:', user.email);
         // Determine role based on email
-        const isUserAdmin = await checkIsAdmin(user.email);
+        const isUserAdmin = user.email === 'admin@ronsenministries.org'; // For now, hardcode the main admin
+        if (isUserAdmin) {
+          await ensureAdminRole(user.email);
+        }
         const role = isUserAdmin ? 'admin' : 'user';
-        
+
         await setDoc(doc(db, 'users', user.uid), {
           uid: user.uid,
           email: user.email,
@@ -150,7 +177,11 @@ export function AuthProvider({ children }) {
           
           if (!userDoc.exists()) {
             // Create user document if it doesn't exist
-            const role = ADMIN_EMAILS.includes(user.email) ? 'admin' : 'user';
+            const isUserAdmin = user.email === 'admin@ronsenministries.org'; // For now, hardcode the main admin
+            if (isUserAdmin) {
+              await ensureAdminRole(user.email);
+            }
+            const role = isUserAdmin ? 'admin' : 'user';
             userData = {
               uid: user.uid,
               email: user.email,
