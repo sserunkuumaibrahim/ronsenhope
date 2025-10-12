@@ -424,8 +424,29 @@ export default function Home() {
 
       {/* Hero Section */}
       <section className="relative py-20 md:py-32 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-orange-300 via-orange-400 to-orange-100"></div>
-        <div className="absolute inset-0 bg-black/20"></div>
+        {/* Video Background */}
+        <div className="absolute inset-0">
+          <video
+            className="w-full h-full object-cover"
+            autoPlay
+            loop
+            muted
+            playsInline
+            poster="/Photos/Home - Carousel/9f8f8672-e795-4a39-b222-7b889d67d1cf.JPG"
+            onError={(e) => {
+              // Hide video and show fallback if video fails to load
+              e.target.style.display = 'none';
+            }}
+          >
+            <source src="/videos/hero-background.mp4" type="video/mp4" />
+            <source src="/videos/hero-background.webm" type="video/webm" />
+            {/* Fallback for browsers that don't support video */}
+            <div className="absolute inset-0 bg-gradient-to-br from-orange-300 via-orange-400 to-orange-100"></div>
+          </video>
+        </div>
+        
+        {/* Overlay for better text readability */}
+        <div className="absolute inset-0 bg-black/40"></div>
         
         {/* Animated background elements */}
         <div className="absolute inset-0">
