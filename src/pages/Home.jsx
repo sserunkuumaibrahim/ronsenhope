@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { motion } from 'framer-motion';
 import MainLayout from '../components/layout/MainLayout';
-import { FiHeart, FiUsers, FiGlobe, FiMail, FiFacebook, FiTwitter, FiInstagram, FiLinkedin, FiYoutube } from 'react-icons/fi';
+import { FiHeart, FiUsers, FiGlobe, FiMail, FiFacebook, FiTwitter, FiInstagram, FiLinkedin, FiYoutube, FiCamera, FiArrowRight } from 'react-icons/fi';
 import { SiTiktok } from 'react-icons/si';
 import { db } from '../firebase/config';
 import { collection, getDocs, addDoc, serverTimestamp } from 'firebase/firestore';
@@ -35,6 +35,10 @@ export default function Home() {
   // Stories state
   const [stories, setStories] = useState([]);
   const [storiesLoading, setStoriesLoading] = useState(true);
+  
+  // Gallery state
+  const [galleryImages, setGalleryImages] = useState([]);
+  const [galleryLoading, setGalleryLoading] = useState(true);
   
   // Quotes state
   const [currentQuote, setCurrentQuote] = useState(null);
@@ -173,8 +177,28 @@ export default function Home() {
       }
     };
 
+    const fetchGallery = async () => {
+      setGalleryLoading(true);
+      try {
+        const galleryCollection = collection(db, 'gallery');
+        const gallerySnapshot = await getDocs(galleryCollection);
+        const galleryData = gallerySnapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data(),
+          uploadDate: doc.data().uploadDate?.toDate ? doc.data().uploadDate.toDate() : new Date(doc.data().uploadDate)
+        }));
+        // Get first 9 images for the grid
+        setGalleryImages(galleryData.slice(0, 9));
+      } catch (error) {
+        console.error('Error fetching gallery:', error);
+      } finally {
+        setGalleryLoading(false);
+      }
+    };
+
     fetchPrograms();
     fetchStories();
+    fetchGallery();
     fetchQuotes();
     fetchCarouselImages();
   }, []);
@@ -1232,6 +1256,112 @@ export default function Home() {
               </motion.div>
             ))}
           </motion.div>
+        </div>
+      </section>
+
+      {/* Gallery Section */}
+      <section className="py-20 bg-gradient-to-br from-orange-50 to-white">
+        <div className="container-custom">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-16"
+          >
+            <div className="inline-flex items-center gap-2 bg-orange-100 text-orange-800 rounded-full px-4 py-2 mb-6">
+              <FiCamera className="text-orange-600" />
+              <span className="text-sm font-medium">Our Gallery</span>
+            </div>
+            <h2 className="text-4xl md:text-5xl font-bold mb-6 text-gray-800">Capturing Our Impact</h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              See the moments that matter - our journey of hope, healing, and transformation through powerful visual stories.
+            </p>
+          </motion.div>
+
+          <div className="flex flex-col md:flex-row justify-between items-center mb-16">
+            <motion.h2
+              initial={{ opacity: 0, y: -20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7 }}
+              className="text-3xl md:text-5xl font-bold mb-6 md:mb-0 apple-text tracking-tight"
+            >
+              Featured Photos
+            </motion.h2>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7 }}
+            >
+              <Link to="/gallery" className="apple-button">
+                View All Photos
+              </Link>
+            </motion.div>
+          </div>
+
+          {/* Gallery Grid */}
+          {!galleryLoading && galleryImages.length > 0 && (
+            <motion.div
+              variants={containerVariants}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10"
+              ref={(el) => {
+                if (el) {
+                  el.addEventListener('mousemove', (e) => {
+                    const cards = el.querySelectorAll('.apple-program-card');
+                    cards.forEach(card => {
+                      const rect = card.getBoundingClientRect();
+                      const x = ((e.clientX - rect.left) / rect.width) * 100;
+                      const y = ((e.clientY - rect.top) / rect.height) * 100;
+                      card.style.setProperty('--x', `${x}%`);
+                      card.style.setProperty('--y', `${y}%`);
+                    });
+                  });
+                }
+              }}
+            >
+              {galleryImages.slice(0, 9).map((image) => (
+                <motion.div key={image.id} variants={itemVariants} className="apple-program-card">
+                  <div className="apple-program-image">
+                    <img
+                      src={image.imageUrl}
+                      alt={image.title || 'Gallery image'}
+                      loading="lazy"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300"></div>
+                  </div>
+                  <div className="apple-program-content">
+                    <h3 className="text-2xl font-bold mb-3 apple-text tracking-tight line-clamp-2">{image.title}</h3>
+                    <p className="apple-text opacity-80 leading-relaxed mb-6 line-clamp-3">{image.description}</p>
+                    <Link to="/gallery" className="apple-link-button">
+                      View Gallery
+                    </Link>
+                  </div>
+                </motion.div>
+              ))}
+            </motion.div>
+          )}
+
+          {/* Loading State */}
+          {galleryLoading && (
+            <div className="text-center py-20">
+              <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+              <p className="mt-4 text-gray-600">Loading gallery...</p>
+            </div>
+          )}
+
+          {/* Empty State */}
+          {!galleryLoading && galleryImages.length === 0 && (
+            <div className="text-center py-20">
+              <FiCamera className="mx-auto h-16 w-16 text-gray-400 mb-4" />
+              <h3 className="text-xl font-semibold text-gray-600 mb-2">No photos yet</h3>
+              <p className="text-gray-500">Check back soon for our visual stories!</p>
+            </div>
+          )}
         </div>
       </section>
 
