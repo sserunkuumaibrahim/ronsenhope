@@ -20,6 +20,12 @@ dist-ssr
 .env.test.local
 .env.production.local
 
+# Firebase scripts with sensitive data
+*.mjs
+setup-*.mjs
+check-*.mjs
+add-*.mjs
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
